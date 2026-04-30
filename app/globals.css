@@ -1,0 +1,159 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f5f5f7;
+  --foreground: #1d1d1f;
+  --surface: #ffffff;
+  --surface-elevated: rgba(255, 255, 255, 0.82);
+  --hairline: rgba(0, 0, 0, 0.08);
+  --muted: #6e6e73;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: #0071e3;
+  color: white;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+main {
+  background:
+    radial-gradient(circle at 50% -10%, rgba(255, 255, 255, 0.96), transparent 32rem),
+    var(--background);
+}
+
+section {
+  border-color: var(--hairline) !important;
+}
+
+h1,
+h2,
+h3 {
+  color: #1d1d1f;
+  letter-spacing: 0;
+}
+
+p,
+li,
+dd,
+dt {
+  color: inherit;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a {
+  transition-duration: 180ms;
+}
+
+input,
+textarea,
+select {
+  background-color: #ffffff;
+  border-color: var(--hairline);
+  color: #1d1d1f;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #6e6e73;
+}
+
+article[class*="border"],
+aside[class*="border"],
+form[class*="border"],
+nav[class*="border"],
+div[class*="border"][class*="bg-white"],
+a[class*="border"][class*="bg-white"],
+a[class*="border"][class*="p-"] {
+  border-color: var(--hairline) !important;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 18px 48px rgba(0, 0, 0, 0.06);
+}
+
+article[class*="bg-white"],
+aside[class*="bg-white"],
+form[class*="bg-white"],
+div[class*="bg-white"],
+a[class*="bg-white"] {
+  background-color: var(--surface-elevated) !important;
+}
+
+.text-neutral-600,
+.text-neutral-500,
+.text-neutral-400 {
+  color: var(--muted) !important;
+}
+
+.text-neutral-900,
+.text-neutral-800,
+.text-neutral-700 {
+  color: #1d1d1f !important;
+}
+
+.bg-neutral-50 {
+  background-color: #fbfbfd !important;
+}
+
+.bg-neutral-100 {
+  background-color: #f5f5f7 !important;
+}
+
+.bg-white {
+  background-color: var(--surface) !important;
+}
+
+.border-black\/10,
+.border-black\/5 {
+  border-color: var(--hairline) !important;
+}
+
+.rounded-xl {
+  border-radius: 8px !important;
+}
+
+.rounded-md {
+  border-radius: 8px !important;
+}
+
+.rounded-full {
+  border-radius: 999px !important;
+}
+
+.shadow-lg {
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.16) !important;
+}
+
+.apple-display {
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  line-height: 0.92;
+  letter-spacing: 0;
+}
+
+.apple-gradient-text {
+  background: linear-gradient(110deg, #1d1d1f 0%, #0071e3 48%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

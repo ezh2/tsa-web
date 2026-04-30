@@ -1,0 +1,1 @@
+update public.profiles set role = 'director' where email = 'burtonw2@illinois.edu';
