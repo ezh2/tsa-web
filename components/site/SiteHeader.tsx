@@ -13,12 +13,17 @@ const STUDENT_LINKS = [
   { label: "Incoming Students", href: "/incoming-students" },
 ];
 
+const MEMBERSHIP_LINKS = [
+  { label: "Overview", href: "/membership" },
+  { label: "Merch", href: "/membership/merch" },
+];
+
 const NAV_ITEMS = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Events", href: "/events" },
   { label: "Students", href: "/students", children: STUDENT_LINKS },
-  { label: "Membership", href: "/membership" },
+  { label: "Membership", href: "/membership", children: MEMBERSHIP_LINKS },
 ];
 
 export function SiteHeader({ user }: { user: CurrentUser | null }) {
@@ -95,7 +100,7 @@ export function SiteHeader({ user }: { user: CurrentUser | null }) {
                     role="menu"
                     className="invisible absolute left-0 top-full z-50 min-w-44 pt-2 opacity-0 transition group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100"
                   >
-                    <div className="rounded-2xl border border-[rgba(255,255,255,0.16)] bg-neutral-950/95 p-1.5 shadow-lg backdrop-blur-xl">
+                    <div className="rounded-2xl border border-[rgba(255,255,255,0.16)] bg-[rgba(23,23,23,0.72)] p-2 shadow-lg shadow-black/20 backdrop-blur-2xl">
                       {item.children.map((child) => {
                         const childActive = isActive(child.href);
                         return (
@@ -105,10 +110,10 @@ export function SiteHeader({ user }: { user: CurrentUser | null }) {
                             role="menuitem"
                             aria-current={childActive ? "page" : undefined}
                             className={
-                              "block rounded-xl px-3 py-2 text-sm transition " +
+                              "block border-l px-3 py-2 text-sm transition " +
                               (childActive
-                                ? "bg-[#f5f5f7] font-semibold text-black"
-                                : "text-neutral-300 hover:bg-[rgba(255,255,255,0.12)] hover:text-white")
+                                ? "border-white font-semibold text-white"
+                                : "border-transparent text-neutral-300 hover:border-white/40 hover:text-white")
                             }
                           >
                             {child.label}

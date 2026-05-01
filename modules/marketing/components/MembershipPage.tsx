@@ -77,6 +77,14 @@ export function MembershipPage() {
             access to lifetime member benefits, partner discounts, merch
             announcements, and the official Line Announcement System.
           </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              href="/membership/merch"
+              className="rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-700"
+            >
+              View merch
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -84,12 +92,16 @@ export function MembershipPage() {
         <div className="mx-auto grid w-full max-w-6xl gap-8 px-6 py-16 lg:grid-cols-[1fr_26rem] sm:py-20">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
-              Our Membership
+              Partnerships
             </p>
             <h2 className="mt-2 text-3xl font-semibold tracking-tight text-neutral-900">
-              Partner discounts
+              Partner Discounts
             </h2>
-            <div className="mt-10 grid gap-5 md:grid-cols-2">
+            <p className="mt-4 max-w-2xl text-sm leading-6 text-neutral-600">
+              TSA members can use these partner discounts at participating local
+              restaurants, shops, and services.
+            </p>
+            <div className="mt-8 grid gap-5 md:grid-cols-2">
               {PARTNERS.map((partner) => (
                 <article
                   key={partner.name}
@@ -189,17 +201,23 @@ export function MembershipPage() {
           </aside>
         </div>
       </section>
+    </main>
+  );
+}
 
+export function MerchPage() {
+  return (
+    <main className="bg-white">
       <section className="border-b border-neutral-100">
         <div className="mx-auto w-full max-w-6xl px-6 py-16 sm:py-20">
           <div className="grid gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
-                Merch
+                Membership
               </p>
-              <h2 className="mt-2 text-3xl font-semibold tracking-tight text-neutral-900">
+              <h1 className="mt-2 text-4xl font-semibold tracking-tight text-neutral-900">
                 TSA 呆丸囡仔 T-shirt
-              </h2>
+              </h1>
               <p className="mt-4 text-sm leading-6 text-neutral-600">
                 TSA will roll out a new T-shirt merch item this semester.
                 Students can purchase the shirt on its own or choose the bundle
@@ -211,7 +229,9 @@ export function MembershipPage() {
                   <p className="mt-1 text-neutral-500">Membership + T-shirt</p>
                 </div>
                 <div className="rounded-md border border-neutral-200 bg-white p-4">
-                  <p className="font-semibold text-neutral-900">$29.99 Membership</p>
+                  <p className="font-semibold text-neutral-900">
+                    $29.99 Membership
+                  </p>
                   <p className="mt-1 text-neutral-500">
                     Lifetime, non-transferable
                   </p>
@@ -232,9 +252,9 @@ export function MembershipPage() {
                 />
               </div>
               <figcaption className="mt-5">
-                <h3 className="text-sm font-semibold uppercase text-neutral-900">
+                <h2 className="text-sm font-semibold uppercase text-neutral-900">
                   TSA T-Shirt Merch
-                </h3>
+                </h2>
                 <p className="mt-1 text-sm font-semibold uppercase text-neutral-900">
                   Release Date To Be Announced
                 </p>

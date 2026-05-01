@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { signInAction, signUpAction } from "@/modules/auth/server/actions";
+import { ACADEMIC_STAGE_LABELS, ACADEMIC_STAGES } from "@/core/academic-year";
+import {
+  signInAction,
+  signInWithGoogleAction,
+  signUpAction,
+} from "@/modules/auth/server/actions";
 import { getCurrentUser } from "@/core/rbac/server";
 
 const inputClass =
@@ -22,7 +27,7 @@ export async function LoginPage({
 
   return (
     <main className="flex min-h-screen flex-1 items-center justify-center bg-neutral-50 px-6 py-16">
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-2xl">
         <Link
           href="/"
           className="mb-8 inline-block text-sm text-neutral-600 hover:text-neutral-900"
@@ -36,7 +41,7 @@ export async function LoginPage({
           </h1>
           <p className="mt-1 text-sm text-neutral-500">
             {isSignup
-              ? "Sign up to RSVP for events and stay in touch."
+              ? "Create your TSA member profile with your student contact info."
               : "Sign in to your UIUC TSA account."}
           </p>
 
@@ -80,22 +85,90 @@ export async function LoginPage({
             action={isSignup ? signUpAction : signInAction}
             className="mt-6 space-y-3"
           >
-            <div className="space-y-1">
-              <label
-                htmlFor="email"
-                className="block text-xs font-medium text-neutral-700"
-              >
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className={inputClass}
+            <input type="hidden" name="next" value={next ?? "/"} />
+            {isSignup && (
+              <div className="grid gap-3 sm:grid-cols-2">
+                <Field
+                  label="First name"
+                  name="first_name"
+                  autoComplete="given-name"
+                />
+                <Field
+                  label="Last name"
+                  name="last_name"
+                  autoComplete="family-name"
+                />
+                <Field
+                  label="NetID"
+                  name="netid"
+                  autoComplete="username"
+                  placeholder="netid"
+                />
+                <Field
+                  label="Phone number"
+                  name="phone_number"
+                  type="tel"
+                  autoComplete="tel"
+                  placeholder="(217) 555-0123"
+                />
+              </div>
+            )}
+            {!isSignup && (
+              <Field
+                label="NetID"
+                name="netid"
+                autoComplete="username"
+                placeholder="netid"
               />
-            </div>
+            )}
+            {isSignup && (
+              <>
+                <div className="space-y-1">
+                  <label
+                    htmlFor="personal_email"
+                    className="block text-xs font-medium text-neutral-700"
+                  >
+                    Personal email
+                  </label>
+                  <input
+                    id="personal_email"
+                    name="personal_email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    placeholder="name@example.com"
+                    className={inputClass}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label
+                    htmlFor="academic_stage"
+                    className="block text-xs font-medium text-neutral-700"
+                  >
+                    Year in school
+                  </label>
+                  <select
+                    id="academic_stage"
+                    name="academic_stage"
+                    required
+                    defaultValue=""
+                    className={inputClass}
+                  >
+                    <option value="" disabled>
+                      Select your current year
+                    </option>
+                    {ACADEMIC_STAGES.map((stage) => (
+                      <option key={stage} value={stage}>
+                        {ACADEMIC_STAGE_LABELS[stage]}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-[11px] text-neutral-500">
+                    This advances automatically each academic year until grad.
+                  </p>
+                </div>
+              </>
+            )}
             <div className="space-y-1">
               <label
                 htmlFor="password"
@@ -126,6 +199,22 @@ export async function LoginPage({
             </button>
           </form>
 
+          <div className="my-6 flex items-center gap-3 text-xs text-neutral-400">
+            <div className="h-px flex-1 bg-neutral-200" />
+            <span>or</span>
+            <div className="h-px flex-1 bg-neutral-200" />
+          </div>
+
+          <form action={signInWithGoogleAction}>
+            <input type="hidden" name="next" value={next ?? "/"} />
+            <button
+              type="submit"
+              className="w-full rounded-md border border-neutral-300 bg-white px-4 py-2 text-sm font-medium text-neutral-900 transition hover:bg-neutral-50"
+            >
+              Continue with Google
+            </button>
+          </form>
+
           <p className="mt-6 text-center text-xs text-neutral-500">
             {isSignup ? "Already have an account? " : "New to UIUC TSA? "}
             <Link
@@ -138,5 +227,39 @@ export async function LoginPage({
         </div>
       </div>
     </main>
+  );
+}
+
+function Field({
+  label,
+  name,
+  type = "text",
+  autoComplete,
+  placeholder,
+}: {
+  label: string;
+  name: string;
+  type?: string;
+  autoComplete?: string;
+  placeholder?: string;
+}) {
+  return (
+    <div className="space-y-1">
+      <label
+        htmlFor={name}
+        className="block text-xs font-medium text-neutral-700"
+      >
+        {label}
+      </label>
+      <input
+        id={name}
+        name={name}
+        type={type}
+        autoComplete={autoComplete}
+        placeholder={placeholder}
+        required
+        className={inputClass}
+      />
+    </div>
   );
 }

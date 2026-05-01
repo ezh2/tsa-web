@@ -1,6 +1,10 @@
 import { requireAuth } from "@/core/rbac/server";
 import { MyUpcomingRsvps } from "@/modules/events";
 import { updateDisplayNameAction } from "@/modules/auth/server/actions";
+import {
+  ACADEMIC_STAGE_LABELS,
+  getCurrentAcademicStage,
+} from "@/core/academic-year";
 
 function feedbackMessage(
   account: string | undefined,
@@ -19,6 +23,11 @@ export async function AccountPage({
   const user = await requireAuth();
   const { account, error } = await searchParams;
   const feedback = feedbackMessage(account, error);
+  const currentAcademicStage = getCurrentAcademicStage(
+    user.academic_stage_start,
+    user.academic_stage_recorded_year,
+  );
+  const fullName = [user.first_name, user.last_name].filter(Boolean).join(" ");
 
   return (
     <main className="mx-auto w-full max-w-2xl px-6 py-16">
@@ -81,7 +90,19 @@ export async function AccountPage({
         </form>
 
         <dl className="mt-6 divide-y divide-neutral-100 border-t border-neutral-100 text-sm">
-          <Row label="Email" value={user.email ?? "—"} />
+          <Row label="Name" value={fullName || "—"} />
+          <Row label="NetID" value={user.netid ?? "—"} />
+          <Row label="Illinois email" value={user.email ?? "—"} />
+          <Row label="Personal email" value={user.personal_email ?? "—"} />
+          <Row label="Phone" value={user.phone_number ?? "—"} />
+          <Row
+            label="Year in school"
+            value={
+              currentAcademicStage
+                ? ACADEMIC_STAGE_LABELS[currentAcademicStage]
+                : "—"
+            }
+          />
           <Row label="Role" value={user.role} />
           <Row label="User ID" value={user.id} mono />
         </dl>

@@ -7,5 +7,8 @@ export {
   SubleasePage,
 } from "./components/CurrentStudentFeaturePages";
 export { IncomingStuPage } from "./components/IncomingStuPage";
-export { MembershipPage } from "./components/MembershipPage";
+export {
+  MembershipPage,
+  MerchPage,
+} from "./components/MembershipPage";
 export { marketingManifest } from "./manifest";

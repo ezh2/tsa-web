@@ -10,6 +10,7 @@ const FOOTER_SECTIONS = [
       { label: "Board of Directors", href: "/about#board" },
       { label: "Sponsors & Partners", href: "/about#sponsors" },
       { label: "Membership", href: "/membership" },
+      { label: "Merch", href: "/membership/merch" },
     ],
   },
   {
