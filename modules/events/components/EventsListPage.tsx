@@ -1,6 +1,12 @@
 import Link from "next/link";
-import { listUpcomingEvents } from "@/modules/events/server/queries";
+import { hasRole } from "@/core/rbac";
+import { getCurrentUser } from "@/core/rbac/server";
+import {
+  listMyRsvpsForEvents,
+  listUpcomingEvents,
+} from "@/modules/events/server/queries";
 import { fmtDateRange } from "@/modules/events/lib/format";
+import { RsvpForm } from "./RsvpForm";
 
 const DEMO_UPCOMING_EVENTS = [
   {
@@ -178,6 +184,14 @@ const PAST_EVENTS = [
 
 export async function EventsListPage() {
   const events = await listUpcomingEvents();
+  const user = await getCurrentUser();
+  const rsvps = user
+    ? await listMyRsvpsForEvents(events.map((event) => event.id))
+    : [];
+  const rsvpByEventId = new Map(
+    rsvps.map((rsvp) => [rsvp.event_id, rsvp] as const),
+  );
+  const canRsvp = user && hasRole(user.role, "member");
 
   return (
     <main className="mx-auto w-full max-w-5xl px-6 py-16 sm:py-20">
@@ -197,24 +211,43 @@ export async function EventsListPage() {
       <ul className="grid gap-4 md:grid-cols-2">
         {events.map((event) => (
           <li key={event.id}>
-            <Link
-              href={`/events/${event.id}`}
-              className="block h-full rounded-md border border-black/10 bg-white/85 p-6 backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-neutral-400 hover:shadow-sm"
-            >
-              <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">
-                {fmtDateRange(event.starts_at, event.ends_at)}
-              </p>
-              <div className="mt-2 flex items-baseline justify-between gap-4">
-                <h2 className="text-lg font-semibold text-neutral-900">
-                  {event.title}
-                </h2>
-                {event.location && (
-                  <span className="shrink-0 text-xs text-neutral-500">
-                    📍 {event.location}
-                  </span>
+            <article className="h-full rounded-md border border-black/10 bg-white/85 p-6 backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-neutral-400 hover:shadow-sm">
+              <Link href={`/events/${event.id}`} className="block">
+                <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">
+                  {fmtDateRange(event.starts_at, event.ends_at)}
+                </p>
+                <div className="mt-2 flex items-baseline justify-between gap-4">
+                  <h2 className="text-lg font-semibold text-neutral-900">
+                    {event.title}
+                  </h2>
+                  {event.location && (
+                    <span className="shrink-0 text-xs text-neutral-500">
+                      📍 {event.location}
+                    </span>
+                  )}
+                </div>
+              </Link>
+              <div className="mt-5 border-t border-neutral-100 pt-4">
+                {canRsvp ? (
+                  <RsvpForm
+                    eventId={event.id}
+                    current={rsvpByEventId.get(event.id) ?? null}
+                    compact
+                  />
+                ) : !user ? (
+                  <Link
+                    href={`/login?next=${encodeURIComponent(`/events/${event.id}`)}`}
+                    className="inline-flex rounded-md border border-neutral-300 px-3 py-2 text-sm font-medium text-neutral-700 transition hover:bg-neutral-100"
+                  >
+                    Sign in to RSVP
+                  </Link>
+                ) : (
+                  <p className="text-sm text-neutral-600">
+                    RSVP is open to verified members.
+                  </p>
                 )}
               </div>
-            </Link>
+            </article>
           </li>
         ))}
 

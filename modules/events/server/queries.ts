@@ -51,6 +51,20 @@ export async function getMyRsvp(eventId: string): Promise<RsvpRecord | null> {
   return (data as RsvpRecord | null) ?? null;
 }
 
+export async function listMyRsvpsForEvents(
+  eventIds: string[],
+): Promise<RsvpRecord[]> {
+  if (eventIds.length === 0) return [];
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("events_rsvp")
+    .select("*")
+    .in("event_id", eventIds);
+  if (error) throw error;
+  return (data ?? []) as RsvpRecord[];
+}
+
 type MyRsvpRow = {
   status: RsvpStatus;
   events_event: EventRecord;
