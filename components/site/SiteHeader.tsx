@@ -24,6 +24,7 @@ const NAV_ITEMS = [
 export function SiteHeader({ user }: { user: CurrentUser | null }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     function updateScrolled() {
@@ -34,6 +35,19 @@ export function SiteHeader({ user }: { user: CurrentUser | null }) {
     window.addEventListener("scroll", updateScrolled, { passive: true });
     return () => window.removeEventListener("scroll", updateScrolled);
   }, []);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setMenuOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
+  function closeMenu() {
+    setMenuOpen(false);
+  }
 
   function isActive(href: string): boolean {
     if (href === "/") return pathname === "/";
@@ -143,7 +157,7 @@ export function SiteHeader({ user }: { user: CurrentUser | null }) {
           {user ? (
             <UserMenu user={user} />
           ) : (
-            <>
+            <div className="hidden items-center gap-2 sm:flex">
               <Link
                 href="/login"
                 className="rounded-full px-4 py-2 text-sm font-medium text-neutral-300 hover:bg-[rgba(255,255,255,0.12)] hover:text-white"
@@ -156,32 +170,141 @@ export function SiteHeader({ user }: { user: CurrentUser | null }) {
               >
                 Sign up
               </Link>
-            </>
+            </div>
           )}
+
+          <button
+            type="button"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            onClick={() => setMenuOpen((v) => !v)}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-white transition hover:bg-[rgba(255,255,255,0.12)] sm:hidden"
+          >
+            {menuOpen ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-6 w-6"
+                aria-hidden="true"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-6 w-6"
+                aria-hidden="true"
+              >
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            )}
+          </button>
         </div>
       </div>
 
-      <nav className="flex items-center gap-1 overflow-x-auto border-t border-white/10 bg-black px-4 py-3 sm:hidden">
-        <div className="flex items-center gap-1 rounded-full border border-[rgba(255,255,255,0.16)] bg-[rgba(255,255,255,0.12)] p-1.5">
-          {NAV_ITEMS.flatMap((item) => item.children ?? item).map((item) => {
-            const active = isActive(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={
-                  "shrink-0 rounded-full px-3 py-1 text-sm " +
-                  (active
-                    ? "bg-[#f5f5f7] font-semibold text-black"
-                    : "text-neutral-300")
-                }
-              >
-                {item.label}
-              </Link>
-            );
-          })}
+      {menuOpen && (
+        <div
+          id="mobile-menu"
+          className="border-t border-white/10 bg-black sm:hidden"
+        >
+          <nav className="flex flex-col gap-1 px-4 py-3">
+            {NAV_ITEMS.map((item) => {
+              if (item.children) {
+                return (
+                  <div key={item.href} className="flex flex-col gap-1">
+                    <Link
+                      href={item.href}
+                      onClick={closeMenu}
+                      aria-current={isActive(item.href) ? "page" : undefined}
+                      className={
+                        "rounded-xl px-4 py-2.5 text-sm transition " +
+                        (isActive(item.href)
+                          ? "bg-[#f5f5f7] font-semibold text-black"
+                          : "text-neutral-200 hover:bg-[rgba(255,255,255,0.12)]")
+                      }
+                    >
+                      {item.label}
+                    </Link>
+                    <div className="ml-3 flex flex-col gap-1 border-l border-white/10 pl-3">
+                      {item.children.map((child) => {
+                        const childActive = isActive(child.href);
+                        return (
+                          <Link
+                            key={child.href}
+                            href={child.href}
+                            onClick={closeMenu}
+                            aria-current={childActive ? "page" : undefined}
+                            className={
+                              "rounded-xl px-4 py-2 text-sm transition " +
+                              (childActive
+                                ? "bg-[#f5f5f7] font-semibold text-black"
+                                : "text-neutral-300 hover:bg-[rgba(255,255,255,0.12)]")
+                            }
+                          >
+                            {child.label}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              }
+
+              const active = isActive(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={closeMenu}
+                  aria-current={active ? "page" : undefined}
+                  className={
+                    "rounded-xl px-4 py-2.5 text-sm transition " +
+                    (active
+                      ? "bg-[#f5f5f7] font-semibold text-black"
+                      : "text-neutral-200 hover:bg-[rgba(255,255,255,0.12)]")
+                  }
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+
+            {!user && (
+              <div className="mt-2 flex flex-col gap-2 border-t border-white/10 pt-3">
+                <Link
+                  href="/login"
+                  onClick={closeMenu}
+                  className="rounded-full px-4 py-2 text-center text-sm font-medium text-neutral-200 hover:bg-[rgba(255,255,255,0.12)]"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  href="/login?mode=signup"
+                  onClick={closeMenu}
+                  className="rounded-full border border-[rgba(255,255,255,0.22)] px-4 py-2 text-center text-sm font-semibold text-white hover:bg-[rgba(255,255,255,0.12)]"
+                >
+                  Sign up
+                </Link>
+              </div>
+            )}
+          </nav>
         </div>
-      </nav>
+      )}
     </header>
   );
 }
