@@ -66,6 +66,11 @@ a {
   transition-duration: 180ms;
 }
 
+button:not(:disabled),
+[role="button"]:not(:disabled) {
+  cursor: pointer;
+}
+
 input,
 textarea,
 select {

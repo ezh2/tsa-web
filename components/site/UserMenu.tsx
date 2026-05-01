@@ -92,7 +92,7 @@ export function UserMenu({ user }: { user: CurrentUser }) {
               <button
                 type="submit"
                 role="menuitem"
-                className="block w-full px-4 py-2 text-left text-sm text-neutral-700 transition hover:bg-neutral-100"
+                className="block w-full cursor-pointer px-4 py-2 text-left text-sm text-neutral-700 transition hover:bg-neutral-100"
               >
                 Sign out
               </button>
