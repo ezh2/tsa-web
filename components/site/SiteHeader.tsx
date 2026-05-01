@@ -30,6 +30,7 @@ export function SiteHeader({ user }: { user: CurrentUser | null }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   useEffect(() => {
     function updateScrolled() {
@@ -54,9 +55,17 @@ export function SiteHeader({ user }: { user: CurrentUser | null }) {
     setMenuOpen(false);
   }
 
+  function closeDropdown() {
+    setOpenDropdown(null);
+  }
+
   function isActive(href: string): boolean {
     if (href === "/") return pathname === "/";
     return pathname === href || pathname.startsWith(`${href}/`);
+  }
+
+  function isExactActive(href: string): boolean {
+    return pathname === href;
   }
 
   return (
@@ -95,12 +104,19 @@ export function SiteHeader({ user }: { user: CurrentUser | null }) {
               item.children?.some((child) => isActive(child.href));
 
             if (item.children) {
+              const dropdownOpen = openDropdown === item.href;
               return (
                 <div key={item.href} className="group relative">
                   <button
                     type="button"
                     aria-current={active ? "page" : undefined}
                     aria-haspopup="menu"
+                    aria-expanded={dropdownOpen}
+                    onClick={() =>
+                      setOpenDropdown((current) =>
+                        current === item.href ? null : item.href,
+                      )
+                    }
                     className={
                       "rounded-full px-4 py-2 text-sm transition " +
                       (active
@@ -112,16 +128,25 @@ export function SiteHeader({ user }: { user: CurrentUser | null }) {
                   </button>
                   <div
                     role="menu"
-                    className="invisible absolute left-0 top-full z-50 min-w-44 pt-2 opacity-0 transition group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100"
+                    className={
+                      "absolute left-0 top-full z-50 min-w-44 pt-2 transition " +
+                      (dropdownOpen
+                        ? "visible opacity-100"
+                        : "invisible opacity-0 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100")
+                    }
                   >
                     <div className="rounded-2xl border border-[rgba(255,255,255,0.16)] bg-[rgba(23,23,23,0.72)] p-2 shadow-lg shadow-black/20 backdrop-blur-2xl">
                       {item.children.map((child) => {
-                        const childActive = isActive(child.href);
+                        const childActive =
+                          child.href === item.href
+                            ? isExactActive(child.href)
+                            : isActive(child.href);
                         return (
                           <Link
                             key={child.href}
                             href={child.href}
                             role="menuitem"
+                            onClick={closeDropdown}
                             aria-current={childActive ? "page" : undefined}
                             className={
                               "block border-l px-3 py-2 text-sm transition " +

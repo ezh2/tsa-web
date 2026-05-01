@@ -8,6 +8,7 @@ import seanPhoto from "../../../images/Board2627/Sean.png";
 import sylviaPhoto from "../../../images/Board2627/Sylvia.png";
 import timPhoto from "../../../images/Board2627/Tim.png";
 import ulandaPhoto from "../../../images/Board2627/Ulanda.png";
+import stevePhoto from "../../../images/Steve.png";
 import tsmcLogo from "../../../images/tsmc-logo.png";
 
 const BOARD_MEMBERS: Array<{
@@ -28,7 +29,7 @@ const BOARD_MEMBERS: Array<{
 
 const SPONSORS: Array<{ name: string; logo?: StaticImageData }> = [
   { name: "TSMC (台灣積體電路製造)", logo: tsmcLogo },
-  { name: "招募中" },
+  { name: "Steve", logo: stevePhoto },
   { name: "招募中" },
   { name: "招募中" },
 ];
@@ -36,7 +37,7 @@ const SPONSORS: Array<{ name: string; logo?: StaticImageData }> = [
 const CONTRIBUTORS = [
   {
     title: "Who made this page?",
-    body: "This website was developed in 2026 by Eric Chang Burton Wang. Ongoing maintenance is managed by the TSA Technology Department.",
+    body: "This website was developed in 2026 by Eric Chang & Burton Wang. Ongoing maintenance is managed by the TSA Technology Department.",
   },
   {
     title: "Join as contributor:",
