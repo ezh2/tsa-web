@@ -277,6 +277,65 @@ export async function signOutAction(): Promise<void> {
   redirect("/");
 }
 
+export async function linkGoogleAction(): Promise<void> {
+  const origin = (await headers()).get("origin");
+  if (!origin) accountErrorRedirect("Could not start Google link.");
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login?next=/account");
+
+  const { data, error } = await supabase.auth.linkIdentity({
+    provider: "google",
+    options: {
+      redirectTo: `${origin}/auth/callback?next=${encodeURIComponent("/account?account=linked")}`,
+      queryParams: {
+        access_type: "offline",
+        prompt: "select_account",
+      },
+    },
+  });
+
+  if (error || !data.url) {
+    accountErrorRedirect(error?.message ?? "Could not start Google link.");
+  }
+
+  redirect(data.url);
+}
+
+export async function unlinkGoogleAction(): Promise<void> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login?next=/account");
+
+  const { data: identitiesData, error: identitiesError } =
+    await supabase.auth.getUserIdentities();
+  if (identitiesError || !identitiesData) {
+    accountErrorRedirect(identitiesError?.message ?? "Could not load identities.");
+  }
+
+  const identities = identitiesData.identities ?? [];
+  const googleIdentity = identities.find((i) => i.provider === "google");
+  if (!googleIdentity) {
+    accountErrorRedirect("No Google account is linked.");
+  }
+  if (identities.length <= 1) {
+    accountErrorRedirect(
+      "Cannot unlink your only sign-in method. Set a password first.",
+    );
+  }
+
+  const { error } = await supabase.auth.unlinkIdentity(googleIdentity);
+  if (error) accountErrorRedirect(error.message);
+
+  revalidatePath("/account");
+  redirect("/account?account=unlinked");
+}
+
 export async function updateDisplayNameAction(formData: FormData): Promise<void> {
   const supabase = await createClient();
   const {

@@ -1,6 +1,11 @@
 import { requireAuth } from "@/core/rbac/server";
+import { createClient } from "@/core/supabase/server";
 import { MyUpcomingRsvps } from "@/modules/events";
-import { updateDisplayNameAction } from "@/modules/auth/server/actions";
+import {
+  linkGoogleAction,
+  unlinkGoogleAction,
+  updateDisplayNameAction,
+} from "@/modules/auth/server/actions";
 import {
   ACADEMIC_STAGE_LABELS,
   getCurrentAcademicStage,
@@ -12,6 +17,9 @@ function feedbackMessage(
 ): { tone: "ok" | "err"; text: string } | null {
   if (error) return { tone: "err", text: error };
   if (account === "updated") return { tone: "ok", text: "Profile updated." };
+  if (account === "linked") return { tone: "ok", text: "Google account linked." };
+  if (account === "unlinked")
+    return { tone: "ok", text: "Google account unlinked." };
   return null;
 }
 
@@ -28,6 +36,12 @@ export async function AccountPage({
     user.academic_stage_recorded_year,
   );
   const fullName = [user.first_name, user.last_name].filter(Boolean).join(" ");
+
+  const supabase = await createClient();
+  const { data: identitiesData } = await supabase.auth.getUserIdentities();
+  const identities = identitiesData?.identities ?? [];
+  const hasGoogle = identities.some((i) => i.provider === "google");
+  const onlyIdentity = identities.length <= 1;
 
   return (
     <main className="mx-auto w-full max-w-2xl px-6 py-16">
@@ -106,6 +120,51 @@ export async function AccountPage({
           <Row label="Role" value={user.role} />
           <Row label="User ID" value={user.id} mono />
         </dl>
+      </section>
+
+      <section className="mt-8 rounded-xl border border-neutral-200 bg-white p-6">
+        <h2 className="text-lg font-semibold text-neutral-900">
+          Connected accounts
+        </h2>
+        <p className="mt-1 text-sm text-neutral-600">
+          {hasGoogle
+            ? "You can sign in with Google."
+            : "Link a Google account to sign in faster next time."}
+        </p>
+
+        <div className="mt-4 flex items-center justify-between gap-4 rounded-lg border border-neutral-200 p-4">
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-neutral-900">Google</p>
+            <p className="truncate text-xs text-neutral-500">
+              {hasGoogle ? "Linked" : "Not linked"}
+            </p>
+          </div>
+          {hasGoogle ? (
+            <form action={unlinkGoogleAction}>
+              <button
+                type="submit"
+                disabled={onlyIdentity}
+                title={
+                  onlyIdentity
+                    ? "Cannot unlink your only sign-in method."
+                    : undefined
+                }
+                className="rounded-md border border-neutral-300 bg-white px-3 py-1.5 text-sm font-medium text-neutral-900 transition hover:border-neutral-400 hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Unlink
+              </button>
+            </form>
+          ) : (
+            <form action={linkGoogleAction}>
+              <button
+                type="submit"
+                className="rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-neutral-700"
+              >
+                Link Google
+              </button>
+            </form>
+          )}
+        </div>
       </section>
 
       <section className="mt-8">
