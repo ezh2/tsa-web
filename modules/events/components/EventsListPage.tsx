@@ -1,3 +1,4 @@
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { hasRole } from "@/core/rbac";
 import { getCurrentUser } from "@/core/rbac/server";
@@ -8,8 +9,22 @@ import {
 import { fmtDateRange } from "@/modules/events/lib/format";
 import { STATIC_UPCOMING_EVENTS } from "@/modules/events/data/upcoming";
 import { RsvpForm } from "./RsvpForm";
+import bentoChicken from "@/images/events/2526/bento/bento_chicken.jpg";
+import bentoSausage from "@/images/events/2526/bento/bento_sausage.jpg";
 
-const PAST_EVENTS = [
+type PastEvent = {
+  title: string;
+  date: string;
+  time: string;
+  location: string;
+  description: string;
+  images?: {
+    src: StaticImageData;
+    alt: string;
+  }[];
+};
+
+const PAST_EVENTS: PastEvent[] = [
   {
     title: "Taiwanese Bento",
     date: "April 18, 2026",
@@ -17,6 +32,16 @@ const PAST_EVENTS = [
     location: "Anniversary Plaza",
     description:
       "Enjoy a familiar Taiwanese bento on campus. Pick up your preorder at Anniversary Plaza on the Illini Union Main Quad side and bring a taste of Taiwan into your weekend.",
+    images: [
+      {
+        src: bentoChicken,
+        alt: "Taiwanese chicken bento meal box",
+      },
+      {
+        src: bentoSausage,
+        alt: "Taiwanese sausage bento meal box",
+      },
+    ],
   },
   {
     title: "Lunar New Year Banquet",
@@ -143,24 +168,39 @@ export async function EventsListPage() {
           {PAST_EVENTS.map((event) => (
             <article
               key={event.title}
-              className="rounded-md border border-black/10 bg-white/85 p-6 backdrop-blur-xl"
+              className="flex flex-col gap-6 rounded-md border border-black/10 bg-white/85 p-6 backdrop-blur-xl sm:flex-row sm:items-start sm:justify-between"
             >
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">
-                    {event.date}
-                  </p>
-                  <h3 className="mt-2 text-xl font-semibold text-neutral-900">
-                    {event.title}
-                  </h3>
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">
+                      {event.date}
+                    </p>
+                    <h3 className="mt-2 text-xl font-semibold text-neutral-900">
+                      {event.title}
+                    </h3>
+                  </div>
+                  <span className="shrink-0 rounded-md bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-600">
+                    {event.location}
+                  </span>
                 </div>
-                <span className="shrink-0 rounded-md bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-600">
-                  {event.location}
-                </span>
+                <p className="mt-4 text-sm leading-6 text-neutral-600">
+                  {event.description}
+                </p>
               </div>
-              <p className="mt-4 text-sm leading-6 text-neutral-600">
-                {event.description}
-              </p>
+              {event.images && (
+                <div className="grid w-full shrink-0 grid-cols-2 gap-3 sm:w-56">
+                  {event.images.map((image) => (
+                    <Image
+                      key={image.alt}
+                      src={image.src}
+                      alt={image.alt}
+                      className="aspect-[3/4] w-full rounded-md object-cover"
+                      sizes="(min-width: 640px) 112px, calc((100vw - 72px) / 2)"
+                    />
+                  ))}
+                </div>
+              )}
             </article>
           ))}
         </div>
