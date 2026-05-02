@@ -22,7 +22,7 @@ const NAV_ITEMS = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Events", href: "/events" },
-  { label: "Students", href: "/students", children: STUDENT_LINKS },
+  { label: "Students", href: "/incoming-students", children: STUDENT_LINKS },
   { label: "Membership", href: "/membership", children: MEMBERSHIP_LINKS },
 ];
 
