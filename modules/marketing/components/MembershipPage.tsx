@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { MerchIntroVideo } from "./MerchIntroVideo";
 import merchModelOne from "../../../images/merch/Merch_Model_1.png";
 import merchModelTwo from "../../../images/merch/Merch_Model_2.png";
 import rawMerch from "../../../images/merch/Raw Merch.png";
@@ -208,6 +209,7 @@ export function MembershipPage() {
 export function MerchPage() {
   return (
     <main className="bg-white">
+      <MerchIntroVideo />
       <section className="border-b border-neutral-100">
         <div className="mx-auto w-full max-w-6xl px-6 py-16 sm:py-20">
           <div className="grid gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">

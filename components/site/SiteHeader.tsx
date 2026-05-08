@@ -28,18 +28,29 @@ const NAV_ITEMS = [
 
 export function SiteHeader({ user }: { user: CurrentUser | null }) {
   const pathname = usePathname();
+  const isMerchPage = pathname === "/membership/merch";
   const [scrolled, setScrolled] = useState(false);
+  const [merchMastheadOpacity, setMerchMastheadOpacity] = useState(1);
   const [menuOpen, setMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   useEffect(() => {
     function updateScrolled() {
-      setScrolled(window.scrollY > 12);
+      const scrollY = window.scrollY;
+
+      setScrolled(scrollY > 12);
+      setMerchMastheadOpacity(
+        Math.max(0, 1 - scrollY / Math.max(window.innerHeight * 0.87, 1)),
+      );
     }
 
     updateScrolled();
     window.addEventListener("scroll", updateScrolled, { passive: true });
-    return () => window.removeEventListener("scroll", updateScrolled);
+    window.addEventListener("resize", updateScrolled);
+    return () => {
+      window.removeEventListener("scroll", updateScrolled);
+      window.removeEventListener("resize", updateScrolled);
+    };
   }, []);
 
   useEffect(() => {
@@ -71,13 +82,38 @@ export function SiteHeader({ user }: { user: CurrentUser | null }) {
   return (
     <header
       className={
-        "sticky top-0 z-40 w-full transition-all duration-300 " +
-        (scrolled
-          ? "border-b border-white/10 bg-black/72 shadow-lg shadow-black/20 backdrop-blur-2xl"
-          : "border-b border-black bg-black")
+        isMerchPage
+          ? "group/header fixed top-0 z-50 w-full bg-transparent transition-colors duration-300 hover:bg-black/72 hover:backdrop-blur-2xl focus-within:bg-black/72 focus-within:backdrop-blur-2xl"
+          : "sticky top-0 z-40 w-full transition-all duration-300 " +
+            (scrolled
+              ? "border-b border-white/10 bg-black/72 shadow-lg shadow-black/20 backdrop-blur-2xl"
+              : "border-b border-black bg-black")
       }
     >
-      <div className="mx-auto flex h-24 w-full max-w-6xl items-center justify-between px-6">
+      {isMerchPage && (
+        <div
+          className="pointer-events-none absolute left-1/2 top-7 z-10 w-[min(26rem,70vw)] -translate-x-1/2 text-center text-white transition-opacity duration-150 ease-out"
+          style={{ opacity: merchMastheadOpacity }}
+        >
+          <div className="transition-opacity duration-300 group-hover/header:opacity-0 group-focus-within/header:opacity-0">
+            <p className="inline-block origin-center scale-x-[0.72] text-[1.3rem] font-semibold uppercase leading-none tracking-[0.08em] sm:text-[1.55rem]">
+              TSA MERCHANDISE
+            </p>
+            <p className="mt-4 text-sm font-medium leading-none text-white/82 sm:text-base">
+              呆丸囡仔
+            </p>
+          </div>
+        </div>
+      )}
+
+      <div
+        className={
+          "mx-auto flex h-24 w-full items-center justify-between px-6 " +
+          (isMerchPage
+            ? "pointer-events-none max-w-none opacity-0 transition-opacity duration-300 group-hover/header:pointer-events-auto group-hover/header:opacity-100 group-focus-within/header:pointer-events-auto group-focus-within/header:opacity-100 sm:px-8"
+            : "max-w-6xl")
+        }
+      >
         <Link
           href="/"
           className="flex items-center gap-3 text-sm font-semibold tracking-tight text-white"
