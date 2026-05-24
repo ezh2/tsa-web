@@ -7,7 +7,7 @@ import { fmtDateRange } from "@/modules/events/lib/format";
 export async function EventsPreview() {
   const events = await listUpcomingEvents().catch((error) => {
     unstable_rethrow(error);
-    console.error("Unable to load upcoming events preview", error);
+    console.warn("Unable to load upcoming events preview", error);
     return [];
   });
   const staticEvents = STATIC_UPCOMING_EVENTS.slice(

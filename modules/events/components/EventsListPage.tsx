@@ -65,7 +65,7 @@ const PAST_EVENTS: PastEvent[] = [
 export async function EventsListPage() {
   const events = await listUpcomingEvents().catch((error) => {
     unstable_rethrow(error);
-    console.error("Unable to load upcoming events", error);
+    console.warn("Unable to load upcoming events", error);
     return [];
   });
   const user = await getCurrentUser();

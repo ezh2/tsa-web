@@ -39,7 +39,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     };
   } catch (error) {
     unstable_rethrow(error);
-    console.error("Unable to load current user", error);
+    console.warn("Unable to load current user", error);
     return null;
   }
 }
