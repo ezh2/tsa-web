@@ -1,4 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
+import newStudentOrientationFlyer from "../../../images/events/2627/new stud oren 2627.png";
 
 const PAGE_INDEX = [
   { label: "新生說明會", href: "#orientation" },
@@ -42,8 +44,9 @@ const SPECIAL_DOCUMENTS = [
 
 const ORIENTATION_DETAILS = [
   "日期：2026 年 6 月 27 日",
-  "時間：8:00 AM - 12:00 PM",
-  "地點：集思北科大會議中心",
+  "時間：10:00 AM - 12:00 PM",
+  "開放入場：9:30 AM",
+  "地點：集思北科大會議中心 2F 貝塔廳",
   "建議新生與家長一起參加，現場會整理抵達 UIUC 前後最常遇到的問題。",
 ];
 
@@ -423,13 +426,33 @@ export function IncomingStuPage() {
             <p className="mt-4 text-sm leading-6 text-neutral-600">
               TSA 新生說明會會集中整理出發前、抵達後、家長繳費與校園生活相關提醒。
             </p>
+            <Link
+              href="https://www.instagram.com/tsa_uiuc/p/DYrauKzh7SE/"
+              className="mt-5 inline-flex rounded-md border border-neutral-900 bg-neutral-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-neutral-700"
+            >
+              View Instagram Post
+            </Link>
           </div>
-          <article className="rounded-md border border-neutral-200 bg-white p-6">
-            <h3 className="text-xl font-semibold text-neutral-900">
-              2026 新生說明會 Details
-            </h3>
-            <BulletList items={ORIENTATION_DETAILS} />
-          </article>
+          <div className="grid gap-6 md:grid-cols-[0.95fr_1.05fr] lg:grid-cols-1 xl:grid-cols-[0.95fr_1.05fr]">
+            <Link
+              href="https://www.instagram.com/tsa_uiuc/p/DYrauKzh7SE/"
+              aria-label="Open the 2026 new student orientation Instagram post"
+              className="overflow-hidden rounded-md border border-neutral-200 bg-white transition hover:border-neutral-400"
+            >
+              <Image
+                src={newStudentOrientationFlyer}
+                alt="2026 UIUC TSA new student orientation flyer"
+                className="h-full w-full object-cover"
+                priority
+              />
+            </Link>
+            <article className="rounded-md border border-neutral-200 bg-white p-6">
+              <h3 className="text-xl font-semibold text-neutral-900">
+                2026 新生說明會 Details
+              </h3>
+              <BulletList items={ORIENTATION_DETAILS} />
+            </article>
+          </div>
         </div>
       </section>
 

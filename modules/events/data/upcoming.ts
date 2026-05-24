@@ -10,10 +10,10 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
   {
     title: "2026 新生說明會",
     date: "June 27, 2026",
-    time: "8:00 - 12:00",
-    location: "集思北科大會議中心",
+    time: "10:00 - 12:00",
+    location: "集思北科大會議中心 2F 貝塔廳",
     description:
-      "A focused orientation for new students and parents covering arrival logistics, campus setup, housing, payments, and everyday life at UIUC.",
+      "A focused orientation for new students and parents covering arrival logistics, campus setup, housing, payments, and everyday life at UIUC. Doors open at 9:30.",
   },
   {
     title: "Merch Presale",
