@@ -1,10 +1,15 @@
 import Link from "next/link";
+import { unstable_rethrow } from "next/navigation";
 import { STATIC_UPCOMING_EVENTS } from "@/modules/events/data/upcoming";
 import { listUpcomingEvents } from "@/modules/events/server/queries";
 import { fmtDateRange } from "@/modules/events/lib/format";
 
 export async function EventsPreview() {
-  const events = await listUpcomingEvents();
+  const events = await listUpcomingEvents().catch((error) => {
+    unstable_rethrow(error);
+    console.error("Unable to load upcoming events preview", error);
+    return [];
+  });
   const staticEvents = STATIC_UPCOMING_EVENTS.slice(
     0,
     Math.max(0, 3 - events.length),

@@ -1,5 +1,6 @@
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
+import { unstable_rethrow } from "next/navigation";
 import { hasRole } from "@/core/rbac";
 import { getCurrentUser } from "@/core/rbac/server";
 import {
@@ -62,7 +63,11 @@ const PAST_EVENTS: PastEvent[] = [
 ];
 
 export async function EventsListPage() {
-  const events = await listUpcomingEvents();
+  const events = await listUpcomingEvents().catch((error) => {
+    unstable_rethrow(error);
+    console.error("Unable to load upcoming events", error);
+    return [];
+  });
   const user = await getCurrentUser();
   const rsvps = user
     ? await listMyRsvpsForEvents(events.map((event) => event.id))
