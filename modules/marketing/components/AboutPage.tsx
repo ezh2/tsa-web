@@ -1,20 +1,19 @@
 import Image, { type StaticImageData } from "next/image";
-import brandonPhoto from "../../../images/Board2627/Brandon.png";
-import burtonPhoto from "../../../images/Board2627/Burton.png";
-import chloePhoto from "../../../images/Board2627/Chloe.png";
-import derrickPhoto from "../../../images/Board2627/Derrick.png";
-import ericPhoto from "../../../images/Board2627/Eric.png";
-import seanPhoto from "../../../images/Board2627/Sean.png";
-import sylviaPhoto from "../../../images/Board2627/Sylvia.png";
-import timPhoto from "../../../images/Board2627/Tim.png";
-import ulandaPhoto from "../../../images/Board2627/Ulanda.png";
+import brandonPhoto from "../../../images/Board2627/Brandon.jpg";
+import chloePhoto from "../../../images/Board2627/Chloe.jpg";
+import derrickPhoto from "../../../images/Board2627/Derrick.jpg";
+import ericPhoto from "../../../images/Board2627/Eric.jpg";
+import seanPhoto from "../../../images/Board2627/Sean.jpg";
+import sylviaPhoto from "../../../images/Board2627/Sylvia.jpg";
+import timPhoto from "../../../images/Board2627/Tim.jpg";
+import ulandaPhoto from "../../../images/Board2627/Ulanda.jpg";
 import stevePhoto from "../../../images/Steve.png";
 import tsmcLogo from "../../../images/tsmc-logo.png";
 
 const BOARD_MEMBERS: Array<{
   name: string;
   role: string;
-  photo: StaticImageData;
+  photo?: StaticImageData;
 }> = [
   { name: "Tim Chen", role: "President", photo: timPhoto },
   { name: "Eric Chang", role: "Vice President", photo: ericPhoto },
@@ -24,7 +23,7 @@ const BOARD_MEMBERS: Array<{
   { name: "Ulanda Chen", role: "Marketing Director", photo: ulandaPhoto },
   { name: "Sean Hsiung", role: "Publicity Director", photo: seanPhoto },
   { name: "Sylvia Hou", role: "Secretary Director", photo: sylviaPhoto },
-  { name: "Burton Wang", role: "Technology Director", photo: burtonPhoto },
+  { name: "Burton Wang", role: "Technology Director" },
 ];
 
 const SPONSORS: Array<{ name: string; logo?: StaticImageData }> = [
@@ -82,7 +81,7 @@ export function AboutPage() {
         </div>
       </section>
 
-      <section className="border-b border-neutral-100 bg-neutral-50">
+      <section id="board" className="scroll-mt-24 border-b border-neutral-100 bg-neutral-50">
         <div className="mx-auto w-full max-w-6xl px-6 py-16 sm:py-20">
           <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
             Leadership
@@ -96,14 +95,18 @@ export function AboutPage() {
                 key={`${member.role}-${index}`}
                 className="rounded-md border border-neutral-200 bg-white p-4"
               >
-                <div className="aspect-[4/3] w-full overflow-hidden rounded-md bg-neutral-100">
-                  <Image
-                    src={member.photo}
-                    alt={`${member.name}, ${member.role}`}
-                    className="h-full w-full object-cover"
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                  />
-                </div>
+                {member.photo ? (
+                  <div className="aspect-[4/3] w-full overflow-hidden rounded-md bg-neutral-100">
+                    <Image
+                      src={member.photo}
+                      alt={`${member.name}, ${member.role}`}
+                      className="h-full w-full object-cover"
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    />
+                  </div>
+                ) : (
+                  <PhotoPlaceholder label="Photo coming soon" />
+                )}
                 <h3 className="mt-4 text-base font-semibold text-neutral-900">
                   {member.name}
                 </h3>
