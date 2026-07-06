@@ -24,9 +24,10 @@ export async function OnboardingPage({
   if (isMemberProfileComplete(user)) redirect(next);
 
   const authEmail = user.auth_email?.toLowerCase() ?? "";
-  const defaultNetid =
-    user.netid ??
-    (authEmail.endsWith("@illinois.edu") ? authEmail.split("@")[0] : "");
+  const lockedNetid = authEmail.endsWith("@illinois.edu")
+    ? authEmail.split("@")[0]
+    : null;
+  const defaultNetid = lockedNetid ?? user.netid ?? "";
   const defaultPersonalEmail =
     user.personal_email ?? (authEmail.endsWith("@illinois.edu") ? "" : authEmail);
 
@@ -75,6 +76,12 @@ export async function OnboardingPage({
               autoComplete="username"
               placeholder="netid"
               defaultValue={defaultNetid}
+              readOnly={!!lockedNetid}
+              hint={
+                lockedNetid
+                  ? "Locked to your University Google account."
+                  : undefined
+              }
             />
             <Field
               label="Phone number"
@@ -142,6 +149,8 @@ function Field({
   autoComplete,
   placeholder,
   defaultValue,
+  readOnly,
+  hint,
 }: {
   label: string;
   name: string;
@@ -149,6 +158,8 @@ function Field({
   autoComplete?: string;
   placeholder?: string;
   defaultValue?: string;
+  readOnly?: boolean;
+  hint?: string;
 }) {
   return (
     <div className="space-y-1">
@@ -165,9 +176,14 @@ function Field({
         autoComplete={autoComplete}
         placeholder={placeholder}
         defaultValue={defaultValue}
+        readOnly={readOnly}
         required
-        className={inputClass}
+        className={
+          inputClass +
+          (readOnly ? " cursor-not-allowed bg-neutral-100 text-neutral-500" : "")
+        }
       />
+      {hint && <p className="text-[11px] text-neutral-500">{hint}</p>}
     </div>
   );
 }

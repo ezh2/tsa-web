@@ -376,16 +376,28 @@ export async function completeGoogleProfileAction(
   const fallbackName = splitName(fullName);
   const userEmail = String(user.email ?? "").trim().toLowerCase();
 
+  if (!userEmail.endsWith("@illinois.edu")) {
+    await supabase.auth.signOut();
+    redirect(
+      "/login?error=" +
+        encodeURIComponent(
+          "UIUC TSA accounts require an @illinois.edu email.",
+        ),
+    );
+  }
+
+  const expectedNetid = userEmail.split("@")[0];
+
   const firstName =
     String(formData.get("first_name") ?? "").trim() || fallbackName.firstName || "";
   const lastName =
     String(formData.get("last_name") ?? "").trim() || fallbackName.lastName || "";
-  const netid = String(formData.get("netid") ?? "").trim().toLowerCase();
+  const netid = expectedNetid;
   const phoneNumber = String(formData.get("phone_number") ?? "").trim();
   const email = illinoisEmailFromNetid(netid);
   const personalEmail =
     String(formData.get("personal_email") ?? "").trim().toLowerCase() ||
-    (userEmail.endsWith("@illinois.edu") ? "" : userEmail);
+    userEmail;
   const academicStage = String(
     formData.get("academic_stage") ?? "",
   ) as AcademicStage;

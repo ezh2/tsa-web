@@ -1,6 +1,7 @@
 import { requireAuth } from "@/core/rbac/server";
 import { createClient } from "@/core/supabase/server";
 import { MyUpcomingRsvps } from "@/modules/events";
+import { MyOrders } from "@/modules/payments";
 import {
   linkGoogleAction,
   unlinkGoogleAction,
@@ -176,6 +177,16 @@ export async function AccountPage({
         </p>
         <div className="mt-4">
           <MyUpcomingRsvps />
+        </div>
+      </section>
+
+      <section className="mt-8">
+        <h2 className="text-lg font-semibold text-neutral-900">Orders</h2>
+        <p className="mt-1 text-sm text-neutral-600">
+          Your membership and merch purchases.
+        </p>
+        <div className="mt-4">
+          <MyOrders />
         </div>
       </section>
     </main>

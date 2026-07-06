@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { CheckoutButton } from "@/modules/payments";
 import { MerchIntroVideo } from "./MerchIntroVideo";
 import merchModelOne from "../../../images/merch/Merch_Model_1.png";
 import merchModelTwo from "../../../images/merch/Merch_Model_2.png";
@@ -52,6 +53,7 @@ const PRICING_PLANS = [
     note: "Best value",
     body: "TSA membership plus T-shirt Merch Bundle",
     featured: true,
+    productKey: "bundle",
   },
   {
     name: "TSA Membership",
@@ -59,10 +61,37 @@ const PRICING_PLANS = [
     note: "Lifetime, non-transferable",
     body: "Lifetime access to TSA membership benefits, partner discounts, card verification, and announcements for the registered member.",
     featured: false,
+    productKey: "membership",
   },
 ];
 
-export function MembershipPage() {
+const CHECKOUT_MESSAGES: Record<string, { tone: "ok" | "err"; text: string }> = {
+  cancelled: {
+    tone: "ok",
+    text: "Checkout was cancelled — you have not been charged.",
+  },
+  "already-member": {
+    tone: "err",
+    text: "This account already has TSA membership.",
+  },
+  "unknown-product": {
+    tone: "err",
+    text: "That product isn't available. Please try again.",
+  },
+  error: {
+    tone: "err",
+    text: "We couldn't start checkout. Please try again in a moment.",
+  },
+};
+
+export async function MembershipPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ checkout?: string }>;
+}) {
+  const { checkout } = (await searchParams) ?? {};
+  const feedback = checkout ? (CHECKOUT_MESSAGES[checkout] ?? null) : null;
+
   return (
     <main className="bg-white">
       <section className="border-b border-neutral-100">
@@ -86,6 +115,20 @@ export function MembershipPage() {
               View merch
             </Link>
           </div>
+
+          {feedback && (
+            <div
+              role={feedback.tone === "err" ? "alert" : "status"}
+              className={
+                "mt-6 max-w-3xl rounded-md border px-3 py-2 text-sm " +
+                (feedback.tone === "err"
+                  ? "border-red-200 bg-red-50 text-red-800"
+                  : "border-neutral-200 bg-neutral-50 text-neutral-700")
+              }
+            >
+              {feedback.text}
+            </div>
+          )}
         </div>
       </section>
 
@@ -182,6 +225,18 @@ export function MembershipPage() {
                   >
                     {plan.body}
                   </p>
+                  <div className="mt-5">
+                    <CheckoutButton
+                      productKey={plan.productKey}
+                      label={`Buy ${plan.name}`}
+                      className={
+                        "inline-flex w-full justify-center rounded-md px-4 py-2 text-sm font-medium transition " +
+                        (plan.featured
+                          ? "bg-white text-neutral-900 hover:bg-neutral-200"
+                          : "bg-neutral-900 text-white hover:bg-neutral-700")
+                      }
+                    />
+                  </div>
                 </article>
               ))}
             </div>
@@ -193,12 +248,10 @@ export function MembershipPage() {
                 </li>
               ))}
             </ul>
-            <Link
-              href="/login?mode=signup"
-              className="mt-8 inline-flex w-full justify-center rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-700"
-            >
-              Create account
-            </Link>
+            <p className="mt-6 text-xs leading-5 text-neutral-500">
+              Purchases require a TSA account — you&apos;ll be asked to sign in
+              first. Payments are processed securely by Stripe.
+            </p>
           </aside>
         </div>
       </section>
@@ -229,6 +282,9 @@ export function MerchPage() {
                 <div className="rounded-md border border-neutral-200 bg-white p-4">
                   <p className="font-semibold text-neutral-900">$47.99 Bundle</p>
                   <p className="mt-1 text-neutral-500">Membership + T-shirt</p>
+                  <div className="mt-3">
+                    <CheckoutButton productKey="bundle" label="Buy bundle" />
+                  </div>
                 </div>
                 <div className="rounded-md border border-neutral-200 bg-white p-4">
                   <p className="font-semibold text-neutral-900">
@@ -237,10 +293,19 @@ export function MerchPage() {
                   <p className="mt-1 text-neutral-500">
                     Lifetime, non-transferable
                   </p>
+                  <div className="mt-3">
+                    <CheckoutButton
+                      productKey="membership"
+                      label="Buy membership"
+                    />
+                  </div>
                 </div>
                 <div className="rounded-md border border-neutral-200 bg-white p-4">
                   <p className="font-semibold text-neutral-900">$32.99 T-shirt</p>
                   <p className="mt-1 text-neutral-500">Semester merch rollout</p>
+                  <div className="mt-3">
+                    <CheckoutButton productKey="tshirt" label="Buy T-shirt" />
+                  </div>
                 </div>
               </div>
             </div>
