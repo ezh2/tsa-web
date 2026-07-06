@@ -9,18 +9,28 @@ const btnSecondary =
 export function RsvpForm({
   eventId,
   current,
+  compact = false,
 }: {
   eventId: string;
   current: RsvpRecord | null;
+  compact?: boolean;
 }) {
   return (
-    <div className="space-y-3 rounded-xl border border-neutral-200 bg-white p-5">
-      <p className="text-sm font-medium text-neutral-900">
-        {current
-          ? `Your RSVP: ${current.status === "going" ? "Going" : "Maybe"}`
-          : "Will you attend?"}
-      </p>
-      <div className="flex flex-wrap gap-2">
+    <div
+      className={
+        compact
+          ? "space-y-3"
+          : "space-y-3 rounded-xl border border-neutral-200 bg-white p-5"
+      }
+    >
+      {!compact && (
+        <p className="text-sm font-medium text-neutral-900">
+          {current
+            ? `Your RSVP: ${current.status === "going" ? "Going" : "Maybe"}`
+            : "Will you attend?"}
+        </p>
+      )}
+      <div className="flex flex-wrap gap-2" aria-label="RSVP options">
         <form action={rsvpAction}>
           <input type="hidden" name="event_id" value={eventId} />
           <input type="hidden" name="status" value="going" />

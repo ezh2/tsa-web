@@ -1,34 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { EventsPreview } from "./EventsPreview";
+import merchModelOne from "../../../images/merch/Merch_Model_1.png";
+import merchModelTwo from "../../../images/merch/Merch_Model_2.png";
+import rawMerch from "../../../images/merch/Raw Merch.png";
+import prepImage from "../../../images/prep.png";
+import stevePhoto from "../../../images/Steve.png";
 import tsaTaiwanLogo from "../../../images/TSA _Taiwan_LOGO.png";
-
-const SITE_SECTIONS = [
-  {
-    title: "About TSA",
-    href: "/about",
-    label: "Organization",
-    body: "Learn about TSA's mission, board of directors, sponsors, partners, and contributors.",
-  },
-  {
-    title: "Incoming Students",
-    href: "/incoming-students",
-    label: "New Student Guide",
-    body: "Find visa, arrival, housing, legal, parent payment, and 新生說明會 information in one guide.",
-  },
-  {
-    title: "Current Students",
-    href: "/current-students",
-    label: "Student Board",
-    body: "Browse previews for second-hand sales, sublease posts, and carpool date registration.",
-  },
-  {
-    title: "Membership",
-    href: "/membership",
-    label: "Benefits",
-    body: "See member discounts, merch information, membership card details, and Line 推播系統 enrollment.",
-  },
-];
 
 const LIFE_SECTIONS = [
   {
@@ -37,8 +15,7 @@ const LIFE_SECTIONS = [
     body: "簽證 / 護照 | 機場到香檳 | 短期住宿",
     summary: "Start with the essentials before you fly: documents, airport planning, and where to stay when you first arrive.",
     accent: "from-sky-400 to-indigo-500",
-    image:
-      "https://images.unsplash.com/photo-1569336415962-a4bd9f69c07b?auto=format&fit=crop&w=900&q=80",
+    image: prepImage.src,
   },
   {
     title: "出境 / 入境",
@@ -69,60 +46,87 @@ const LIFE_SECTIONS = [
   },
 ];
 
-const ORIENTATION_POINTS = [
-  { label: "Date", value: "2026 年 6 月 27 日" },
-  { label: "Time", value: "8:00 AM - 12:00 PM" },
-  { label: "Location", value: "集思北科大會議中心" },
-];
-
 const INTERN_WALL = [
   {
     month: "September",
-    name: "Best Intern",
-    role: "Program Team",
-    note: "Recognized for event logistics, volunteer coordination, and strong execution during fall programming.",
+    name: "Steve",
+    role: "Program Department",
+    note: "",
   },
   {
     month: "October",
-    name: "Best Intern",
-    role: "Marketing Team",
-    note: "Recognized for campaign planning, event promotion, and consistent support across social channels.",
+    name: "Steve",
+    role: "Marketing Department",
+    note: "",
   },
   {
     month: "November",
-    name: "Best Intern",
-    role: "Tech Team",
-    note: "Recognized for website updates, student tools, and helping keep TSA information organized.",
+    name: "Steve",
+    role: "Technology Department",
+    note: "",
   },
   {
     month: "December",
-    name: "Best Intern",
-    role: "Operations Team",
-    note: "Recognized for dependable check-in support, event preparation, and team communication.",
+    name: "Steve",
+    role: "Treasury Department",
+    note: "",
   },
   {
     month: "January",
-    name: "Best Intern",
-    role: "Design Team",
-    note: "Recognized for visual assets, merch support, and thoughtful creative direction.",
+    name: "Steve",
+    role: "Publicity Department",
+    note: "",
   },
   {
     month: "February",
-    name: "Best Intern",
-    role: "Culture Team",
-    note: "Recognized for supporting cultural programming and creating welcoming event experiences.",
+    name: "Steve",
+    role: "Secretary Department",
+    note: "",
   },
 ];
 
-const SOCIAL_LINKS = [
-  { label: "Instagram", href: "https://www.instagram.com/uiuctsa/" },
-  { label: "Facebook", href: "https://www.facebook.com/UIUCTSA/" },
+type FontAwesomeIconName =
+  | "instagram"
+  | "facebook"
+  | "arrow-down-to-people";
+
+const SOCIAL_LINKS: Array<{
+  label: string;
+  href: string;
+  icon: FontAwesomeIconName | null;
+}> = [
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/uiuctsa/",
+    icon: "instagram",
+  },
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/UIUCTSA/",
+    icon: "facebook",
+  },
   {
     label: "Taiwanese at UIUC",
     href: "https://www.facebook.com/groups/taiwaneseatuiuc/",
+    icon: "arrow-down-to-people",
   },
-  { label: "Linktree", href: "https://linktr.ee/uiuctsa" },
+  { label: "Linktree", href: "https://linktr.ee/uiuctsa", icon: null },
 ];
+
+const FONT_AWESOME_ICONS = {
+  instagram: {
+    viewBox: "0 0 448 512",
+    path: "M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9S352.4 35.1 316.5 33.4c-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1S3.3 127.5 1.6 163.4c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.5 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2s34.5-58 36.2-93.9c2.1-37 2.1-147.8-.1-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z",
+  },
+  facebook: {
+    viewBox: "0 0 512 512",
+    path: "M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5 16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256z",
+  },
+  "arrow-down-to-people": {
+    viewBox: "0 0 640 512",
+    path: "M160 64c0-17.7 14.3-32 32-32H320V16c0-6.5 3.9-12.3 9.9-14.8s12.9-1.1 17.4 3.5l48 48c6.2 6.2 6.2 16.4 0 22.6l-48 48c-4.6 4.6-11.5 5.9-17.4 3.5S320 118.5 320 112V96H224v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V64zM96 320a64 64 0 1 0 0-128 64 64 0 1 0 0 128zm448 0a64 64 0 1 0 0-128 64 64 0 1 0 0 128zM0 480c0 17.7 14.3 32 32 32H192c17.7 0 32-14.3 32-32 0-53-43-96-96-96H96c-53 0-96 43-96 96zm416 32H608c17.7 0 32-14.3 32-32 0-53-43-96-96-96H512c-53 0-96 43-96 96 0 17.7 14.3 32 32 32zm-96-96a80 80 0 1 0 0-160 80 80 0 1 0 0 160zm-128 64c0 17.7 14.3 32 32 32H416c17.7 0 32-14.3 32-32 0-61.9-50.1-112-112-112H304c-61.9 0-112 50.1-112 112z",
+  },
+} as const;
 
 export function MarketingHomePage() {
   return (
@@ -153,8 +157,9 @@ export function MarketingHomePage() {
                 <Link
                   key={social.label}
                   href={social.href}
-                  className="text-lg font-medium text-black transition hover:opacity-70"
+                  className="inline-flex items-center gap-2 text-lg font-medium text-black transition hover:opacity-70"
                 >
+                  {social.icon && <FontAwesomeIcon icon={social.icon} />}
                   {social.label}
                 </Link>
               ))}
@@ -174,24 +179,6 @@ export function MarketingHomePage() {
         </div>
       </section>
 
-      <section className="border-b border-neutral-100 bg-[#f5c84c]">
-        <div className="mx-auto grid w-full max-w-6xl gap-10 px-6 py-20 lg:grid-cols-2 lg:items-start sm:py-28">
-          <h2 className="text-5xl font-medium leading-tight tracking-tight text-black sm:text-6xl">
-            Our Mission,
-            <br />
-            Our Work
-          </h2>
-          <p className="text-xl leading-9 text-black">
-            UIUC Taiwanese Student Association (UIUC TSA)&apos;s mission and
-            work can be condensed into two main categories - service and
-            culture. As a non-profit RSO, we focus on service as voluntary deeds
-            that feed back to Taiwanese community in Champaign-Urbana; as a
-            cultural RSO, we aim to help people know Taiwan more and let
-            Taiwanese people know each other more!
-          </p>
-        </div>
-      </section>
-
       <section className="overflow-hidden border-b border-neutral-100 bg-neutral-50">
         <div className="mx-auto w-full max-w-6xl px-6 py-20 sm:py-28">
           <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
@@ -205,151 +192,98 @@ export function MarketingHomePage() {
             </p>
           </div>
 
-          <div className="mt-14 grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
-            <Link
-              href={LIFE_SECTIONS[0].href}
-              className="group relative min-h-[34rem] overflow-hidden rounded-md border border-black/10 bg-white p-8 shadow-2xl"
-            >
-              <div
-                className="absolute inset-0 bg-cover bg-center opacity-75 transition duration-500 group-hover:scale-105"
-                style={{ backgroundImage: `url(${LIFE_SECTIONS[0].image})` }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
-              <div className="relative z-10 flex h-full flex-col justify-between">
-                <div>
-                  <p className="text-sm font-semibold uppercase tracking-wider text-white/70">
-                    Featured guide
-                  </p>
-                  <h3 className="mt-3 max-w-xl text-5xl font-semibold tracking-tight text-white">
-                    {LIFE_SECTIONS[0].title}
-                  </h3>
-                  <p className="mt-5 max-w-xl text-lg leading-8 text-white/82">
-                    {LIFE_SECTIONS[0].summary}
-                  </p>
-                </div>
-                <div className="flex items-end justify-between gap-6">
-                  <p className="max-w-md text-lg text-white/86">
-                    {LIFE_SECTIONS[0].body}
-                  </p>
-                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#f5f5f7] text-2xl text-black transition group-hover:translate-x-1">
-                    →
-                  </span>
-                </div>
-              </div>
-            </Link>
-
-            <div className="grid gap-5">
-              {LIFE_SECTIONS.slice(1).map((section) => (
-                <Link
-                  key={section.title}
-                  href={section.href}
-                  className="group relative overflow-hidden rounded-md border border-black/10 bg-white/85 p-6 backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-neutral-300"
-                >
-                  <div
-                    className={`absolute left-0 top-0 h-full w-1 bg-gradient-to-b ${section.accent}`}
-                  />
-                  <div className="grid gap-5 sm:grid-cols-[7rem_1fr] sm:items-center">
-                    <div
-                      className="h-28 rounded-md bg-cover bg-center opacity-80"
-                      style={{ backgroundImage: `url(${section.image})` }}
-                    />
-                    <div>
-                      <p className="text-sm font-medium text-neutral-500">
-                        {section.body}
-                      </p>
-                      <h3 className="mt-2 text-2xl font-semibold tracking-tight text-neutral-900">
-                        {section.title}
-                      </h3>
-                      <p className="mt-3 text-sm leading-6 text-neutral-600">
-                        {section.summary}
-                      </p>
-                    </div>
+          <div className="mt-14 grid gap-5 md:grid-cols-2">
+            {LIFE_SECTIONS.map((section) => (
+              <Link
+                key={section.title}
+                href={section.href}
+                className="group relative flex min-h-[24rem] overflow-hidden rounded-md border border-black/10 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-neutral-300 hover:shadow-md"
+              >
+                <div
+                  className="absolute inset-0 bg-cover bg-center opacity-75 transition duration-500 group-hover:scale-105"
+                  style={{ backgroundImage: `url(${section.image})` }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
+                <div className="relative z-10 flex h-full w-full flex-col justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-white/72">
+                      {section.body}
+                    </p>
+                    <h3 className="mt-3 text-4xl font-semibold tracking-tight text-white">
+                      {section.title}
+                    </h3>
                   </div>
-                  <span className="absolute right-5 top-5 text-2xl text-neutral-500 transition group-hover:translate-x-1 group-hover:text-neutral-900">
-                    →
-                  </span>
-                </Link>
-              ))}
-            </div>
+                  <div className="flex items-end justify-end">
+                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#f5f5f7] text-xl text-black transition group-hover:translate-x-1">
+                      →
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
 
       <EventsPreview />
 
-      <section className="border-y border-neutral-100 bg-neutral-50">
-        <div className="mx-auto grid w-full max-w-6xl gap-10 px-6 py-16 lg:grid-cols-[0.82fr_1.18fr] lg:items-center sm:py-20">
+      <section className="border-y border-neutral-100 bg-white">
+        <div className="mx-auto grid w-full max-w-6xl gap-10 px-6 py-16 lg:grid-cols-[0.88fr_1.12fr] lg:items-center sm:py-20">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
-              Incoming Students
+              Merch
             </p>
-            <h2 className="mt-2 text-3xl font-semibold tracking-tight text-neutral-900">
-              2026 新生說明會
+            <h2 className="mt-2 text-4xl font-semibold tracking-tight text-neutral-900">
+              TSA 呆丸囡仔 T-shirt
             </h2>
             <p className="mt-4 text-sm leading-6 text-neutral-600">
-              A focused orientation for new students and parents covering
-              arrival logistics, campus setup, housing, payments, and everyday
-              life at UIUC.
+              Preview this semester&apos;s TSA T-shirt design and model shots.
+              Members can purchase the shirt separately or choose the membership
+              bundle.
             </p>
+            <div className="mt-6 grid gap-3 text-sm text-neutral-700 sm:grid-cols-3 lg:grid-cols-1">
+              <div className="rounded-md border border-neutral-200 bg-neutral-50 p-4">
+                <p className="font-semibold text-neutral-900">$47.99 Bundle</p>
+                <p className="mt-1 text-neutral-500">Membership + T-shirt</p>
+              </div>
+              <div className="rounded-md border border-neutral-200 bg-neutral-50 p-4">
+                <p className="font-semibold text-neutral-900">$32.99 T-shirt</p>
+                <p className="mt-1 text-neutral-500">Release date TBA</p>
+              </div>
+            </div>
+            <Link
+              href="/membership/merch"
+              className="mt-8 inline-flex rounded-md bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-neutral-700"
+            >
+              View merch
+            </Link>
           </div>
-          <div className="rounded-md border border-black/10 bg-white/85 p-6 shadow-sm backdrop-blur-xl">
-            <div className="grid gap-4 sm:grid-cols-3">
-              {ORIENTATION_POINTS.map((point) => (
-                <div
-                  key={point.label}
-                  className="border-l border-neutral-200 pl-4 first:border-l-0 first:pl-0"
+
+          <div className="grid gap-4 sm:grid-cols-[1fr_0.82fr]">
+            <figure className="flex min-h-[22rem] items-center justify-center rounded-md border border-black/10 bg-neutral-50 p-6">
+              <Image
+                src={rawMerch}
+                alt="TSA T-shirt merch design"
+                className="h-full max-h-[28rem] w-full object-contain"
+              />
+            </figure>
+            <div className="grid gap-4">
+              {[
+                { src: merchModelOne, label: "Model Preview 1" },
+                { src: merchModelTwo, label: "Model Preview 2" },
+              ].map((model) => (
+                <figure
+                  key={model.label}
+                  className="flex min-h-[13rem] items-center justify-center rounded-md border border-black/10 bg-neutral-50 p-4"
                 >
-                  <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
-                    {point.label}
-                  </p>
-                  <p className="mt-2 text-base font-semibold leading-7 text-neutral-900">
-                    {point.value}
-                  </p>
-                </div>
+                  <Image
+                    src={model.src}
+                    alt={`TSA T-shirt merch ${model.label.toLowerCase()}`}
+                    className="max-h-[18rem] w-full object-contain"
+                  />
+                </figure>
               ))}
             </div>
-            <div className="mt-6 flex flex-col gap-3 border-t border-neutral-100 pt-5 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm leading-6 text-neutral-600">
-                Orientation details, family resources, and legal checklist are
-                collected in the incoming student guide.
-              </p>
-              <Link
-                href="/incoming-students#orientation"
-                className="inline-flex shrink-0 justify-center rounded-full bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-neutral-700"
-              >
-                View guide
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-b border-neutral-100">
-        <div className="mx-auto w-full max-w-6xl px-6 py-16 sm:py-20">
-          <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
-            Explore
-          </p>
-          <h2 className="mt-2 max-w-2xl text-3xl font-semibold tracking-tight text-neutral-900">
-            Preview each section of the website.
-          </h2>
-          <div className="mt-10 grid gap-5 md:grid-cols-2">
-            {SITE_SECTIONS.map((section) => (
-              <Link
-                key={section.href}
-                href={section.href}
-                className="group rounded-md border border-black/10 bg-white/80 p-6 backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-neutral-400 hover:shadow-sm"
-              >
-                <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
-                  {section.label}
-                </p>
-                <h3 className="mt-2 text-xl font-semibold text-neutral-900 group-hover:underline">
-                  {section.title}
-                </h3>
-                <p className="mt-3 text-sm leading-6 text-neutral-600">
-                  {section.body}
-                </p>
-              </Link>
-            ))}
           </div>
         </div>
       </section>
@@ -371,16 +305,16 @@ export function MarketingHomePage() {
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
-                href="/membership"
+                href="mailto:tsauiuc@gmail.com"
                 className="rounded-full bg-[#f5f5f7] px-4 py-2 text-sm font-medium text-black transition hover:bg-[#e8e8ed]"
               >
-                Become a member
+                Become an intern
               </Link>
               <Link
-                href="/about#contributors"
+                href="/about#sponsors"
                 className="rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-medium text-neutral-700 transition hover:bg-neutral-100"
               >
-                Contribute to TSA
+                Partner with TSA
               </Link>
             </div>
           </div>
@@ -405,16 +339,23 @@ export function MarketingHomePage() {
                   <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
                     {intern.month}
                   </p>
-                  <div className="flex aspect-square items-center justify-center rounded-md bg-neutral-200 text-xs font-semibold uppercase tracking-wider text-neutral-500">
-                    Photo
+                  <div className="aspect-square overflow-hidden rounded-md bg-neutral-200">
+                    <Image
+                      src={stevePhoto}
+                      alt={`${intern.name}, ${intern.role}`}
+                      className="h-full w-full object-cover"
+                      sizes="18rem"
+                    />
                   </div>
                   <h4 className="mt-4 text-base font-semibold text-neutral-900">
                     {intern.name}
                   </h4>
                   <p className="mt-1 text-sm text-neutral-500">{intern.role}</p>
-                  <p className="mt-3 text-sm leading-6 text-neutral-600">
-                    {intern.note}
-                  </p>
+                  {intern.note && (
+                    <p className="mt-3 text-sm leading-6 text-neutral-600">
+                      {intern.note}
+                    </p>
+                  )}
                 </article>
               ))}
             </div>
@@ -423,5 +364,23 @@ export function MarketingHomePage() {
       </section>
 
     </>
+  );
+}
+
+function FontAwesomeIcon({
+  icon,
+}: {
+  icon: FontAwesomeIconName;
+}) {
+  const data = FONT_AWESOME_ICONS[icon];
+
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox={data.viewBox}
+      className="h-5 w-5 shrink-0 fill-current"
+    >
+      <path d={data.path} />
+    </svg>
   );
 }
