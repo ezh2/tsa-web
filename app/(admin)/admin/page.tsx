@@ -12,6 +12,11 @@ const TILES = [
     title: "Events",
     body: "Create new events and review what's scheduled.",
   },
+  {
+    href: "/admin/orders",
+    title: "Orders",
+    body: "Membership and merch payments, with T-shirt sizes for pickup.",
+  },
 ];
 
 export default async function AdminHomePage() {
