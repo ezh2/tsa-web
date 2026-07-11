@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CheckoutButton } from "@/modules/payments";
 import { MerchIntroVideo } from "./MerchIntroVideo";
 import merchModelOne from "../../../images/merch/Merch_Model_1.png";
 import merchModelTwo from "../../../images/merch/Merch_Model_2.png";
@@ -225,18 +224,6 @@ export async function MembershipPage({
                   >
                     {plan.body}
                   </p>
-                  <div className="mt-5">
-                    <CheckoutButton
-                      productKey={plan.productKey}
-                      label={`Buy ${plan.name}`}
-                      className={
-                        "inline-flex w-full justify-center rounded-md px-4 py-2 text-sm font-medium transition " +
-                        (plan.featured
-                          ? "bg-white text-neutral-900 hover:bg-neutral-200"
-                          : "bg-neutral-900 text-white hover:bg-neutral-700")
-                      }
-                    />
-                  </div>
                 </article>
               ))}
             </div>
@@ -282,9 +269,6 @@ export function MerchPage() {
                 <div className="rounded-md border border-neutral-200 bg-white p-4">
                   <p className="font-semibold text-neutral-900">$47.99 Bundle</p>
                   <p className="mt-1 text-neutral-500">Membership + T-shirt</p>
-                  <div className="mt-3">
-                    <CheckoutButton productKey="bundle" label="Buy bundle" />
-                  </div>
                 </div>
                 <div className="rounded-md border border-neutral-200 bg-white p-4">
                   <p className="font-semibold text-neutral-900">
@@ -293,19 +277,10 @@ export function MerchPage() {
                   <p className="mt-1 text-neutral-500">
                     Lifetime, non-transferable
                   </p>
-                  <div className="mt-3">
-                    <CheckoutButton
-                      productKey="membership"
-                      label="Buy membership"
-                    />
-                  </div>
                 </div>
                 <div className="rounded-md border border-neutral-200 bg-white p-4">
                   <p className="font-semibold text-neutral-900">$32.99 T-shirt</p>
                   <p className="mt-1 text-neutral-500">Semester merch rollout</p>
-                  <div className="mt-3">
-                    <CheckoutButton productKey="tshirt" label="Buy T-shirt" />
-                  </div>
                 </div>
               </div>
             </div>
