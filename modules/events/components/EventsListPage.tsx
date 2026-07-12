@@ -5,13 +5,19 @@ import { hasRole } from "@/core/rbac";
 import { getCurrentUser } from "@/core/rbac/server";
 import {
   listMyRsvpsForEvents,
+  listPastEvents,
   listUpcomingEvents,
 } from "@/modules/events/server/queries";
 import { fmtDateRange } from "@/modules/events/lib/format";
-import { STATIC_UPCOMING_EVENTS } from "@/modules/events/data/upcoming";
+import {
+  getStaticPastEvents,
+  getStaticUpcomingEvents,
+  type StaticUpcomingEvent,
+} from "@/modules/events/data/upcoming";
 import { RsvpForm } from "./RsvpForm";
 import bentoChicken from "@/images/events/2526/bento/bento_chicken.jpg";
 import bentoSausage from "@/images/events/2526/bento/bento_sausage.jpg";
+import ruff0629 from "@/images/events/2627/ruff0629.jpg";
 
 type PastEvent = {
   title: string;
@@ -26,6 +32,20 @@ type PastEvent = {
 };
 
 const PAST_EVENTS: PastEvent[] = [
+  {
+    title: "Homecoming @RUFF",
+    date: "June 29, 2026",
+    time: "Time announced by WWTSA",
+    location: "Partner event with WWTSA",
+    description:
+      "A partner event with WWTSA welcoming students back to TAIWAN with the most fire party at RUFF TAIPEI.",
+    images: [
+      {
+        src: ruff0629,
+        alt: "Homecoming at RUFF partner event flyer",
+      },
+    ],
+  },
   {
     title: "Taiwanese Bento",
     date: "April 18, 2026",
@@ -68,6 +88,13 @@ export async function EventsListPage() {
     console.warn("Unable to load upcoming events", error);
     return [];
   });
+  const pastEvents = await listPastEvents().catch((error) => {
+    unstable_rethrow(error);
+    console.warn("Unable to load past events", error);
+    return [];
+  });
+  const staticUpcomingEvents = getStaticUpcomingEvents();
+  const staticPastEvents = getStaticPastEvents();
   const user = await getCurrentUser();
   const rsvps = user
     ? await listMyRsvpsForEvents(events.map((event) => event.id))
@@ -135,7 +162,7 @@ export async function EventsListPage() {
           </li>
         ))}
 
-        {STATIC_UPCOMING_EVENTS.map((event) => (
+        {staticUpcomingEvents.map((event) => (
           <li key={`${event.date}-${event.title}`}>
             <article className="h-full rounded-md border border-black/10 bg-white/85 p-6 backdrop-blur-xl">
               <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">
@@ -152,6 +179,7 @@ export async function EventsListPage() {
               <p className="mt-4 text-sm leading-6 text-neutral-600">
                 {event.description}
               </p>
+              <StaticEventImage event={event} />
             </article>
           </li>
         ))}
@@ -170,6 +198,63 @@ export async function EventsListPage() {
         </p>
 
         <div className="mt-8 space-y-4">
+          {pastEvents.map((event) => (
+            <article
+              key={event.id}
+              className="flex flex-col gap-6 rounded-md border border-black/10 bg-white/85 p-6 backdrop-blur-xl sm:flex-row sm:items-start sm:justify-between"
+            >
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">
+                      {fmtDateRange(event.starts_at, event.ends_at)}
+                    </p>
+                    <h3 className="mt-2 text-xl font-semibold text-neutral-900">
+                      {event.title}
+                    </h3>
+                  </div>
+                  {event.location && (
+                    <span className="shrink-0 rounded-md bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-600">
+                      {event.location}
+                    </span>
+                  )}
+                </div>
+                {event.description && (
+                  <p className="mt-4 text-sm leading-6 text-neutral-600">
+                    {event.description}
+                  </p>
+                )}
+              </div>
+            </article>
+          ))}
+
+          {staticPastEvents.map((event) => (
+            <article
+              key={`${event.date}-${event.title}`}
+              className="flex flex-col gap-6 rounded-md border border-black/10 bg-white/85 p-6 backdrop-blur-xl sm:flex-row sm:items-start sm:justify-between"
+            >
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">
+                      {event.date} · {event.time}
+                    </p>
+                    <h3 className="mt-2 text-xl font-semibold text-neutral-900">
+                      {event.title}
+                    </h3>
+                  </div>
+                  <span className="shrink-0 rounded-md bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-600">
+                    {event.location}
+                  </span>
+                </div>
+                <p className="mt-4 text-sm leading-6 text-neutral-600">
+                  {event.description}
+                </p>
+              </div>
+              <StaticEventImage event={event} side />
+            </article>
+          ))}
+
           {PAST_EVENTS.map((event) => (
             <article
               key={event.title}
@@ -211,5 +296,49 @@ export async function EventsListPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+function StaticEventImage({
+  event,
+  side,
+}: {
+  event: StaticUpcomingEvent;
+  side?: boolean;
+}) {
+  if (!event.image) return null;
+
+  const image = (
+    <Image
+      src={event.image.src}
+      alt={event.image.alt}
+      className={
+        side
+          ? "aspect-[3/4] w-full rounded-md object-cover"
+          : "aspect-[4/3] w-full rounded-md object-cover"
+      }
+      sizes={side ? "(min-width: 640px) 224px, 100vw" : "(min-width: 768px) 448px, 100vw"}
+    />
+  );
+
+  if (!event.href) {
+    return (
+      <div className={side ? "w-full shrink-0 sm:w-56" : "mt-5"}>{image}</div>
+    );
+  }
+
+  return (
+    <Link
+      href={event.href}
+      rel="noopener noreferrer"
+      target="_blank"
+      className={
+        side
+          ? "block w-full shrink-0 sm:w-56"
+          : "mt-5 block transition hover:opacity-90"
+      }
+    >
+      {image}
+    </Link>
   );
 }

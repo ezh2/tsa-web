@@ -1,9 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MerchIntroVideo } from "./MerchIntroVideo";
-import merchModelOne from "../../../images/merch/Merch_Model_1.png";
-import merchModelTwo from "../../../images/merch/Merch_Model_2.png";
+import { MerchTranslationButton } from "./MerchTranslationButton";
 import rawMerch from "../../../images/merch/Raw Merch.png";
+import merchPosterOne from "../../../images/merch/TSA_Merch_Poster_1.jpeg";
+import merchPosterTwo from "../../../images/merch/TSA_Merch_Poster_2.jpeg";
+
+const MERCH_PURCHASE_URL =
+  "https://myship.7-11.com.tw/general/detail/GM2607092499849";
 
 const PARTNERS = [
   {
@@ -80,6 +84,10 @@ const CHECKOUT_MESSAGES: Record<string, { tone: "ok" | "err"; text: string }> = 
   error: {
     tone: "err",
     text: "We couldn't start checkout. Please try again in a moment.",
+  },
+  paused: {
+    tone: "ok",
+    text: "Online checkout is temporarily paused.",
   },
 };
 
@@ -161,6 +169,8 @@ export async function MembershipPage({
                   </p>
                   <Link
                     href={partner.href}
+                    rel="noopener noreferrer"
+                    target="_blank"
                     className="mt-4 inline-flex text-sm font-medium text-neutral-900 underline underline-offset-4"
                   >
                     Location
@@ -236,8 +246,8 @@ export async function MembershipPage({
               ))}
             </ul>
             <p className="mt-6 text-xs leading-5 text-neutral-500">
-              Purchases require a TSA account — you&apos;ll be asked to sign in
-              first. Payments are processed securely by Stripe.
+              Online checkout is temporarily paused. Membership and merch
+              options are shown for reference.
             </p>
           </aside>
         </div>
@@ -260,15 +270,27 @@ export function MerchPage() {
               <h1 className="mt-2 text-4xl font-semibold tracking-tight text-neutral-900">
                 TSA 呆丸囡仔 T-shirt
               </h1>
-              <p className="mt-4 text-sm leading-6 text-neutral-600">
-                TSA will roll out a new T-shirt merch item this semester.
-                Students can purchase the shirt on its own or choose the bundle
-                for TSA membership plus merch at a lower combined price.
-              </p>
+              <div className="mt-4 space-y-4 text-sm leading-6 text-neutral-600">
+                <p className="font-semibold text-neutral-900">
+                  📢【UIUC TSA 新學期官方周邊登場】
+                </p>
+                <p>新學期 TSA 官方周邊正式上線啦！</p>
+                <p>
+                  這次帶來的是 「呆丸囡仔」落肩短 T，把遠在香檳校園的回憶、熱血與歸屬感，穿進日常生活。不論你是即將啟程的新生、努力奮鬥的在校生，還是想念 Alma Mater 的校友，都能用這件 TSA 專屬設計展現屬於我們的 Illini Pride！🧡 💙
+                </p>
+                <p>
+                  最百搭、最耐看的 經典黑白雙色系列，簡約有質感，無論是在圖書館讀書、出門吃早午餐，還是日常穿搭都能輕鬆駕馭。穿上它，不管身在香檳還是台灣，都能一眼認出自己的 TSA 家人！
+                </p>
+                <p>趕快入手，一起把屬於 UIUC 的回憶穿在身上吧！</p>
+                <MerchTranslationButton />
+              </div>
               <div className="mt-6 grid gap-3 text-sm text-neutral-700 sm:grid-cols-3 lg:grid-cols-1">
                 <div className="rounded-md border border-neutral-200 bg-white p-4">
                   <p className="font-semibold text-neutral-900">$47.99 Bundle</p>
                   <p className="mt-1 text-neutral-500">Membership + T-shirt</p>
+                  <div className="mt-3">
+                    <MerchPurchaseLink label="Buy bundle" />
+                  </div>
                 </div>
                 <div className="rounded-md border border-neutral-200 bg-white p-4">
                   <p className="font-semibold text-neutral-900">
@@ -281,6 +303,9 @@ export function MerchPage() {
                 <div className="rounded-md border border-neutral-200 bg-white p-4">
                   <p className="font-semibold text-neutral-900">$32.99 T-shirt</p>
                   <p className="mt-1 text-neutral-500">Semester merch rollout</p>
+                  <div className="mt-3">
+                    <MerchPurchaseLink label="Buy T-shirt" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -298,7 +323,7 @@ export function MerchPage() {
                   TSA T-Shirt Merch
                 </h2>
                 <p className="mt-1 text-sm font-semibold uppercase text-neutral-900">
-                  Release Date To Be Announced
+                  Released July 10, 2026
                 </p>
                 <p className="mt-1 text-sm text-neutral-900">$32.99</p>
               </figcaption>
@@ -307,8 +332,8 @@ export function MerchPage() {
 
           <div className="mt-12 grid gap-5 md:grid-cols-2">
             {[
-              { src: merchModelOne, label: "Model Preview 1" },
-              { src: merchModelTwo, label: "Model Preview 2" },
+              { src: merchPosterOne, label: "Poster Preview 1" },
+              { src: merchPosterTwo, label: "Poster Preview 2" },
             ].map((model) => (
               <figure key={model.label}>
                 <div className="flex min-h-[34rem] items-center justify-center bg-neutral-50 p-6 sm:p-10">
@@ -324,5 +349,18 @@ export function MerchPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+function MerchPurchaseLink({ label }: { label: string }) {
+  return (
+    <Link
+      href={MERCH_PURCHASE_URL}
+      rel="noopener noreferrer"
+      target="_blank"
+      className="inline-flex w-full justify-center rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-700"
+    >
+      {label}
+    </Link>
   );
 }

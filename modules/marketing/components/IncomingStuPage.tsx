@@ -2,6 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import newStudentOrientationFlyer from "../../../images/events/2627/new stud oren 2627.png";
 
+const NEW_STUDENT_ORIENTATION_URL =
+  "https://drive.google.com/file/d/1XQUzouvdKBJ9bWFAMBzvMgI-GwMjHEQn/view";
+
 const PAGE_INDEX = [
   { label: "新生說明會", href: "#orientation" },
   { label: "簽證 / 護照", href: "#documents" },
@@ -427,16 +430,20 @@ export function IncomingStuPage() {
               TSA 新生說明會會集中整理出發前、抵達後、家長繳費與校園生活相關提醒。
             </p>
             <Link
-              href="https://www.instagram.com/tsa_uiuc/p/DYrauKzh7SE/"
+              href={NEW_STUDENT_ORIENTATION_URL}
+              rel="noopener noreferrer"
+              target="_blank"
               className="mt-5 inline-flex rounded-md border border-neutral-900 bg-neutral-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-neutral-700"
             >
-              View Instagram Post
+              View Orientation File
             </Link>
           </div>
           <div className="grid gap-6 md:grid-cols-[0.95fr_1.05fr] lg:grid-cols-1 xl:grid-cols-[0.95fr_1.05fr]">
             <Link
-              href="https://www.instagram.com/tsa_uiuc/p/DYrauKzh7SE/"
-              aria-label="Open the 2026 new student orientation Instagram post"
+              href={NEW_STUDENT_ORIENTATION_URL}
+              aria-label="Open the 2026 new student orientation file"
+              rel="noopener noreferrer"
+              target="_blank"
               className="overflow-hidden rounded-md border border-neutral-200 bg-white transition hover:border-neutral-400"
             >
               <Image
@@ -475,12 +482,16 @@ export function IncomingStuPage() {
               <div className="mt-5 flex flex-wrap gap-3">
                 <Link
                   href="https://www.boca.gov.tw/"
+                  rel="noopener noreferrer"
+                  target="_blank"
                   className="text-sm font-medium text-neutral-900 underline underline-offset-4"
                 >
                   外交部領事事務局
                 </Link>
                 <Link
                   href="https://www.gov.tw/"
+                  rel="noopener noreferrer"
+                  target="_blank"
                   className="text-sm font-medium text-neutral-900 underline underline-offset-4"
                 >
                   我的 E 政府
@@ -514,12 +525,16 @@ export function IncomingStuPage() {
               <div className="mt-5 flex flex-wrap gap-3">
                 <Link
                   href="https://www.ait.org.tw/"
+                  rel="noopener noreferrer"
+                  target="_blank"
                   className="text-sm font-medium text-neutral-900 underline underline-offset-4"
                 >
                   美國在台協會
                 </Link>
                 <Link
                   href="https://www.ustraveldocs.com/"
+                  rel="noopener noreferrer"
+                  target="_blank"
                   className="text-sm font-medium text-neutral-900 underline underline-offset-4"
                 >
                   申請美國簽證
@@ -581,6 +596,8 @@ export function IncomingStuPage() {
               <BulletList items={DEPARTURE_ITEMS} />
               <Link
                 href="https://www.evaair.com/"
+                rel="noopener noreferrer"
+                target="_blank"
                 className="mt-5 inline-flex text-sm font-medium text-neutral-900 underline underline-offset-4"
               >
                 長榮航空旅遊限制資訊
@@ -597,6 +614,8 @@ export function IncomingStuPage() {
               <BulletList items={CUSTOMS_ITEMS} />
               <Link
                 href="https://www.cbp.gov/travel/international-visitors/know-before-you-visit"
+                rel="noopener noreferrer"
+                target="_blank"
                 className="mt-5 inline-flex text-sm font-medium text-neutral-900 underline underline-offset-4"
               >
                 U.S. Customs and Border Protection
@@ -802,6 +821,8 @@ export function IncomingStuPage() {
           </div>
           <Link
             href="https://www.uiuctsa.com/ui-pay"
+            rel="noopener noreferrer"
+            target="_blank"
             className="mt-8 inline-flex rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-700"
           >
             View old UI-Pay guide
@@ -842,6 +863,8 @@ export function IncomingStuPage() {
           </div>
           <Link
             href="https://www.taiwanembassy.org/"
+            rel="noopener noreferrer"
+            target="_blank"
             className="mt-8 inline-flex rounded-md border border-neutral-300 bg-white px-4 py-2 text-sm font-medium text-neutral-700 transition hover:bg-neutral-100"
           >
             內政部役政署參考資訊

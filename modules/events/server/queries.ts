@@ -19,6 +19,18 @@ export async function listUpcomingEvents(): Promise<EventRecord[]> {
   return (data ?? []) as EventRecord[];
 }
 
+export async function listPastEvents(): Promise<EventRecord[]> {
+  const supabase = await createClient();
+  const nowIso = new Date().toISOString();
+  const { data, error } = await supabase
+    .from("events_event")
+    .select("*")
+    .lt("starts_at", nowIso)
+    .order("starts_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as EventRecord[];
+}
+
 export async function listAllEvents(): Promise<EventRecord[]> {
   const supabase = await createClient();
   const { data, error } = await supabase

@@ -68,16 +68,22 @@ export function SiteFooter() {
                 {section.title}
               </h2>
               <ul className="mt-5 space-y-3">
-                {section.links.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-white/55 underline-offset-4 transition hover:text-white hover:underline"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
+                {section.links.map((link) => {
+                  const isExternal = link.href.startsWith("http");
+
+                  return (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        rel={isExternal ? "noopener noreferrer" : undefined}
+                        target={isExternal ? "_blank" : undefined}
+                        className="text-sm text-white/55 underline-offset-4 transition hover:text-white hover:underline"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </nav>
           ))}

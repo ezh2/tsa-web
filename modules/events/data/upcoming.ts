@@ -1,10 +1,21 @@
+import type { StaticImageData } from "next/image";
+import newStudentOrientationFlyer from "@/images/events/2627/new stud oren 2627.png";
+
 export interface StaticUpcomingEvent {
   title: string;
   date: string;
   time: string;
   location: string;
   description: string;
+  href?: string;
+  image?: {
+    src: StaticImageData;
+    alt: string;
+  };
 }
+
+const NEW_STUDENT_ORIENTATION_URL =
+  "https://drive.google.com/file/d/1XQUzouvdKBJ9bWFAMBzvMgI-GwMjHEQn/view";
 
 export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
   {
@@ -14,14 +25,11 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
     location: "集思北科大會議中心 2F 貝塔廳",
     description:
       "A focused orientation for new students and parents covering arrival logistics, campus setup, housing, payments, and everyday life at UIUC. Doors open at 9:30.",
-  },
-  {
-    title: "Merch Presale",
-    date: "July 10, 2026",
-    time: "12:00 - 23:59",
-    location: "Online",
-    description:
-      "Reserve TSA apparel and community merchandise before the fall semester. Presale details, sizing information, and pickup windows will be shared through TSA channels.",
+    href: NEW_STUDENT_ORIENTATION_URL,
+    image: {
+      src: newStudentOrientationFlyer,
+      alt: "2026 UIUC TSA new student orientation flyer",
+    },
   },
   {
     title: "Welcome Picnic",
@@ -160,3 +168,28 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
       "A closing event for the academic year with time to reflect, celebrate contributors, and send off graduating members.",
   },
 ];
+
+function eventDateTimestamp(event: StaticUpcomingEvent): number {
+  const timestamp = Date.parse(event.date);
+  return Number.isNaN(timestamp) ? 0 : timestamp;
+}
+
+function startOfToday(now: Date): number {
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+}
+
+export function getStaticUpcomingEvents(
+  now: Date = new Date(),
+): StaticUpcomingEvent[] {
+  const today = startOfToday(now);
+  return STATIC_UPCOMING_EVENTS.filter(
+    (event) => eventDateTimestamp(event) >= today,
+  ).sort((a, b) => eventDateTimestamp(a) - eventDateTimestamp(b));
+}
+
+export function getStaticPastEvents(now: Date = new Date()): StaticUpcomingEvent[] {
+  const today = startOfToday(now);
+  return STATIC_UPCOMING_EVENTS.filter(
+    (event) => eventDateTimestamp(event) < today,
+  ).sort((a, b) => eventDateTimestamp(b) - eventDateTimestamp(a));
+}

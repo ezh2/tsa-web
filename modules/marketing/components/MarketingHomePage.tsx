@@ -1,9 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { EventsPreview } from "./EventsPreview";
-import merchModelOne from "../../../images/merch/Merch_Model_1.png";
-import merchModelTwo from "../../../images/merch/Merch_Model_2.png";
 import rawMerch from "../../../images/merch/Raw Merch.png";
+import merchPosterOne from "../../../images/merch/TSA_Merch_Poster_1.jpeg";
+import merchPosterTwo from "../../../images/merch/TSA_Merch_Poster_2.jpeg";
 import prepImage from "../../../images/prep.png";
 import stevePhoto from "../../../images/Steve.png";
 import tsaTaiwanLogo from "../../../images/TSA _Taiwan_LOGO.png";
@@ -248,7 +248,7 @@ export function MarketingHomePage() {
               </div>
               <div className="rounded-md border border-neutral-200 bg-neutral-50 p-4">
                 <p className="font-semibold text-neutral-900">$32.99 T-shirt</p>
-                <p className="mt-1 text-neutral-500">Release date TBA</p>
+                <p className="mt-1 text-neutral-500">Released July 10, 2026</p>
               </div>
             </div>
             <Link
@@ -269,8 +269,8 @@ export function MarketingHomePage() {
             </figure>
             <div className="grid gap-4">
               {[
-                { src: merchModelOne, label: "Model Preview 1" },
-                { src: merchModelTwo, label: "Model Preview 2" },
+                { src: merchPosterOne, label: "Poster Preview 1" },
+                { src: merchPosterTwo, label: "Poster Preview 2" },
               ].map((model) => (
                 <figure
                   key={model.label}
