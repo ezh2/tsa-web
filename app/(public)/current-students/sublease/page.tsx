@@ -4,4 +4,4 @@ export const metadata: Metadata = {
   title: "Sublease",
 };
 
-export { SubleasePage as default } from "@/modules/marketing";
+export { SubleasePage as default } from "@/modules/listings";

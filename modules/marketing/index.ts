@@ -5,7 +5,7 @@ export {
   CarpoolPage,
   MarketplacePage,
   SubleasePage,
-} from "./components/CurrentStudentFeaturePages";
+} from "@/modules/listings";
 export { IncomingStuPage } from "./components/IncomingStuPage";
 export {
   MembershipPage,
