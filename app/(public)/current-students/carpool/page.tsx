@@ -4,4 +4,4 @@ export const metadata: Metadata = {
   title: "Carpool",
 };
 
-export { CarpoolPage as default } from "@/modules/marketing";
+export { CarpoolPage as default } from "@/modules/listings";
