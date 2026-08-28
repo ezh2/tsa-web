@@ -40,12 +40,12 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
       "A relaxed welcome event for new and returning students with organized games, conversation, and a chance to meet the TSA board before classes get busy.",
   },
   {
-    title: "Water Balloon Social",
+    title: "New Student Welcome Event",
     date: "August 29, 2026",
-    time: "15:00 - 17:00",
-    location: "South Quad",
+    time: "20:00 - 22:00",
+    location: "Chili Bistro",
     description:
-      "An outdoor social built around casual team games and water balloon activities. Designed as an easy way to meet friends early in the semester.",
+      "Kick off the semester over dinner at Chili Bistro! Meet fellow new students, connect with TSA members, and enjoy a relaxed evening of good food and conversation as you settle into life at UIUC.",
   },
   {
     title: "Night Market",
