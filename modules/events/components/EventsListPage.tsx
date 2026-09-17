@@ -117,6 +117,9 @@ export async function EventsListPage() {
           Browse UIUC TSA events, from campus traditions and cultural gatherings
           to student-led socials, fundraisers, and performance nights.
         </p>
+        <p className="mx-auto mt-4 max-w-2xl rounded-md border border-neutral-200 bg-white px-4 py-3 text-sm font-medium text-neutral-700">
+          資訊以 Instagram 為主。
+        </p>
       </header>
 
       <ul className="grid gap-4 md:grid-cols-2">

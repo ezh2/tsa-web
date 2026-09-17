@@ -243,8 +243,11 @@ export function MarketingHomePage() {
             </p>
             <div className="mt-6 grid gap-3 text-sm text-neutral-700 sm:grid-cols-3 lg:grid-cols-1">
               <div className="rounded-md border border-neutral-200 bg-neutral-50 p-4">
-                <p className="font-semibold text-neutral-900">$47.99 Bundle</p>
-                <p className="mt-1 text-neutral-500">Membership + T-shirt</p>
+                <p className="font-semibold text-neutral-900">$49.99 Bundle</p>
+                <p className="mt-1 text-neutral-500">Membership + one T-shirt</p>
+                <p className="mt-2 text-xs leading-5 text-neutral-500">
+                  Cannot be combined with other event discounts.
+                </p>
               </div>
               <div className="rounded-md border border-neutral-200 bg-neutral-50 p-4">
                 <p className="font-semibold text-neutral-900">$32.99 T-shirt</p>

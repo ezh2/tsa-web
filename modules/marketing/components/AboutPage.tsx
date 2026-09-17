@@ -1,5 +1,6 @@
 import Image, { type StaticImageData } from "next/image";
 import brandonPhoto from "../../../images/Board2627/Brandon.jpg";
+import burtonPhoto from "../../../images/Board2627/burton.jpeg";
 import chloePhoto from "../../../images/Board2627/Chloe.jpg";
 import derrickPhoto from "../../../images/Board2627/Derrick.jpg";
 import ericPhoto from "../../../images/Board2627/Eric.jpg";
@@ -23,7 +24,7 @@ const BOARD_MEMBERS: Array<{
   { name: "Ulanda Chen", role: "Marketing Director", photo: ulandaPhoto },
   { name: "Sean Hsiung", role: "Publicity Director", photo: seanPhoto },
   { name: "Sylvia Hou", role: "Secretary Director", photo: sylviaPhoto },
-  { name: "Burton Wang", role: "Technology Director" },
+  { name: "Burton Wang", role: "Technology Director", photo: burtonPhoto },
 ];
 
 const SPONSORS: Array<{ name: string; logo?: StaticImageData }> = [

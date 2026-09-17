@@ -19,7 +19,7 @@ export const PRODUCT_CATALOG: Record<ProductKey, PaymentProduct> = {
     key: "membership",
     name: "TSA Membership",
     description:
-      "Lifetime, non-transferable UIUC TSA membership with partner discounts and Line Announcement System enrollment.",
+      "Lifetime, non-transferable UIUC TSA membership with membership card verification and Line Announcement System enrollment. Partner discounts are to be announced.",
     amountCents: 2999,
     grantsMembership: true,
     collectsShirtSize: false,
@@ -28,8 +28,8 @@ export const PRODUCT_CATALOG: Record<ProductKey, PaymentProduct> = {
     key: "bundle",
     name: "TSA Membership + T-shirt Bundle",
     description:
-      "Lifetime UIUC TSA membership plus the TSA 呆丸囡仔 T-shirt at the best combined price.",
-    amountCents: 4799,
+      "Lifetime UIUC TSA membership plus one TSA 呆丸囡仔 T-shirt. Bundle pricing applies to one T-shirt only and cannot be combined with other event discounts.",
+    amountCents: 4999,
     grantsMembership: true,
     collectsShirtSize: true,
   },

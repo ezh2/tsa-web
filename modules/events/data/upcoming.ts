@@ -48,28 +48,28 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
       "Kick off the semester over dinner at Chili Bistro! Meet fellow new students, connect with TSA members, and enjoy a relaxed evening of good food and conversation as you settle into life at UIUC.",
   },
   {
-    title: "Night Market",
-    date: "September 12, 2026",
-    time: "18:00 - 21:00",
-    location: "Illini Union",
+    title: "First General Meeting",
+    date: "September 20, 2026",
+    time: "TBA",
+    location: "TBA",
     description:
-      "TSA's signature night-market experience featuring Taiwanese food, student activities, performances, and community booths inspired by Taiwan's local markets.",
+      "TSA's first general meeting of the semester. Follow Instagram for the latest time, room, and RSVP details.",
   },
   {
-    title: "Mid-Autumn BBQ",
-    date: "September 19, 2026",
-    time: "17:00 - 20:00",
-    location: "Crystal Lake Park",
-    description:
-      "A Mid-Autumn Festival gathering with barbecue, seasonal snacks, and outdoor community time for Taiwanese students and friends of Taiwan.",
-  },
-  {
-    title: "Fall Merch Sale",
+    title: "超可盃 籃球",
     date: "September 26, 2026",
-    time: "13:00 - 16:00",
-    location: "Anniversary Plaza",
+    time: "TBA",
+    location: "TBA",
     description:
-      "A campus pickup and sale window for TSA merchandise, including remaining presale items and limited fall inventory while supplies last.",
+      "A TSA basketball activity. Follow Instagram for the latest schedule and sign-up details.",
+  },
+  {
+    title: "中秋烤肉",
+    date: "September 27, 2026",
+    time: "TBA",
+    location: "TBA",
+    description:
+      "A Mid-Autumn Festival barbecue gathering. Follow Instagram for the latest time, location, and ticket details.",
   },
   {
     title: "Internal Bonding",
@@ -81,11 +81,19 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
   },
   {
     title: "1010 Party",
-    date: "October 10, 2026",
-    time: "19:00 - 22:00",
+    date: "October 9, 2026",
+    time: "TBA",
     location: "TBA",
     description:
-      "A community celebration for Double Ten Day with social activities, cultural touches, and a festive space for students to gather.",
+      "A community celebration for Double Ten Day with social activities, cultural touches, and a festive space for students to gather. Follow Instagram for details.",
+  },
+  {
+    title: "TASC 10/10 Night",
+    date: "October 10, 2026",
+    time: "TBA",
+    location: "TBA",
+    description:
+      "A 10/10 night activity with TASC. Follow Instagram for the latest details.",
   },
   {
     title: "Singing Contest",

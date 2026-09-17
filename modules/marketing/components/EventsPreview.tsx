@@ -25,6 +25,9 @@ export async function EventsPreview() {
           <h2 className="mt-2 text-4xl font-semibold tracking-tight text-neutral-900 sm:text-5xl">
             Upcoming events
           </h2>
+          <p className="mt-3 text-sm font-medium text-neutral-600">
+            資訊以 Instagram 為主。
+          </p>
         </div>
         <Link
           href="/events"

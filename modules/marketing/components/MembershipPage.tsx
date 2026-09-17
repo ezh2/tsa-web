@@ -13,25 +13,25 @@ const PARTNERS = [
   {
     category: "Restaurant",
     name: "Golden Harbor 漁滿樓",
-    offer: "5% off of all purchases",
+    offer: "To be announced",
     href: "https://goo.gl/maps/",
   },
   {
     category: "Restaurant",
     name: "PHO Noodle Station",
-    offer: "10% off on purchases above $15, except lunch special",
+    offer: "To be announced",
     href: "https://goo.gl/maps/",
   },
   {
     category: "Restaurant",
     name: "Paris Super",
-    offer: "10% off all purchases above $15 pre-tax",
+    offer: "To be announced",
     href: "https://goo.gl/maps/",
   },
   {
     category: "Beverages",
     name: "HAPPYLEMON",
-    offer: "10% off on all purchases",
+    offer: "To be announced",
     href: "https://www.google.com/maps",
   },
   {
@@ -45,16 +45,17 @@ const PARTNERS = [
 const MEMBERSHIP_FEATURES = [
   "Lifetime TSA membership",
   "Non-transferable membership holder benefits",
-  "Partner store discounts",
+  "Partner store discounts to be announced",
   "Membership card and Line Announcement System enrollment",
+  "Membership card discounts cannot be combined with other event discounts",
 ];
 
 const PRICING_PLANS = [
   {
     name: "Bundle",
-    price: "$47.99",
+    price: "$49.99",
     note: "Best value",
-    body: "TSA membership plus T-shirt Merch Bundle",
+    body: "TSA membership plus one T-shirt Merch Bundle. Bundle price applies to one T-shirt only.",
     featured: true,
     productKey: "bundle",
   },
@@ -62,7 +63,7 @@ const PRICING_PLANS = [
     name: "TSA Membership",
     price: "$29.99",
     note: "Lifetime, non-transferable",
-    body: "Lifetime access to TSA membership benefits, partner discounts, card verification, and announcements for the registered member.",
+    body: "Lifetime access to TSA membership benefits, membership card verification, and announcements for the registered member. Partner discounts are to be announced.",
     featured: false,
     productKey: "membership",
   },
@@ -111,7 +112,7 @@ export async function MembershipPage({
           </h1>
           <p className="mt-4 max-w-3xl text-lg leading-8 text-neutral-600">
             Join TSA to support Taiwanese community programming at UIUC and get
-            access to lifetime member benefits, partner discounts, merch
+            access to lifetime member benefits, membership-card updates, merch
             announcements, and the official Line Announcement System.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
@@ -146,11 +147,15 @@ export async function MembershipPage({
               Partnerships
             </p>
             <h2 className="mt-2 text-3xl font-semibold tracking-tight text-neutral-900">
-              Partner Discounts
+              Partner Discounts To Be Announced
             </h2>
             <p className="mt-4 max-w-2xl text-sm leading-6 text-neutral-600">
-              TSA members can use these partner discounts at participating local
-              restaurants, shops, and services.
+              Partner discounts are currently under discussion. Final
+              membership-card benefit information will be announced through TSA
+              channels.
+            </p>
+            <p className="mt-3 max-w-2xl rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm font-medium text-neutral-700">
+              資訊以 Instagram 為主。
             </p>
             <div className="mt-8 grid gap-5 md:grid-cols-2">
               {PARTNERS.map((partner) => (
@@ -286,8 +291,14 @@ export function MerchPage() {
               </div>
               <div className="mt-6 grid gap-3 text-sm text-neutral-700 sm:grid-cols-3 lg:grid-cols-1">
                 <div className="rounded-md border border-neutral-200 bg-white p-4">
-                  <p className="font-semibold text-neutral-900">$47.99 Bundle</p>
-                  <p className="mt-1 text-neutral-500">Membership + T-shirt</p>
+                  <p className="font-semibold text-neutral-900">$49.99 Bundle</p>
+                  <p className="mt-1 text-neutral-500">
+                    Membership + one T-shirt
+                  </p>
+                  <p className="mt-2 text-xs leading-5 text-neutral-500">
+                    Bundle pricing applies to one T-shirt only and cannot be
+                    combined with other event discounts.
+                  </p>
                   <div className="mt-3">
                     <MerchPurchaseLink label="Buy bundle" />
                   </div>
