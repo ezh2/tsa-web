@@ -28,7 +28,7 @@ export async function GET(request: Request) {
     const params = new URLSearchParams();
     params.set(
       "error",
-      "UIUC TSA accounts require an @illinois.edu email. Sign in with your University Google account.",
+      "TSA UIUC accounts require an @illinois.edu email. Sign in with your University Google account.",
     );
     return NextResponse.redirect(
       new URL(`/login?${params.toString()}`, requestUrl),

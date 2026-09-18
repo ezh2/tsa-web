@@ -114,7 +114,7 @@ export async function EventsListPage() {
           Events
         </h1>
         <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-neutral-600">
-          Browse UIUC TSA events, from campus traditions and cultural gatherings
+          Browse TSA UIUC events, from campus traditions and cultural gatherings
           to student-led socials, fundraisers, and performance nights.
         </p>
         <p className="mx-auto mt-4 max-w-2xl rounded-md border border-neutral-200 bg-white px-4 py-3 text-sm font-medium text-neutral-700">

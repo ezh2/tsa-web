@@ -19,7 +19,7 @@ export default async function MembersHomePage() {
           Members area
         </h1>
         <p className="mt-2 text-sm text-neutral-600">
-          Welcome back. This area is for verified UIUC TSA members.
+          Welcome back. This area is for verified TSA UIUC members.
         </p>
       </header>
 

@@ -32,7 +32,7 @@ export async function LoginPage({
           href="/"
           className="mb-8 inline-block text-sm text-neutral-600 hover:text-neutral-900"
         >
-          ← Back to UIUC TSA
+          ← Back to TSA UIUC
         </Link>
 
         <div className="rounded-2xl border border-neutral-200 bg-white p-8 shadow-sm">
@@ -42,7 +42,7 @@ export async function LoginPage({
           <p className="mt-1 text-sm text-neutral-500">
             {isSignup
               ? "Create your TSA member profile with your student contact info."
-              : "Sign in to your UIUC TSA account."}
+              : "Sign in to your TSA UIUC account."}
           </p>
 
           <div className="mt-6 flex gap-1 rounded-lg bg-neutral-100 p-1">
@@ -216,7 +216,7 @@ export async function LoginPage({
           </form>
 
           <p className="mt-6 text-center text-xs text-neutral-500">
-            {isSignup ? "Already have an account? " : "New to UIUC TSA? "}
+            {isSignup ? "Already have an account? " : "New to TSA UIUC? "}
             <Link
               href={isSignup ? "/login" : "/login?mode=signup"}
               className="font-medium text-neutral-900 hover:underline"

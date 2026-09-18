@@ -33,7 +33,7 @@ export default async function AdminHomePage() {
           Admin dashboard
         </h1>
         <p className="mt-2 text-sm text-neutral-600">
-          Manage UIUC TSA events and operations from here.
+          Manage TSA UIUC events and operations from here.
         </p>
       </header>
 

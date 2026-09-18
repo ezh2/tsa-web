@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Home | UIUC TSA",
-    template: "%s | UIUC TSA",
+    default: "Home | TSA UIUC",
+    template: "%s | TSA UIUC",
   },
   description:
     "The Taiwanese Student Association at the University of Illinois Urbana-Champaign. Events, community, and culture for Taiwanese students and friends of Taiwan on campus.",

@@ -120,13 +120,13 @@ export function SiteHeader({ user }: { user: CurrentUser | null }) {
         >
           <Image
             src={tsaLogo}
-            alt="UIUC TSA logo"
+            alt="TSA UIUC logo"
             width={64}
             height={64}
             className="h-16 w-16 shrink-0 object-contain"
           />
           <span className="flex flex-col leading-tight">
-            <span className="text-base">UIUC TSA</span>
+            <span className="text-base">TSA UIUC</span>
             <span className="hidden text-xs font-normal text-neutral-500 sm:inline">
               Taiwanese Student Association
             </span>

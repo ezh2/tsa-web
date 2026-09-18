@@ -42,13 +42,13 @@ export function SiteFooter() {
           <Link href="/" className="inline-flex items-center gap-4">
             <Image
               src={tsaLogo}
-              alt="UIUC TSA logo"
+              alt="TSA UIUC logo"
               width={76}
               height={76}
               className="h-16 w-16 object-contain"
             />
             <div>
-              <p className="text-2xl font-semibold tracking-tight">UIUC TSA</p>
+              <p className="text-2xl font-semibold tracking-tight">TSA UIUC</p>
               <p className="mt-1 text-sm text-white/50">
                 Taiwanese Student Association
               </p>

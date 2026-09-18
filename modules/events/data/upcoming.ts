@@ -28,7 +28,7 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
     href: NEW_STUDENT_ORIENTATION_URL,
     image: {
       src: newStudentOrientationFlyer,
-      alt: "2026 UIUC TSA new student orientation flyer",
+      alt: "2026 TSA UIUC new student orientation flyer",
     },
   },
   {

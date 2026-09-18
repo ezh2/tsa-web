@@ -448,7 +448,7 @@ export function IncomingStuPage() {
             >
               <Image
                 src={newStudentOrientationFlyer}
-                alt="2026 UIUC TSA new student orientation flyer"
+                alt="2026 TSA UIUC new student orientation flyer"
                 className="h-full w-full object-cover"
                 priority
               />

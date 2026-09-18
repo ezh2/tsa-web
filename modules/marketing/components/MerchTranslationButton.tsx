@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 const ENGLISH_COPY = [
-  "UIUC TSA’s official merchandise for the new semester is finally here!",
+  "TSA UIUC’s official merchandise for the new semester is finally here!",
   "This time, we are introducing the 「呆丸囡仔」oversized T-shirt, designed to bring the memories, energy, and sense of belonging from campus in Champaign into your everyday life. Whether you are an incoming student about to begin a new journey, a current student working hard on campus, or an alum who misses your alma mater, this TSA-exclusive design is the perfect way to show your Illini Pride! 🧡 💙",
   "Available in classic black and white, these timeless and versatile colors make the shirt easy to style for any occasion. Whether you are studying at the library, heading out for brunch, or putting together a casual everyday outfit, it fits effortlessly into your wardrobe. No matter whether you are in Champaign or Taiwan, wearing it will help you instantly recognize fellow members of the TSA community!",
   "Get yours now and carry your UIUC memories with you wherever you go!",

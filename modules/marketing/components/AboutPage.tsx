@@ -41,7 +41,7 @@ const CONTRIBUTORS = [
   },
   {
     title: "Join as contributor:",
-    body: "We manage contributions through GitHub. If you would like to contribute, please open a pull request by following the instructions provided in the repository’s README and direct message UIUC TSA via Instagram, Facebook, or email.",
+    body: "We manage contributions through GitHub. If you would like to contribute, please open a pull request by following the instructions provided in the repository’s README and direct message TSA UIUC via Instagram, Facebook, or email.",
   },
 ];
 

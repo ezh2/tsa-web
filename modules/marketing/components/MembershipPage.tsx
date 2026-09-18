@@ -108,7 +108,7 @@ export async function MembershipPage({
             Membership
           </p>
           <h1 className="mt-2 text-4xl font-semibold tracking-tight text-neutral-900">
-            UIUC TSA Membership
+            TSA UIUC Membership
           </h1>
           <p className="mt-4 max-w-3xl text-lg leading-8 text-neutral-600">
             Join TSA to support Taiwanese community programming at UIUC and get
@@ -277,7 +277,7 @@ export function MerchPage() {
               </h1>
               <div className="mt-4 space-y-4 text-sm leading-6 text-neutral-600">
                 <p className="font-semibold text-neutral-900">
-                  📢【UIUC TSA 新學期官方周邊登場】
+                  📢【TSA UIUC 新學期官方周邊登場】
                 </p>
                 <p>新學期 TSA 官方周邊正式上線啦！</p>
                 <p>

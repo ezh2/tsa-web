@@ -381,7 +381,7 @@ export async function completeGoogleProfileAction(
     redirect(
       "/login?error=" +
         encodeURIComponent(
-          "UIUC TSA accounts require an @illinois.edu email.",
+          "TSA UIUC accounts require an @illinois.edu email.",
         ),
     );
   }
