@@ -48,28 +48,28 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
       "Kick off the semester over dinner at Chili Bistro! Meet fellow new students, connect with TSA members, and enjoy a relaxed evening of good food and conversation as you settle into life at UIUC.",
   },
   {
-    title: "First General Meeting",
+    title: "General Meeting",
     date: "September 20, 2026",
     time: "TBA",
-    location: "TBA",
+    location: "AACC",
     description:
-      "TSA's first general meeting of the semester. Follow Instagram for the latest time, room, and RSVP details.",
+      "An interns-only TSA general meeting. Please bring your i-card. Follow Instagram for the latest details.",
   },
   {
     title: "超可盃 籃球",
     date: "September 26, 2026",
-    time: "TBA",
-    location: "TBA",
+    time: "11:30 - 16:30",
+    location: "ARC Gym 1, Court 5-6",
     description:
       "A TSA basketball activity. Follow Instagram for the latest schedule and sign-up details.",
   },
   {
     title: "中秋烤肉",
     date: "September 27, 2026",
-    time: "TBA",
-    location: "TBA",
+    time: "11:30",
+    location: "Crystal Lake Park",
     description:
-      "A Mid-Autumn Festival barbecue gathering. Follow Instagram for the latest time, location, and ticket details.",
+      "A Mid-Autumn Festival barbecue gathering. Follow Instagram for the latest ticket details.",
   },
   {
     title: "Internal Bonding",
@@ -88,10 +88,10 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
       "A community celebration for Double Ten Day with social activities, cultural touches, and a festive space for students to gather. Follow Instagram for details.",
   },
   {
-    title: "TASC 10/10 Night",
+    title: "TASC 10/10 Night Market",
     date: "October 10, 2026",
     time: "TBA",
-    location: "TBA",
+    location: "TASC Night Market, booth location TBA",
     description:
       "A 10/10 night activity with TASC. Follow Instagram for the latest details.",
   },
@@ -195,9 +195,12 @@ export function getStaticUpcomingEvents(
   ).sort((a, b) => eventDateTimestamp(a) - eventDateTimestamp(b));
 }
 
-export function getStaticPastEvents(now: Date = new Date()): StaticUpcomingEvent[] {
+export function getStaticPastEvents(
+  now: Date = new Date(),
+): StaticUpcomingEvent[] {
   const today = startOfToday(now);
   return STATIC_UPCOMING_EVENTS.filter(
-    (event) => eventDateTimestamp(event) < today,
+    (event) =>
+      event.title !== "Welcome Picnic" && eventDateTimestamp(event) < today,
   ).sort((a, b) => eventDateTimestamp(b) - eventDateTimestamp(a));
 }

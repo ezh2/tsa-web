@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { UserMenu } from "./UserMenu";
 import type { CurrentUser } from "@/core/types";
-import tsaLogo from "../../images/TSA_bear.png";
+import tsaLogo from "../../images/TSA UIUC Logo.webp";
 
 const STUDENT_LINKS = [
   { label: "Current Students", href: "/current-students" },

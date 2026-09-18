@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import tsaLogo from "../../images/TSA_bear.png";
+import tsaLogo from "../../images/TSA UIUC Logo.webp";
 
 const FOOTER_SECTIONS = [
   {
