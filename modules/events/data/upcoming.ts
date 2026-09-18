@@ -50,7 +50,7 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
   {
     title: "General Meeting",
     date: "September 20, 2026",
-    time: "TBA",
+    time: "13:00 - 14:00",
     location: "AACC",
     description:
       "An interns-only TSA general meeting. Please bring your i-card. Follow Instagram for the latest details.",

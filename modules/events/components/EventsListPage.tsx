@@ -1,34 +1,34 @@
-import Image, { type StaticImageData } from "next/image";
-import Link from "next/link";
 import { unstable_rethrow } from "next/navigation";
-import { hasRole } from "@/core/rbac";
-import { getCurrentUser } from "@/core/rbac/server";
 import {
-  listMyRsvpsForEvents,
   listPastEvents,
   listUpcomingEvents,
 } from "@/modules/events/server/queries";
-import { fmtDateRange } from "@/modules/events/lib/format";
 import {
   getStaticPastEvents,
   getStaticUpcomingEvents,
   type StaticUpcomingEvent,
 } from "@/modules/events/data/upcoming";
-import { RsvpForm } from "./RsvpForm";
-import bentoChicken from "@/images/events/2526/bento/bento_chicken.jpg";
-import bentoSausage from "@/images/events/2526/bento/bento_sausage.jpg";
-import ruff0629 from "@/images/events/2627/ruff0629.jpg";
+
+type CalendarEvent = {
+  key: string;
+  title: string;
+  date: string;
+  time: string;
+  location: string;
+  timestamp: number;
+};
+
+type CalendarEventGroup = {
+  month: string;
+  key: string;
+  events: CalendarEvent[];
+};
 
 type PastEvent = {
   title: string;
   date: string;
   time: string;
   location: string;
-  description: string;
-  images?: {
-    src: StaticImageData;
-    alt: string;
-  }[];
 };
 
 const PAST_EVENTS: PastEvent[] = [
@@ -37,50 +37,201 @@ const PAST_EVENTS: PastEvent[] = [
     date: "June 29, 2026",
     time: "Time announced by WWTSA",
     location: "Partner event with WWTSA",
-    description:
-      "A partner event with WWTSA welcoming students back to TAIWAN with the most fire party at RUFF TAIPEI.",
-    images: [
-      {
-        src: ruff0629,
-        alt: "Homecoming at RUFF partner event flyer",
-      },
-    ],
   },
   {
     title: "Taiwanese Bento",
     date: "April 18, 2026",
     time: "13:30 - 16:00",
     location: "Anniversary Plaza",
-    description:
-      "Enjoy a familiar Taiwanese bento on campus. Pick up your preorder at Anniversary Plaza on the Illini Union Main Quad side and bring a taste of Taiwan into your weekend.",
-    images: [
-      {
-        src: bentoChicken,
-        alt: "Taiwanese chicken bento meal box",
-      },
-      {
-        src: bentoSausage,
-        alt: "Taiwanese sausage bento meal box",
-      },
-    ],
   },
   {
     title: "Lunar New Year Banquet",
     date: "February 14, 2026",
     time: "Time announced through TSA Linktree",
     location: "Golden Harbor / 漁滿樓",
-    description:
-      "Celebrate Lunar New Year with TSA at Golden Harbor. Join us for Taiwanese cuisine, time with friends, and our annual raffle draw.",
   },
   {
     title: "TSA Singing Contest",
     date: "November 15, 2025",
     time: "20:30",
     location: "Illini Room A",
-    description:
-      "Showcase your voice at the TSA Singing Contest. We are excited to welcome performers and friends for a night of music, stage energy, and community support.",
   },
 ];
+
+const DATE_FORMAT = new Intl.DateTimeFormat(undefined, {
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+});
+
+const MONTH_FORMAT = new Intl.DateTimeFormat(undefined, {
+  month: "long",
+  year: "numeric",
+});
+
+const TIME_FORMAT = new Intl.DateTimeFormat(undefined, {
+  hour: "numeric",
+  minute: "2-digit",
+});
+
+function timestampFromDate(date: string): number {
+  const timestamp = Date.parse(date);
+  return Number.isNaN(timestamp) ? 0 : timestamp;
+}
+
+function monthKey(date: Date): string {
+  return `${date.getFullYear()}-${date.getMonth()}`;
+}
+
+function nextMonth(date: Date): Date {
+  return new Date(date.getFullYear(), date.getMonth() + 1, 1);
+}
+
+function timeRange(startsAt: string, endsAt: string | null): string {
+  const start = new Date(startsAt);
+  if (!endsAt) return TIME_FORMAT.format(start);
+  const end = new Date(endsAt);
+  return `${TIME_FORMAT.format(start)} - ${TIME_FORMAT.format(end)}`;
+}
+
+function fromStaticEvent(event: StaticUpcomingEvent): CalendarEvent {
+  return {
+    key: `static-${event.date}-${event.title}`,
+    title: event.title,
+    date: event.date,
+    time: event.time,
+    location: event.location,
+    timestamp: timestampFromDate(event.date),
+  };
+}
+
+function groupByMonth(events: CalendarEvent[]): CalendarEventGroup[] {
+  const groups = new Map<string, CalendarEvent[]>();
+
+  for (const event of events.toSorted((a, b) => a.timestamp - b.timestamp)) {
+    const eventDate = new Date(event.timestamp);
+    const key = monthKey(eventDate);
+    groups.set(key, [...(groups.get(key) ?? []), event]);
+  }
+
+  return Array.from(groups, ([key, groupedEvents]) => ({
+    month: MONTH_FORMAT.format(new Date(groupedEvents[0].timestamp)),
+    key,
+    events: groupedEvents,
+  }));
+}
+
+function MonthGroup({ group }: { group: CalendarEventGroup }) {
+  return (
+    <section aria-labelledby={`events-${group.key}`}>
+      <h2
+        id={`events-${group.key}`}
+        className="border-b border-neutral-200 pb-3 text-2xl font-semibold tracking-tight text-neutral-900"
+      >
+        {group.month}
+      </h2>
+      <div className="mt-4 grid gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        {group.events.map((event) => (
+          <EventBlock key={event.key} event={event} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function EventBlock({ event }: { event: CalendarEvent }) {
+  return (
+    <article className="flex aspect-square min-h-0 flex-col justify-between rounded-md border border-black/10 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-neutral-400">
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
+          {event.date}
+        </p>
+        <h3 className="mt-2 text-base font-semibold leading-tight text-neutral-950">
+          {event.title}
+        </h3>
+      </div>
+      <dl className="mt-3 space-y-2 text-xs text-neutral-700">
+        <div>
+          <dt className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
+            Time
+          </dt>
+          <dd className="mt-0.5 font-medium">{event.time}</dd>
+        </div>
+        <div>
+          <dt className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
+            Location
+          </dt>
+          <dd className="mt-0.5 line-clamp-2 font-medium">
+            {event.location}
+          </dd>
+        </div>
+      </dl>
+    </article>
+  );
+}
+
+function CalendarBlocks({
+  events,
+  now = new Date(),
+}: {
+  events: CalendarEvent[];
+  now?: Date;
+}) {
+  const groups = groupByMonth(events);
+  const visibleMonthKeys = new Set([monthKey(now), monthKey(nextMonth(now))]);
+  const visibleGroups = groups.filter((group) =>
+    visibleMonthKeys.has(group.key),
+  );
+  const displayedGroups = visibleGroups.length > 0 ? visibleGroups : groups.slice(0, 1);
+  const displayedGroupKeys = new Set(displayedGroups.map((group) => group.key));
+  const foldedGroups = groups.filter((group) => !displayedGroupKeys.has(group.key));
+
+  if (groups.length === 0) {
+    return (
+      <p className="rounded-md border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-600">
+        No events to show right now.
+      </p>
+    );
+  }
+
+  return (
+    <div className="space-y-10">
+      {displayedGroups.map((group) => (
+        <MonthGroup key={group.key} group={group} />
+      ))}
+      {foldedGroups.length > 0 && (
+        <details className="rounded-md border border-neutral-200 bg-white p-4">
+          <summary className="cursor-pointer text-sm font-semibold uppercase tracking-wider text-neutral-600">
+            Future Events
+          </summary>
+          <div className="mt-6 space-y-10">
+            {foldedGroups.map((group) => (
+              <MonthGroup key={group.key} group={group} />
+            ))}
+          </div>
+        </details>
+      )}
+    </div>
+  );
+}
+
+function EventBlockGrid({ events }: { events: CalendarEvent[] }) {
+  if (events.length === 0) {
+    return (
+      <p className="rounded-md border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-600">
+        No events to show right now.
+      </p>
+    );
+  }
+
+  return (
+    <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-4">
+      {events.map((event) => (
+        <EventBlock key={event.key} event={event} />
+      ))}
+    </div>
+  );
+}
 
 export async function EventsListPage() {
   const events = await listUpcomingEvents().catch((error) => {
@@ -93,19 +244,47 @@ export async function EventsListPage() {
     console.warn("Unable to load past events", error);
     return [];
   });
-  const staticUpcomingEvents = getStaticUpcomingEvents();
-  const staticPastEvents = getStaticPastEvents();
-  const user = await getCurrentUser();
-  const rsvps = user
-    ? await listMyRsvpsForEvents(events.map((event) => event.id))
-    : [];
-  const rsvpByEventId = new Map(
-    rsvps.map((rsvp) => [rsvp.event_id, rsvp] as const),
-  );
-  const canRsvp = user && hasRole(user.role, "member");
+
+  const upcomingCalendarEvents: CalendarEvent[] = [
+    ...events.map((event) => {
+      const start = new Date(event.starts_at);
+      return {
+        key: `db-${event.id}`,
+        title: event.title,
+        date: DATE_FORMAT.format(start),
+        time: timeRange(event.starts_at, event.ends_at),
+        location: event.location ?? "TBA",
+        timestamp: start.getTime(),
+      };
+    }),
+    ...getStaticUpcomingEvents().map(fromStaticEvent),
+  ];
+
+  const pastCalendarEvents: CalendarEvent[] = [
+    ...pastEvents.map((event) => {
+      const start = new Date(event.starts_at);
+      return {
+        key: `db-past-${event.id}`,
+        title: event.title,
+        date: DATE_FORMAT.format(start),
+        time: timeRange(event.starts_at, event.ends_at),
+        location: event.location ?? "TBA",
+        timestamp: start.getTime(),
+      };
+    }),
+    ...getStaticPastEvents().map(fromStaticEvent),
+    ...PAST_EVENTS.map((event) => ({
+      key: `manual-past-${event.date}-${event.title}`,
+      title: event.title,
+      date: event.date,
+      time: event.time,
+      location: event.location,
+      timestamp: timestampFromDate(event.date),
+    })),
+  ].toSorted((a, b) => b.timestamp - a.timestamp);
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-6 py-16 sm:py-20">
+    <main className="mx-auto w-full max-w-6xl px-6 py-16 sm:py-20">
       <header className="mb-12 text-center">
         <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
           What&apos;s coming up
@@ -114,79 +293,14 @@ export async function EventsListPage() {
           Events
         </h1>
         <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-neutral-600">
-          Browse TSA UIUC events, from campus traditions and cultural gatherings
-          to student-led socials, fundraisers, and performance nights.
+          Browse TSA UIUC events by date, time, and location.
         </p>
         <p className="mx-auto mt-4 max-w-2xl rounded-md border border-neutral-200 bg-white px-4 py-3 text-sm font-medium text-neutral-700">
           資訊以 Instagram 為主。
         </p>
       </header>
 
-      <ul className="grid gap-4 md:grid-cols-2">
-        {events.map((event) => (
-          <li key={event.id}>
-            <article className="h-full rounded-md border border-black/10 bg-white/85 p-6 backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-neutral-400 hover:shadow-sm">
-              <Link href={`/events/${event.id}`} className="block">
-                <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">
-                  {fmtDateRange(event.starts_at, event.ends_at)}
-                </p>
-                <div className="mt-2 flex items-baseline justify-between gap-4">
-                  <h2 className="text-lg font-semibold text-neutral-900">
-                    {event.title}
-                  </h2>
-                  {event.location && (
-                    <span className="shrink-0 text-xs text-neutral-500">
-                      📍 {event.location}
-                    </span>
-                  )}
-                </div>
-              </Link>
-              <div className="mt-5 border-t border-neutral-100 pt-4">
-                {canRsvp ? (
-                  <RsvpForm
-                    eventId={event.id}
-                    current={rsvpByEventId.get(event.id) ?? null}
-                    compact
-                  />
-                ) : !user ? (
-                  <Link
-                    href={`/login?next=${encodeURIComponent(`/events/${event.id}`)}`}
-                    className="inline-flex rounded-md border border-neutral-300 px-3 py-2 text-sm font-medium text-neutral-700 transition hover:bg-neutral-100"
-                  >
-                    Sign in to RSVP
-                  </Link>
-                ) : (
-                  <p className="text-sm text-neutral-600">
-                    RSVP is open to verified members.
-                  </p>
-                )}
-              </div>
-            </article>
-          </li>
-        ))}
-
-        {staticUpcomingEvents.map((event) => (
-          <li key={`${event.date}-${event.title}`}>
-            <article className="h-full rounded-md border border-black/10 bg-white/85 p-6 backdrop-blur-xl">
-              <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">
-                {event.date} · {event.time}
-              </p>
-              <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <h2 className="text-lg font-semibold text-neutral-900">
-                  {event.title}
-                </h2>
-                <span className="shrink-0 rounded-md bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-600">
-                  {event.location}
-                </span>
-              </div>
-              <p className="mt-4 text-sm leading-6 text-neutral-600">
-                {event.description}
-              </p>
-              <StaticEventImage event={event} />
-            </article>
-          </li>
-        ))}
-      </ul>
+      <CalendarBlocks events={upcomingCalendarEvents} />
 
       <section className="mt-20 border-t border-neutral-100 pt-14">
         <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
@@ -195,153 +309,10 @@ export async function EventsListPage() {
         <h2 className="mt-2 text-4xl font-semibold tracking-tight text-neutral-900">
           Past Events
         </h2>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-neutral-600">
-          A quick record of recent TSA events, announcements, and community
-          gatherings.
-        </p>
-
-        <div className="mt-8 space-y-4">
-          {pastEvents.map((event) => (
-            <article
-              key={event.id}
-              className="flex flex-col gap-6 rounded-md border border-black/10 bg-white/85 p-6 backdrop-blur-xl sm:flex-row sm:items-start sm:justify-between"
-            >
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
-                    <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">
-                      {fmtDateRange(event.starts_at, event.ends_at)}
-                    </p>
-                    <h3 className="mt-2 text-xl font-semibold text-neutral-900">
-                      {event.title}
-                    </h3>
-                  </div>
-                  {event.location && (
-                    <span className="shrink-0 rounded-md bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-600">
-                      {event.location}
-                    </span>
-                  )}
-                </div>
-                {event.description && (
-                  <p className="mt-4 text-sm leading-6 text-neutral-600">
-                    {event.description}
-                  </p>
-                )}
-              </div>
-            </article>
-          ))}
-
-          {staticPastEvents.map((event) => (
-            <article
-              key={`${event.date}-${event.title}`}
-              className="flex flex-col gap-6 rounded-md border border-black/10 bg-white/85 p-6 backdrop-blur-xl sm:flex-row sm:items-start sm:justify-between"
-            >
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
-                    <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">
-                      {event.date} · {event.time}
-                    </p>
-                    <h3 className="mt-2 text-xl font-semibold text-neutral-900">
-                      {event.title}
-                    </h3>
-                  </div>
-                  <span className="shrink-0 rounded-md bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-600">
-                    {event.location}
-                  </span>
-                </div>
-                <p className="mt-4 text-sm leading-6 text-neutral-600">
-                  {event.description}
-                </p>
-              </div>
-              <StaticEventImage event={event} side />
-            </article>
-          ))}
-
-          {PAST_EVENTS.map((event) => (
-            <article
-              key={event.title}
-              className="flex flex-col gap-6 rounded-md border border-black/10 bg-white/85 p-6 backdrop-blur-xl sm:flex-row sm:items-start sm:justify-between"
-            >
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
-                    <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">
-                      {event.date}
-                    </p>
-                    <h3 className="mt-2 text-xl font-semibold text-neutral-900">
-                      {event.title}
-                    </h3>
-                  </div>
-                  <span className="shrink-0 rounded-md bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-600">
-                    {event.location}
-                  </span>
-                </div>
-                <p className="mt-4 text-sm leading-6 text-neutral-600">
-                  {event.description}
-                </p>
-              </div>
-              {event.images && (
-                <div className="grid w-full shrink-0 grid-cols-2 gap-3 sm:w-56">
-                  {event.images.map((image) => (
-                    <Image
-                      key={image.alt}
-                      src={image.src}
-                      alt={image.alt}
-                      className="aspect-[3/4] w-full rounded-md object-cover"
-                      sizes="(min-width: 640px) 112px, calc((100vw - 72px) / 2)"
-                    />
-                  ))}
-                </div>
-              )}
-            </article>
-          ))}
+        <div className="mt-8">
+          <EventBlockGrid events={pastCalendarEvents} />
         </div>
       </section>
     </main>
-  );
-}
-
-function StaticEventImage({
-  event,
-  side,
-}: {
-  event: StaticUpcomingEvent;
-  side?: boolean;
-}) {
-  if (!event.image) return null;
-
-  const image = (
-    <Image
-      src={event.image.src}
-      alt={event.image.alt}
-      className={
-        side
-          ? "aspect-[3/4] w-full rounded-md object-cover"
-          : "aspect-[4/3] w-full rounded-md object-cover"
-      }
-      sizes={side ? "(min-width: 640px) 224px, 100vw" : "(min-width: 768px) 448px, 100vw"}
-    />
-  );
-
-  if (!event.href) {
-    return (
-      <div className={side ? "w-full shrink-0 sm:w-56" : "mt-5"}>{image}</div>
-    );
-  }
-
-  return (
-    <Link
-      href={event.href}
-      rel="noopener noreferrer"
-      target="_blank"
-      className={
-        side
-          ? "block w-full shrink-0 sm:w-56"
-          : "mt-5 block transition hover:opacity-90"
-      }
-    >
-      {image}
-    </Link>
   );
 }
