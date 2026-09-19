@@ -70,6 +70,7 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
     location: "Crystal Lake Park",
     description:
       "A Mid-Autumn Festival barbecue gathering. Follow Instagram for the latest ticket details.",
+    href: "https://forms.gle/3EQo4LgSNydndDrr6",
   },
   {
     title: "Internal Bonding",

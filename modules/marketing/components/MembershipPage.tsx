@@ -9,6 +9,8 @@ import merchPosterTwo from "../../../images/merch/TSA_Merch_Poster_2.jpeg";
 const MERCH_PURCHASE_URL =
   "https://myship.7-11.com.tw/general/detail/GM2607092499849";
 
+const SHOW_PARTNER_DISCOUNT_NAMES = false;
+
 const PARTNERS = [
   {
     category: "Restaurant",
@@ -157,32 +159,38 @@ export async function MembershipPage({
             <p className="mt-3 max-w-2xl rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm font-medium text-neutral-700">
               資訊以 Instagram 為主。
             </p>
-            <div className="mt-8 grid gap-5 md:grid-cols-2">
-              {PARTNERS.map((partner) => (
-                <article
-                  key={partner.name}
-                  className="rounded-md border border-neutral-200 bg-white p-5"
-                >
-                  <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
-                    {partner.category}
-                  </p>
-                  <h3 className="mt-2 text-lg font-semibold text-neutral-900">
-                    {partner.name}
-                  </h3>
-                  <p className="mt-3 text-sm leading-6 text-neutral-600">
-                    {partner.offer}
-                  </p>
-                  <Link
-                    href={partner.href}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                    className="mt-4 inline-flex text-sm font-medium text-neutral-900 underline underline-offset-4"
+            {SHOW_PARTNER_DISCOUNT_NAMES ? (
+              <div className="mt-8 grid gap-5 md:grid-cols-2">
+                {PARTNERS.map((partner) => (
+                  <article
+                    key={partner.name}
+                    className="rounded-md border border-neutral-200 bg-white p-5"
                   >
-                    Location
-                  </Link>
-                </article>
-              ))}
-            </div>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                      {partner.category}
+                    </p>
+                    <h3 className="mt-2 text-lg font-semibold text-neutral-900">
+                      {partner.name}
+                    </h3>
+                    <p className="mt-3 text-sm leading-6 text-neutral-600">
+                      {partner.offer}
+                    </p>
+                    <Link
+                      href={partner.href}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      className="mt-4 inline-flex text-sm font-medium text-neutral-900 underline underline-offset-4"
+                    >
+                      Location
+                    </Link>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-8 rounded-md border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-600">
+                Partner discount details will be announced once confirmed.
+              </p>
+            )}
           </div>
 
           <aside className="h-fit rounded-md border border-neutral-200 bg-white p-6">

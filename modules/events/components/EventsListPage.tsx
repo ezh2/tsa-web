@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { unstable_rethrow } from "next/navigation";
 import {
   listPastEvents,
@@ -16,6 +17,7 @@ type CalendarEvent = {
   time: string;
   location: string;
   timestamp: number;
+  href?: string;
 };
 
 type CalendarEventGroup = {
@@ -102,6 +104,7 @@ function fromStaticEvent(event: StaticUpcomingEvent): CalendarEvent {
     time: event.time,
     location: event.location,
     timestamp: timestampFromDate(event.date),
+    href: event.href,
   };
 }
 
@@ -140,7 +143,7 @@ function MonthGroup({ group }: { group: CalendarEventGroup }) {
 }
 
 function EventBlock({ event }: { event: CalendarEvent }) {
-  return (
+  const content = (
     <article className="flex min-h-32 flex-col justify-between rounded-md border border-black/10 bg-white p-3 shadow-sm transition hover:-translate-y-0.5 hover:border-neutral-400">
       <div>
         <p className="text-[0.65rem] font-semibold uppercase leading-tight tracking-wider text-neutral-500">
@@ -167,6 +170,19 @@ function EventBlock({ event }: { event: CalendarEvent }) {
         </div>
       </dl>
     </article>
+  );
+
+  if (!event.href) return content;
+
+  return (
+    <Link
+      href={event.href}
+      rel="noopener noreferrer"
+      target="_blank"
+      className="block"
+    >
+      {content}
+    </Link>
   );
 }
 
