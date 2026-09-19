@@ -29,6 +29,16 @@ const PREVIEWS = [
 
 export function CurrentStuPage() {
   return (
+    <main className="mx-auto flex min-h-[70vh] w-full max-w-6xl items-center justify-center px-6 py-16 text-center sm:py-20">
+      <h1 className="text-4xl font-semibold tracking-tight text-neutral-900">
+        In development
+      </h1>
+    </main>
+  );
+}
+
+export function CurrentStuPageFullImplementation() {
+  return (
     <main className="bg-white">
       <section className="border-b border-neutral-100">
         <div className="mx-auto w-full max-w-6xl px-6 py-16 sm:py-20">

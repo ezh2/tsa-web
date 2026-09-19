@@ -130,7 +130,7 @@ function MonthGroup({ group }: { group: CalendarEventGroup }) {
       >
         {group.month}
       </h2>
-      <div className="mt-4 grid gap-3 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="mt-4 grid gap-2 sm:grid-cols-4 lg:grid-cols-5">
         {group.events.map((event) => (
           <EventBlock key={event.key} event={event} />
         ))}
@@ -141,24 +141,24 @@ function MonthGroup({ group }: { group: CalendarEventGroup }) {
 
 function EventBlock({ event }: { event: CalendarEvent }) {
   return (
-    <article className="flex aspect-square min-h-0 flex-col justify-between rounded-md border border-black/10 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-neutral-400">
+    <article className="flex min-h-32 flex-col justify-between rounded-md border border-black/10 bg-white p-3 shadow-sm transition hover:-translate-y-0.5 hover:border-neutral-400">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
+        <p className="text-[0.65rem] font-semibold uppercase leading-tight tracking-wider text-neutral-500">
           {event.date}
         </p>
-        <h3 className="mt-2 text-base font-semibold leading-tight text-neutral-950">
+        <h3 className="mt-1.5 text-sm font-semibold leading-tight text-neutral-950">
           {event.title}
         </h3>
       </div>
-      <dl className="mt-3 space-y-2 text-xs text-neutral-700">
-        <div>
-          <dt className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
+      <dl className="mt-3 grid gap-2 text-[0.7rem] leading-tight text-neutral-700">
+        <div className="min-w-0">
+          <dt className="text-[0.62rem] font-semibold uppercase tracking-wider text-neutral-400">
             Time
           </dt>
           <dd className="mt-0.5 font-medium">{event.time}</dd>
         </div>
-        <div>
-          <dt className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
+        <div className="min-w-0">
+          <dt className="text-[0.62rem] font-semibold uppercase tracking-wider text-neutral-400">
             Location
           </dt>
           <dd className="mt-0.5 line-clamp-2 font-medium">
@@ -225,7 +225,7 @@ function EventBlockGrid({ events }: { events: CalendarEvent[] }) {
   }
 
   return (
-    <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-4">
+    <div className="grid gap-2 sm:grid-cols-4 lg:grid-cols-5">
       {events.map((event) => (
         <EventBlock key={event.key} event={event} />
       ))}

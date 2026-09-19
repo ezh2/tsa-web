@@ -46,44 +46,12 @@ const LIFE_SECTIONS = [
   },
 ];
 
-const INTERN_WALL = [
-  {
-    month: "September",
-    name: "Steve",
-    role: "Program Department",
-    note: "",
-  },
-  {
-    month: "October",
-    name: "Steve",
-    role: "Marketing Department",
-    note: "",
-  },
-  {
-    month: "November",
-    name: "Steve",
-    role: "Technology Department",
-    note: "",
-  },
-  {
-    month: "December",
-    name: "Steve",
-    role: "Treasury Department",
-    note: "",
-  },
-  {
-    month: "January",
-    name: "Steve",
-    role: "Publicity Department",
-    note: "",
-  },
-  {
-    month: "February",
-    name: "Steve",
-    role: "Secretary Department",
-    note: "",
-  },
-];
+const INTERN_WALL: Array<{
+  month: string;
+  name: string;
+  role: string;
+  note: string;
+}> = [];
 
 type FontAwesomeIconName =
   | "instagram"
@@ -330,38 +298,46 @@ export function MarketingHomePage() {
               Monthly recognition for interns who help make TSA events and
               projects possible.
             </p>
-            <div
-              aria-label="Best Intern Wall by month"
-              className="mt-4 flex max-w-full snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain pb-4 [scrollbar-width:thin]"
-            >
-              {INTERN_WALL.map((intern, index) => (
-                <article
-                  key={`${intern.month}-${intern.role}-${index}`}
-                  className="w-[16rem] shrink-0 snap-start rounded-md border border-black/10 bg-white/85 p-5 backdrop-blur-xl sm:w-[18rem]"
-                >
-                  <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
-                    {intern.month}
-                  </p>
-                  <div className="aspect-square overflow-hidden rounded-md bg-neutral-200">
-                    <Image
-                      src={stevePhoto}
-                      alt={`${intern.name}, ${intern.role}`}
-                      className="h-full w-full object-cover"
-                      sizes="18rem"
-                    />
-                  </div>
-                  <h4 className="mt-4 text-base font-semibold text-neutral-900">
-                    {intern.name}
-                  </h4>
-                  <p className="mt-1 text-sm text-neutral-500">{intern.role}</p>
-                  {intern.note && (
-                    <p className="mt-3 text-sm leading-6 text-neutral-600">
-                      {intern.note}
+            {INTERN_WALL.length > 0 ? (
+              <div
+                aria-label="Best Intern Wall by month"
+                className="mt-4 flex max-w-full snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain pb-4 [scrollbar-width:thin]"
+              >
+                {INTERN_WALL.map((intern, index) => (
+                  <article
+                    key={`${intern.month}-${intern.role}-${index}`}
+                    className="w-[16rem] shrink-0 snap-start rounded-md border border-black/10 bg-white/85 p-5 backdrop-blur-xl sm:w-[18rem]"
+                  >
+                    <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                      {intern.month}
                     </p>
-                  )}
-                </article>
-              ))}
-            </div>
+                    <div className="aspect-square overflow-hidden rounded-md bg-neutral-200">
+                      <Image
+                        src={stevePhoto}
+                        alt={`${intern.name}, ${intern.role}`}
+                        className="h-full w-full object-cover"
+                        sizes="18rem"
+                      />
+                    </div>
+                    <h4 className="mt-4 text-base font-semibold text-neutral-900">
+                      {intern.name}
+                    </h4>
+                    <p className="mt-1 text-sm text-neutral-500">
+                      {intern.role}
+                    </p>
+                    {intern.note && (
+                      <p className="mt-3 text-sm leading-6 text-neutral-600">
+                        {intern.note}
+                      </p>
+                    )}
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-4 rounded-md border border-black/10 bg-white/85 px-4 py-3 text-sm text-neutral-600">
+                Interns will appear here once selected.
+              </p>
+            )}
           </div>
         </div>
       </section>
