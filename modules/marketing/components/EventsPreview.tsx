@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { unstable_rethrow } from "next/navigation";
 import { getStaticUpcomingEvents } from "@/modules/events/data/upcoming";
@@ -70,21 +71,33 @@ export async function EventsPreview() {
           <Link
             key={event.title}
             href="/events"
-            className="group flex min-h-64 flex-col rounded-md border border-black/10 bg-white/85 p-6 backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-neutral-400 hover:shadow-sm"
+            className="group relative flex min-h-64 flex-col overflow-hidden rounded-md border border-black/10 bg-white/85 p-6 backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-neutral-400 hover:shadow-sm"
           >
-            <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">
-              {event.date} · {event.time}
-            </p>
-            <h3 className="mt-2 text-lg font-semibold text-neutral-900 group-hover:underline">
-              {event.title}
-            </h3>
-            <p className="mt-1 text-sm text-neutral-600">{event.location}</p>
-            <p className="mt-3 line-clamp-3 text-sm text-neutral-600">
-              {event.description}
-            </p>
-            <span className="mt-4 inline-block text-sm font-medium text-neutral-900 group-hover:underline">
-              View calendar →
-            </span>
+            {event.image && (
+              <Image
+                src={event.image.src}
+                alt=""
+                fill
+                aria-hidden
+                className="pointer-events-none object-cover opacity-8"
+                sizes="(min-width: 1024px) 384px, (min-width: 640px) 50vw, 100vw"
+              />
+            )}
+            <div className="relative flex h-full flex-col">
+              <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">
+                {event.date} · {event.time}
+              </p>
+              <h3 className="mt-2 text-lg font-semibold text-neutral-900 group-hover:underline">
+                {event.title}
+              </h3>
+              <p className="mt-1 text-sm text-neutral-600">{event.location}</p>
+              <p className="mt-3 line-clamp-3 text-sm text-neutral-600">
+                {event.description}
+              </p>
+              <span className="mt-4 inline-block text-sm font-medium text-neutral-900 group-hover:underline">
+                View calendar →
+              </span>
+            </div>
           </Link>
         ))}
       </div>

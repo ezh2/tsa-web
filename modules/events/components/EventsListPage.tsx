@@ -1,4 +1,4 @@
-import Link from "next/link";
+import type { StaticImageData } from "next/image";
 import { unstable_rethrow } from "next/navigation";
 import {
   listPastEvents,
@@ -9,6 +9,9 @@ import {
   getStaticUpcomingEvents,
   type StaticUpcomingEvent,
 } from "@/modules/events/data/upcoming";
+import { EventCard } from "./EventCard";
+import bentoPhoto from "@/images/events/2526/bento/bento_2526.jpg";
+import ruffPhoto from "@/images/events/2627/ruff0629.jpg";
 
 type CalendarEvent = {
   key: string;
@@ -16,8 +19,13 @@ type CalendarEvent = {
   date: string;
   time: string;
   location: string;
+  description?: string;
   timestamp: number;
   href?: string;
+  image?: {
+    src: StaticImageData;
+    alt: string;
+  };
 };
 
 type CalendarEventGroup = {
@@ -31,6 +39,10 @@ type PastEvent = {
   date: string;
   time: string;
   location: string;
+  image?: {
+    src: StaticImageData;
+    alt: string;
+  };
 };
 
 const PAST_EVENTS: PastEvent[] = [
@@ -39,12 +51,20 @@ const PAST_EVENTS: PastEvent[] = [
     date: "June 29, 2026",
     time: "Time announced by WWTSA",
     location: "Partner event with WWTSA",
+    image: {
+      src: ruffPhoto,
+      alt: "Homecoming at RUFF partner event flyer",
+    },
   },
   {
     title: "Taiwanese Bento",
     date: "April 18, 2026",
     time: "13:30 - 16:00",
     location: "Anniversary Plaza",
+    image: {
+      src: bentoPhoto,
+      alt: "TSA UIUC Taiwanese bento event",
+    },
   },
   {
     title: "Lunar New Year Banquet",
@@ -103,8 +123,10 @@ function fromStaticEvent(event: StaticUpcomingEvent): CalendarEvent {
     date: event.date,
     time: event.time,
     location: event.location,
+    description: event.description,
     timestamp: timestampFromDate(event.date),
     href: event.href,
+    image: event.image,
   };
 }
 
@@ -143,47 +165,7 @@ function MonthGroup({ group }: { group: CalendarEventGroup }) {
 }
 
 function EventBlock({ event }: { event: CalendarEvent }) {
-  const content = (
-    <article className="flex min-h-32 flex-col justify-between rounded-md border border-black/10 bg-white p-3 shadow-sm transition hover:-translate-y-0.5 hover:border-neutral-400">
-      <div>
-        <p className="text-[0.65rem] font-semibold uppercase leading-tight tracking-wider text-neutral-500">
-          {event.date}
-        </p>
-        <h3 className="mt-1.5 text-sm font-semibold leading-tight text-neutral-950">
-          {event.title}
-        </h3>
-      </div>
-      <dl className="mt-3 grid gap-2 text-[0.7rem] leading-tight text-neutral-700">
-        <div className="min-w-0">
-          <dt className="text-[0.62rem] font-semibold uppercase tracking-wider text-neutral-400">
-            Time
-          </dt>
-          <dd className="mt-0.5 font-medium">{event.time}</dd>
-        </div>
-        <div className="min-w-0">
-          <dt className="text-[0.62rem] font-semibold uppercase tracking-wider text-neutral-400">
-            Location
-          </dt>
-          <dd className="mt-0.5 line-clamp-2 font-medium">
-            {event.location}
-          </dd>
-        </div>
-      </dl>
-    </article>
-  );
-
-  if (!event.href) return content;
-
-  return (
-    <Link
-      href={event.href}
-      rel="noopener noreferrer"
-      target="_blank"
-      className="block"
-    >
-      {content}
-    </Link>
-  );
+  return <EventCard event={event} />;
 }
 
 function CalendarBlocks({
@@ -270,6 +252,7 @@ export async function EventsListPage() {
         date: DATE_FORMAT.format(start),
         time: timeRange(event.starts_at, event.ends_at),
         location: event.location ?? "TBA",
+        description: event.description ?? undefined,
         timestamp: start.getTime(),
       };
     }),
@@ -285,6 +268,7 @@ export async function EventsListPage() {
         date: DATE_FORMAT.format(start),
         time: timeRange(event.starts_at, event.ends_at),
         location: event.location ?? "TBA",
+        description: event.description ?? undefined,
         timestamp: start.getTime(),
       };
     }),
@@ -295,6 +279,7 @@ export async function EventsListPage() {
       date: event.date,
       time: event.time,
       location: event.location,
+      image: event.image,
       timestamp: timestampFromDate(event.date),
     })),
   ].toSorted((a, b) => b.timestamp - a.timestamp);

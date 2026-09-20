@@ -1,5 +1,9 @@
 import type { StaticImageData } from "next/image";
+import bbqPhoto from "@/images/events/2627/bbq2627.jpg";
+import generalMeetingPhoto from "@/images/events/2627/general_meeting_2627.jpg";
 import newStudentOrientationFlyer from "@/images/events/2627/new stud oren 2627.png";
+import superOkPhoto from "@/images/events/2627/super_ok.jpg";
+import welcomeDinnerPhoto from "@/images/events/2627/welcome_dinner.jpg";
 
 export interface StaticUpcomingEvent {
   title: string;
@@ -46,6 +50,10 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
     location: "Chili Bistro",
     description:
       "Kick off the semester over dinner at Chili Bistro! Meet fellow new students, connect with TSA members, and enjoy a relaxed evening of good food and conversation as you settle into life at UIUC.",
+    image: {
+      src: welcomeDinnerPhoto,
+      alt: "TSA UIUC new student welcome dinner",
+    },
   },
   {
     title: "General Meeting",
@@ -54,6 +62,10 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
     location: "AACC",
     description:
       "An interns-only TSA general meeting. Please bring your i-card. Follow Instagram for the latest details.",
+    image: {
+      src: generalMeetingPhoto,
+      alt: "TSA UIUC General Meeting",
+    },
   },
   {
     title: "超可盃 籃球",
@@ -62,6 +74,10 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
     location: "ARC Gym 1, Court 5-6",
     description:
       "A TSA basketball activity. Follow Instagram for the latest schedule and sign-up details.",
+    image: {
+      src: superOkPhoto,
+      alt: "TSA UIUC 超可盃 basketball event",
+    },
   },
   {
     title: "中秋烤肉",
@@ -71,6 +87,10 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
     description:
       "A Mid-Autumn Festival barbecue gathering. Follow Instagram for the latest ticket details.",
     href: "https://forms.gle/3EQo4LgSNydndDrr6",
+    image: {
+      src: bbqPhoto,
+      alt: "TSA UIUC Mid-Autumn BBQ",
+    },
   },
   {
     title: "Internal Bonding",
