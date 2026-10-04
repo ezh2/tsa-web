@@ -26,6 +26,10 @@ type CalendarEvent = {
     src: StaticImageData;
     alt: string;
   };
+  images?: {
+    src: StaticImageData;
+    alt: string;
+  }[];
 };
 
 type CalendarEventGroup = {
@@ -127,6 +131,7 @@ function fromStaticEvent(event: StaticUpcomingEvent): CalendarEvent {
     timestamp: timestampFromDate(event.date),
     href: event.href,
     image: event.image,
+    images: event.images,
   };
 }
 

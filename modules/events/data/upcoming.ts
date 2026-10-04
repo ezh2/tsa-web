@@ -1,5 +1,7 @@
 import type { StaticImageData } from "next/image";
-import bbqPhoto from "@/images/events/2627/bbq2627.jpg";
+import bbqPhotoOne from "@/images/events/2627/BBQ/IMG_4378.JPG";
+import bbqPhotoTwo from "@/images/events/2627/BBQ/IMG_4786.jpeg";
+import bbqPhotoThree from "@/images/events/2627/BBQ/IMG_4795.jpeg";
 import generalMeetingPhoto from "@/images/events/2627/general_meeting_2627.jpg";
 import newStudentOrientationFlyer from "@/images/events/2627/new stud oren 2627.png";
 import superOkPhoto from "@/images/events/2627/super_ok.jpg";
@@ -16,6 +18,10 @@ export interface StaticUpcomingEvent {
     src: StaticImageData;
     alt: string;
   };
+  images?: {
+    src: StaticImageData;
+    alt: string;
+  }[];
 }
 
 const NEW_STUDENT_ORIENTATION_URL =
@@ -88,22 +94,28 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
       "A Mid-Autumn Festival barbecue gathering. Follow Instagram for the latest ticket details.",
     href: "https://forms.gle/3EQo4LgSNydndDrr6",
     image: {
-      src: bbqPhoto,
+      src: bbqPhotoOne,
       alt: "TSA UIUC Mid-Autumn BBQ",
     },
+    images: [
+      {
+        src: bbqPhotoOne,
+        alt: "TSA UIUC Mid-Autumn BBQ group photo",
+      },
+      {
+        src: bbqPhotoTwo,
+        alt: "TSA UIUC Mid-Autumn BBQ food and picnic setup",
+      },
+      {
+        src: bbqPhotoThree,
+        alt: "TSA UIUC Mid-Autumn BBQ students at Crystal Lake Park",
+      },
+    ],
   },
   {
-    title: "Internal Bonding",
-    date: "October 3, 2026",
-    time: "18:00 - 20:00",
-    location: "TBA",
-    description:
-      "A board and volunteer bonding session focused on team connection, planning alignment, and strengthening the people behind TSA events.",
-  },
-  {
-    title: "1010 Party",
+    title: "National Day Celebration",
     date: "October 9, 2026",
-    time: "TBA",
+    time: "21:30",
     location: "TBA",
     description:
       "A community celebration for Double Ten Day with social activities, cultural touches, and a festive space for students to gather. Follow Instagram for details.",
@@ -111,7 +123,7 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
   {
     title: "TASC 10/10 Night Market",
     date: "October 10, 2026",
-    time: "TBA",
+    time: "17:30",
     location: "TASC Night Market, booth location TBA",
     description:
       "A 10/10 night activity with TASC. Follow Instagram for the latest details.",
@@ -155,14 +167,6 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
     location: "Golden Harbor / 漁滿樓",
     description:
       "TSA's Lunar New Year banquet with Taiwanese cuisine, raffle prizes, and a formal community celebration for the new year.",
-  },
-  {
-    title: "Spring Internal Bonding",
-    date: "February 27, 2027",
-    time: "18:00 - 20:00",
-    location: "TBA",
-    description:
-      "A second-semester bonding and planning session for TSA board members, interns, and contributors.",
   },
   {
     title: "Taiwanese Breakfast Pop-Up",

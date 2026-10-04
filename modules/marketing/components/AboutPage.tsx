@@ -8,7 +8,7 @@ import seanPhoto from "../../../images/Board2627/Sean.jpg";
 import sylviaPhoto from "../../../images/Board2627/Sylvia.jpg";
 import timPhoto from "../../../images/Board2627/Tim.jpg";
 import ulandaPhoto from "../../../images/Board2627/Ulanda.jpg";
-import stevePhoto from "../../../images/Steve.png";
+import lateaLogo from "../../../images/latea-logo.png";
 import tsmcLogo from "../../../images/tsmc-logo.png";
 
 const BOARD_MEMBERS: Array<{
@@ -29,8 +29,8 @@ const BOARD_MEMBERS: Array<{
 
 const SPONSORS: Array<{ name: string; logo?: StaticImageData }> = [
   { name: "TSMC (台灣積體電路製造)", logo: tsmcLogo },
-  { name: "Steve", logo: stevePhoto },
-  { name: "招募中" },
+  { name: "LaTea", logo: lateaLogo },
+  { name: "TECO Taiwan" },
   { name: "招募中" },
 ];
 
@@ -141,7 +141,7 @@ export function AboutPage() {
                     />
                   </div>
                 ) : (
-                  <PhotoPlaceholder label="招募中" />
+                  <PhotoPlaceholder label={sponsor.name} />
                 )}
                 <h3 className="mt-4 text-base font-semibold text-neutral-900">
                   {sponsor.name}

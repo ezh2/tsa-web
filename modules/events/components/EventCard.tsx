@@ -15,14 +15,20 @@ export type EventCardEvent = {
     src: StaticImageData;
     alt: string;
   };
+  images?: {
+    src: StaticImageData;
+    alt: string;
+  }[];
 };
 
 function EventSummary({ event }: { event: EventCardEvent }) {
+  const previewImage = event.image ?? event.images?.[0];
+
   return (
     <>
-      {event.image && (
+      {previewImage && (
         <Image
-          src={event.image.src}
+          src={previewImage.src}
           alt=""
           fill
           aria-hidden
@@ -62,8 +68,9 @@ function EventSummary({ event }: { event: EventCardEvent }) {
 
 export function EventCard({ event }: { event: EventCardEvent }) {
   const [open, setOpen] = useState(false);
+  const images = event.images ?? (event.image ? [event.image] : []);
 
-  if (!event.image) {
+  if (images.length === 0) {
     return (
       <article className="relative overflow-hidden rounded-md border border-black/10 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-neutral-400">
         <EventSummary event={event} />
@@ -94,13 +101,37 @@ export function EventCard({ event }: { event: EventCardEvent }) {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="relative">
-              <Image
-                src={event.image.src}
-                alt={event.image.alt}
-                className="aspect-[4/3] w-full object-cover"
-                sizes="(min-width: 768px) 672px, 100vw"
-                priority
-              />
+              {images.length === 1 ? (
+                <Image
+                  src={images[0].src}
+                  alt={images[0].alt}
+                  className="aspect-[4/3] w-full object-cover"
+                  sizes="(min-width: 768px) 672px, 100vw"
+                  priority
+                />
+              ) : (
+                <div className="grid gap-1 bg-neutral-100 p-1 sm:grid-cols-2">
+                  {images.map((image, index) => (
+                    <Image
+                      key={image.alt}
+                      src={image.src}
+                      alt={image.alt}
+                      className={
+                        "w-full object-cover " +
+                        (index === 0
+                          ? "aspect-[4/3] sm:col-span-2"
+                          : "aspect-[4/3]")
+                      }
+                      sizes={
+                        index === 0
+                          ? "(min-width: 768px) 672px, 100vw"
+                          : "(min-width: 768px) 336px, 100vw"
+                      }
+                      priority={index === 0}
+                    />
+                  ))}
+                </div>
+              )}
               <button
                 type="button"
                 aria-label="Close event details"

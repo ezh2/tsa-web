@@ -1,11 +1,10 @@
 import Link from "next/link";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { EventsPreview } from "./EventsPreview";
 import rawMerch from "../../../images/merch/Raw Merch.png";
 import merchPosterOne from "../../../images/merch/TSA_Merch_Poster_1.jpeg";
 import merchPosterTwo from "../../../images/merch/TSA_Merch_Poster_2.jpeg";
 import prepImage from "../../../images/prep.png";
-import stevePhoto from "../../../images/Steve.png";
 import tsaTaiwanLogo from "../../../images/TSA _Taiwan_LOGO.png";
 
 const LIFE_SECTIONS = [
@@ -51,7 +50,21 @@ const INTERN_WALL: Array<{
   name: string;
   role: string;
   note: string;
-}> = [];
+  image?: StaticImageData;
+}> = [
+  {
+    month: "September 2026",
+    name: "Barron Tsai",
+    role: "Marketing",
+    note: "",
+  },
+  {
+    month: "September 2026",
+    name: "Ryan Hsu",
+    role: "Program",
+    note: "",
+  },
+];
 
 type FontAwesomeIconName =
   | "instagram"
@@ -311,13 +324,19 @@ export function MarketingHomePage() {
                     <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
                       {intern.month}
                     </p>
-                    <div className="aspect-square overflow-hidden rounded-md bg-neutral-200">
-                      <Image
-                        src={stevePhoto}
-                        alt={`${intern.name}, ${intern.role}`}
-                        className="h-full w-full object-cover"
-                        sizes="18rem"
-                      />
+                    <div className="flex aspect-square items-center justify-center overflow-hidden rounded-md bg-neutral-200">
+                      {intern.image ? (
+                        <Image
+                          src={intern.image}
+                          alt={`${intern.name}, ${intern.role}`}
+                          className="h-full w-full object-cover"
+                          sizes="18rem"
+                        />
+                      ) : (
+                        <span aria-hidden="true" className="text-4xl font-semibold text-neutral-500">
+                          {intern.name.split(" ").map((part) => part[0]).join("")}
+                        </span>
+                      )}
                     </div>
                     <h4 className="mt-4 text-base font-semibold text-neutral-900">
                       {intern.name}
