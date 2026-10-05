@@ -1,5 +1,5 @@
 import type { StaticImageData } from "next/image";
-import bbqPhotoOne from "@/images/events/2627/BBQ/IMG_4378.JPG";
+import bbqPhotoOne from "@/images/events/2627/BBQ/IMG_4378.jpeg";
 import bbqPhotoTwo from "@/images/events/2627/BBQ/IMG_4786.jpeg";
 import bbqPhotoThree from "@/images/events/2627/BBQ/IMG_4795.jpeg";
 import generalMeetingPhoto from "@/images/events/2627/general_meeting_2627.jpg";

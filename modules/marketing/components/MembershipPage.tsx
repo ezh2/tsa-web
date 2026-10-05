@@ -1,44 +1,66 @@
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { MerchIntroVideo } from "./MerchIntroVideo";
 import { MerchTranslationButton } from "./MerchTranslationButton";
 import rawMerch from "../../../images/merch/Raw Merch.png";
 import merchPosterOne from "../../../images/merch/TSA_Merch_Poster_1.jpeg";
 import merchPosterTwo from "../../../images/merch/TSA_Merch_Poster_2.jpeg";
+import lateaLogo from "../../../images/sponsors/latea-logo.png";
 
 const MERCH_PURCHASE_URL =
   "https://myship.7-11.com.tw/general/detail/GM2607092499849";
 
-const SHOW_PARTNER_DISCOUNT_NAMES = false;
-
-const PARTNERS = [
+const PARTNERS: Array<{
+  category: string;
+  name: string;
+  offer: string;
+  additionalOffer?: string;
+  address?: string;
+  href?: string;
+  confirmed: boolean;
+  logo?: StaticImageData;
+}> = [
+  {
+    category: "Beverages",
+    name: "LaTea",
+    address: "601 S 6th St Apt 105, Champaign, IL 61820",
+    offer: "10% off in-store at LaTea (regular-priced drinks only). Cannot be combined with other discounts or promotions.",
+    additionalOffer: "Early access to seasonal drinks and new product launches.",
+    confirmed: true,
+    logo: lateaLogo,
+  },
   {
     category: "Restaurant",
     name: "Golden Harbor 漁滿樓",
+    confirmed: false,
     offer: "To be announced",
     href: "https://goo.gl/maps/",
   },
   {
     category: "Restaurant",
     name: "PHO Noodle Station",
+    confirmed: false,
     offer: "To be announced",
     href: "https://goo.gl/maps/",
   },
   {
     category: "Restaurant",
     name: "Paris Super",
+    confirmed: false,
     offer: "To be announced",
     href: "https://goo.gl/maps/",
   },
   {
     category: "Beverages",
     name: "HAPPYLEMON",
+    confirmed: false,
     offer: "To be announced",
     href: "https://www.google.com/maps",
   },
   {
     category: "Groceries",
     name: "Weee",
+    confirmed: false,
     offer: "To be announced",
     href: "https://www.sayweee.com/",
   },
@@ -47,7 +69,7 @@ const PARTNERS = [
 const MEMBERSHIP_FEATURES = [
   "Lifetime TSA membership",
   "Non-transferable membership holder benefits",
-  "Partner store discounts to be announced",
+  "LaTea partner discounts and early access to new drinks",
   "Membership card and Line Announcement System enrollment",
   "Membership card discounts cannot be combined with other event discounts",
 ];
@@ -65,7 +87,7 @@ const PRICING_PLANS = [
     name: "TSA Membership",
     price: "$29.99",
     note: "Lifetime, non-transferable",
-    body: "Lifetime access to TSA membership benefits, membership card verification, and announcements for the registered member. Partner discounts are to be announced.",
+    body: "Lifetime access to TSA membership benefits, membership card verification, and announcements for the registered member, including LaTea partner benefits.",
     featured: false,
     productKey: "membership",
   },
@@ -149,32 +171,50 @@ export async function MembershipPage({
               Partnerships
             </p>
             <h2 className="mt-2 text-3xl font-semibold tracking-tight text-neutral-900">
-              Partner Discounts To Be Announced
+              VIP Card Collaboration Partners
             </h2>
             <p className="mt-4 max-w-2xl text-sm leading-6 text-neutral-600">
-              Partner discounts are currently under discussion. Final
-              membership-card benefit information will be announced through TSA
-              channels.
+              Enjoy the following benefits with your TSA membership card.
+              Additional partner benefits will be announced through TSA channels.
             </p>
             <p className="mt-3 max-w-2xl rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm font-medium text-neutral-700">
               資訊以 Instagram 為主。
             </p>
-            {SHOW_PARTNER_DISCOUNT_NAMES ? (
+            {PARTNERS.some((partner) => partner.confirmed) ? (
               <div className="mt-8 grid gap-5 md:grid-cols-2">
-                {PARTNERS.map((partner) => (
+                {PARTNERS.filter((partner) => partner.confirmed).map((partner) => (
                   <article
                     key={partner.name}
                     className="rounded-md border border-neutral-200 bg-white p-5"
                   >
+                    {partner.logo && (
+                      <Image
+                        src={partner.logo}
+                        alt={`${partner.name} logo`}
+                        className="mb-4 h-32 w-full object-contain object-center"
+                        sizes="240px"
+                      />
+                    )}
                     <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
                       {partner.category}
                     </p>
                     <h3 className="mt-2 text-lg font-semibold text-neutral-900">
                       {partner.name}
                     </h3>
+                    {partner.address && (
+                      <p className="mt-2 text-sm leading-6 text-neutral-500">
+                        {partner.address}
+                      </p>
+                    )}
                     <p className="mt-3 text-sm leading-6 text-neutral-600">
                       {partner.offer}
                     </p>
+                    {partner.additionalOffer && (
+                      <p className="mt-3 text-sm leading-6 text-neutral-600">
+                        {partner.additionalOffer}
+                      </p>
+                    )}
+                    {partner.href && (
                     <Link
                       href={partner.href}
                       rel="noopener noreferrer"
@@ -183,6 +223,7 @@ export async function MembershipPage({
                     >
                       Location
                     </Link>
+                    )}
                   </article>
                 ))}
               </div>

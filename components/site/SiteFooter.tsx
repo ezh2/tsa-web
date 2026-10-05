@@ -68,7 +68,7 @@ export function SiteFooter() {
                 {section.title}
               </h2>
               <ul className="mt-5 space-y-3">
-                {section.links.map((link) => {
+                {section.links.filter((link) => !link.href.startsWith("/current-students")).map((link) => {
                   const isExternal = link.href.startsWith("http");
 
                   return (

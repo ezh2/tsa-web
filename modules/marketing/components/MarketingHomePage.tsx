@@ -6,6 +6,7 @@ import merchPosterOne from "../../../images/merch/TSA_Merch_Poster_1.jpeg";
 import merchPosterTwo from "../../../images/merch/TSA_Merch_Poster_2.jpeg";
 import prepImage from "../../../images/prep.png";
 import tsaTaiwanLogo from "../../../images/TSA _Taiwan_LOGO.png";
+import barronPhoto from "../../../images/interns/barron_marketing.jpg";
 
 const LIFE_SECTIONS = [
   {
@@ -57,6 +58,7 @@ const INTERN_WALL: Array<{
     name: "Barron Tsai",
     role: "Marketing",
     note: "",
+    image: barronPhoto,
   },
   {
     month: "September 2026",
@@ -174,7 +176,7 @@ export function MarketingHomePage() {
           </div>
 
           <div className="mt-14 grid gap-5 md:grid-cols-2">
-            {LIFE_SECTIONS.map((section) => (
+            {LIFE_SECTIONS.filter((section) => section.href !== "/current-students").map((section) => (
               <Link
                 key={section.title}
                 href={section.href}

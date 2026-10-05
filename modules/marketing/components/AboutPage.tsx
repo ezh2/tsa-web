@@ -8,8 +8,9 @@ import seanPhoto from "../../../images/Board2627/Sean.jpg";
 import sylviaPhoto from "../../../images/Board2627/Sylvia.jpg";
 import timPhoto from "../../../images/Board2627/Tim.jpg";
 import ulandaPhoto from "../../../images/Board2627/Ulanda.jpg";
-import lateaLogo from "../../../images/latea-logo.png";
-import tsmcLogo from "../../../images/tsmc-logo.png";
+import lateaLogo from "../../../images/sponsors/latea-logo.png";
+import tsmcLogo from "../../../images/sponsors/tsmc-logo.png";
+import weeeLogo from "../../../images/sponsors/weee-logo.png";
 
 const BOARD_MEMBERS: Array<{
   name: string;
@@ -30,8 +31,8 @@ const BOARD_MEMBERS: Array<{
 const SPONSORS: Array<{ name: string; logo?: StaticImageData }> = [
   { name: "TSMC (台灣積體電路製造)", logo: tsmcLogo },
   { name: "LaTea", logo: lateaLogo },
+  { name: "Weee", logo: weeeLogo },
   { name: "TECO Taiwan" },
-  { name: "招募中" },
 ];
 
 const CONTRIBUTORS = [

@@ -8,11 +8,6 @@ import { UserMenu } from "./UserMenu";
 import type { CurrentUser } from "@/core/types";
 import tsaLogo from "../../images/TSA UIUC Logo.webp";
 
-const STUDENT_LINKS = [
-  { label: "Current Students", href: "/current-students" },
-  { label: "Incoming Students", href: "/incoming-students" },
-];
-
 const MEMBERSHIP_LINKS = [
   { label: "Overview", href: "/membership" },
   { label: "Merch", href: "/membership/merch" },
@@ -22,7 +17,7 @@ const NAV_ITEMS = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Events", href: "/events" },
-  { label: "Students", href: "/incoming-students", children: STUDENT_LINKS },
+  { label: "Students", href: "/incoming-students" },
   { label: "Membership", href: "/membership", children: MEMBERSHIP_LINKS },
 ];
 
@@ -143,6 +138,21 @@ export function SiteHeader({ user }: { user: CurrentUser | null }) {
               const dropdownOpen = openDropdown === item.href;
               return (
                 <div key={item.href} className="group relative">
+                  {item.label === "Membership" ? (
+                    <Link
+                      href={item.href}
+                      onClick={closeDropdown}
+                      aria-current={active ? "page" : undefined}
+                      className={
+                        "block rounded-full px-4 py-2 text-sm transition " +
+                        (active
+                          ? "bg-[#f5f5f7] font-semibold text-black shadow-sm"
+                          : "text-neutral-300 hover:bg-[rgba(255,255,255,0.12)] hover:text-white")
+                      }
+                    >
+                      {item.label}
+                    </Link>
+                  ) : (
                   <button
                     type="button"
                     aria-current={active ? "page" : undefined}
@@ -162,6 +172,7 @@ export function SiteHeader({ user }: { user: CurrentUser | null }) {
                   >
                     {item.label}
                   </button>
+                  )}
                   <div
                     role="menu"
                     className={
