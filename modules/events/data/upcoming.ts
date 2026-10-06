@@ -3,6 +3,7 @@ import bbqPhotoOne from "@/images/events/2627/BBQ/IMG_4378.jpeg";
 import bbqPhotoTwo from "@/images/events/2627/BBQ/IMG_4786.jpeg";
 import bbqPhotoThree from "@/images/events/2627/BBQ/IMG_4795.jpeg";
 import generalMeetingPhoto from "@/images/events/2627/general_meeting_2627.jpg";
+import nationalDayPhoto from "@/images/events/2627/10-10.jpg";
 import newStudentOrientationFlyer from "@/images/events/2627/new stud oren 2627.png";
 import superOkPhoto from "@/images/events/2627/super_ok.jpg";
 import welcomeDinnerPhoto from "@/images/events/2627/welcome_dinner.jpg";
@@ -119,6 +120,10 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
     location: "TBA",
     description:
       "A community celebration for Double Ten Day with social activities, cultural touches, and a festive space for students to gather. Follow Instagram for details.",
+    image: {
+      src: nationalDayPhoto,
+      alt: "TSA UIUC National Day Celebration",
+    },
   },
   {
     title: "TASC 10/10 Night Market",
