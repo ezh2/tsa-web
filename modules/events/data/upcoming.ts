@@ -117,7 +117,7 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
     title: "National Day Celebration",
     date: "October 10, 2026",
     time: "22:30",
-    location: "TBA",
+    location: "Joe's Brewery Champaign",
     description:
       "A community celebration for Double Ten Day with social activities, cultural touches, and a festive space for students to gather. Follow Instagram for details.",
     image: {
