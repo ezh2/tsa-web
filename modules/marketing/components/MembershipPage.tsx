@@ -1,72 +1,8 @@
+import { getContent, requireSiteFeature } from "@/modules/content";
 import Image from "next/image";
 import Link from "next/link";
 import { MerchIntroVideo } from "./MerchIntroVideo";
 import { MerchTranslationButton } from "./MerchTranslationButton";
-import rawMerch from "../../../images/merch/Raw Merch.png";
-import merchPosterOne from "../../../images/merch/TSA_Merch_Poster_1.jpeg";
-import merchPosterTwo from "../../../images/merch/TSA_Merch_Poster_2.jpeg";
-
-const MERCH_PURCHASE_URL =
-  "https://myship.7-11.com.tw/general/detail/GM2607092499849";
-
-const PARTNERS = [
-  {
-    category: "Restaurant",
-    name: "Golden Harbor 漁滿樓",
-    offer: "5% off of all purchases",
-    href: "https://goo.gl/maps/",
-  },
-  {
-    category: "Restaurant",
-    name: "PHO Noodle Station",
-    offer: "10% off on purchases above $15, except lunch special",
-    href: "https://goo.gl/maps/",
-  },
-  {
-    category: "Restaurant",
-    name: "Paris Super",
-    offer: "10% off all purchases above $15 pre-tax",
-    href: "https://goo.gl/maps/",
-  },
-  {
-    category: "Beverages",
-    name: "HAPPYLEMON",
-    offer: "10% off on all purchases",
-    href: "https://www.google.com/maps",
-  },
-  {
-    category: "Groceries",
-    name: "Weee",
-    offer: "To be announced",
-    href: "https://www.sayweee.com/",
-  },
-];
-
-const MEMBERSHIP_FEATURES = [
-  "Lifetime TSA membership",
-  "Non-transferable membership holder benefits",
-  "Partner store discounts",
-  "Membership card and Line Announcement System enrollment",
-];
-
-const PRICING_PLANS = [
-  {
-    name: "Bundle",
-    price: "$47.99",
-    note: "Best value",
-    body: "TSA membership plus T-shirt Merch Bundle",
-    featured: true,
-    productKey: "bundle",
-  },
-  {
-    name: "TSA Membership",
-    price: "$29.99",
-    note: "Lifetime, non-transferable",
-    body: "Lifetime access to TSA membership benefits, partner discounts, card verification, and announcements for the registered member.",
-    featured: false,
-    productKey: "membership",
-  },
-];
 
 const CHECKOUT_MESSAGES: Record<string, { tone: "ok" | "err"; text: string }> = {
   cancelled: {
@@ -96,6 +32,9 @@ export async function MembershipPage({
 }: {
   searchParams?: Promise<{ checkout?: string }>;
 }) {
+  await requireSiteFeature("membership");
+  const [membership, features] = await Promise.all([getContent("membership"), getContent("features")]);
+  const PARTNERS = membership.partners, MEMBERSHIP_FEATURES = membership.features, PRICING_PLANS = membership.pricingPlans;
   const { checkout } = (await searchParams) ?? {};
   const feedback = checkout ? (CHECKOUT_MESSAGES[checkout] ?? null) : null;
 
@@ -107,21 +46,19 @@ export async function MembershipPage({
             Membership
           </p>
           <h1 className="mt-2 text-4xl font-semibold tracking-tight text-neutral-900">
-            UIUC TSA Membership
+            {membership.title}
           </h1>
           <p className="mt-4 max-w-3xl text-lg leading-8 text-neutral-600">
-            Join TSA to support Taiwanese community programming at UIUC and get
-            access to lifetime member benefits, partner discounts, merch
-            announcements, and the official Line Announcement System.
+            {membership.description}
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          {features.merch && <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/membership/merch"
               className="rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-700"
             >
               View merch
             </Link>
-          </div>
+          </div>}
 
           {feedback && (
             <div
@@ -256,10 +193,12 @@ export async function MembershipPage({
   );
 }
 
-export function MerchPage() {
+export async function MerchPage() {
+  await requireSiteFeature("merch");
+  const merch = await getContent("merch");
   return (
     <main className="bg-white">
-      <MerchIntroVideo />
+      <MerchIntroVideo src={merch.banner} />
       <section className="border-b border-neutral-100">
         <div className="mx-auto w-full max-w-6xl px-6 py-16 sm:py-20">
           <div className="grid gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
@@ -268,43 +207,33 @@ export function MerchPage() {
                 Membership
               </p>
               <h1 className="mt-2 text-4xl font-semibold tracking-tight text-neutral-900">
-                TSA 呆丸囡仔 T-shirt
+                {merch.title}
               </h1>
               <div className="mt-4 space-y-4 text-sm leading-6 text-neutral-600">
-                <p className="font-semibold text-neutral-900">
-                  📢【UIUC TSA 新學期官方周邊登場】
-                </p>
-                <p>新學期 TSA 官方周邊正式上線啦！</p>
-                <p>
-                  這次帶來的是 「呆丸囡仔」落肩短 T，把遠在香檳校園的回憶、熱血與歸屬感，穿進日常生活。不論你是即將啟程的新生、努力奮鬥的在校生，還是想念 Alma Mater 的校友，都能用這件 TSA 專屬設計展現屬於我們的 Illini Pride！🧡 💙
-                </p>
-                <p>
-                  最百搭、最耐看的 經典黑白雙色系列，簡約有質感，無論是在圖書館讀書、出門吃早午餐，還是日常穿搭都能輕鬆駕馭。穿上它，不管身在香檳還是台灣，都能一眼認出自己的 TSA 家人！
-                </p>
-                <p>趕快入手，一起把屬於 UIUC 的回憶穿在身上吧！</p>
-                <MerchTranslationButton />
+                {merch.paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+                <MerchTranslationButton paragraphs={merch.englishParagraphs} />
               </div>
               <div className="mt-6 grid gap-3 text-sm text-neutral-700 sm:grid-cols-3 lg:grid-cols-1">
                 <div className="rounded-md border border-neutral-200 bg-white p-4">
-                  <p className="font-semibold text-neutral-900">$47.99 Bundle</p>
+                  <p className="font-semibold text-neutral-900">{merch.bundlePrice} Bundle</p>
                   <p className="mt-1 text-neutral-500">Membership + T-shirt</p>
                   <div className="mt-3">
-                    <MerchPurchaseLink label="Buy bundle" />
+                    <MerchPurchaseLink href={merch.purchaseUrl} label="Buy bundle" />
                   </div>
                 </div>
                 <div className="rounded-md border border-neutral-200 bg-white p-4">
                   <p className="font-semibold text-neutral-900">
-                    $29.99 Membership
+                    {merch.membershipPrice} Membership
                   </p>
                   <p className="mt-1 text-neutral-500">
                     Lifetime, non-transferable
                   </p>
                 </div>
                 <div className="rounded-md border border-neutral-200 bg-white p-4">
-                  <p className="font-semibold text-neutral-900">$32.99 T-shirt</p>
+                  <p className="font-semibold text-neutral-900">{merch.shirtPrice} T-shirt</p>
                   <p className="mt-1 text-neutral-500">Semester merch rollout</p>
                   <div className="mt-3">
-                    <MerchPurchaseLink label="Buy T-shirt" />
+                    <MerchPurchaseLink href={merch.purchaseUrl} label="Buy T-shirt" />
                   </div>
                 </div>
               </div>
@@ -312,33 +241,30 @@ export function MerchPage() {
 
             <figure>
               <div className="flex aspect-[4/3] items-center justify-center bg-neutral-50 p-6">
-                <Image
-                  src={rawMerch}
+                {merch.design && <Image
+                  src={merch.design} unoptimized width={900} height={900}
                   alt="TSA T-shirt merch design"
                   className="h-full w-full object-contain"
-                />
+                />}
               </div>
               <figcaption className="mt-5">
                 <h2 className="text-sm font-semibold uppercase text-neutral-900">
                   TSA T-Shirt Merch
                 </h2>
                 <p className="mt-1 text-sm font-semibold uppercase text-neutral-900">
-                  Released July 10, 2026
+                  {merch.releaseDate}
                 </p>
-                <p className="mt-1 text-sm text-neutral-900">$32.99</p>
+                <p className="mt-1 text-sm text-neutral-900">{merch.shirtPrice}</p>
               </figcaption>
             </figure>
           </div>
 
           <div className="mt-12 grid gap-5 md:grid-cols-2">
-            {[
-              { src: merchPosterOne, label: "Poster Preview 1" },
-              { src: merchPosterTwo, label: "Poster Preview 2" },
-            ].map((model) => (
+            {merch.posters.filter((poster) => poster.src).map((model) => (
               <figure key={model.label}>
                 <div className="flex min-h-[34rem] items-center justify-center bg-neutral-50 p-6 sm:p-10">
                   <Image
-                    src={model.src}
+                    src={model.src} unoptimized width={800} height={1000}
                     alt={`TSA T-shirt merch ${model.label.toLowerCase()}`}
                     className="max-h-[46rem] w-full object-contain"
                   />
@@ -352,10 +278,11 @@ export function MerchPage() {
   );
 }
 
-function MerchPurchaseLink({ label }: { label: string }) {
+function MerchPurchaseLink({ label, href }: { label: string; href: string }) {
+  if (!href) return null;
   return (
     <Link
-      href={MERCH_PURCHASE_URL}
+      href={href}
       rel="noopener noreferrer"
       target="_blank"
       className="inline-flex w-full justify-center rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-700"

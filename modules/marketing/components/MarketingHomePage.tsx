@@ -1,117 +1,13 @@
+import { getContent } from "@/modules/content";
 import Link from "next/link";
 import Image from "next/image";
 import { EventsPreview } from "./EventsPreview";
-import rawMerch from "../../../images/merch/Raw Merch.png";
-import merchPosterOne from "../../../images/merch/TSA_Merch_Poster_1.jpeg";
-import merchPosterTwo from "../../../images/merch/TSA_Merch_Poster_2.jpeg";
-import prepImage from "../../../images/prep.png";
-import stevePhoto from "../../../images/Steve.png";
 import tsaTaiwanLogo from "../../../images/TSA _Taiwan_LOGO.png";
-
-const LIFE_SECTIONS = [
-  {
-    title: "行前準備",
-    href: "/incoming-students#documents",
-    body: "簽證 / 護照 | 機場到香檳 | 短期住宿",
-    summary: "Start with the essentials before you fly: documents, airport planning, and where to stay when you first arrive.",
-    accent: "from-sky-400 to-indigo-500",
-    image: prepImage.src,
-  },
-  {
-    title: "出境 / 入境",
-    href: "/incoming-students#flight-customs",
-    body: "出境 | 入境 | 海關",
-    summary: "Know what to carry, what to declare, and how to move through immigration with confidence.",
-    accent: "from-blue-400 to-cyan-300",
-    image:
-      "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    title: "新生專區",
-    href: "/incoming-students#campus-checkin",
-    body: "學校報到 | 宿舍 | 選課",
-    summary: "Get oriented with ISSS check-in, I-Card, health requirements, NetID, housing, and school systems.",
-    accent: "from-emerald-300 to-lime-300",
-    image:
-      "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    title: "香檳生活",
-    href: "/current-students",
-    body: "電信申辦 | 銀行開戶 | 住宿 | 交通 | 醫療 | 餐廳",
-    summary: "Settle into daily life with student tools for housing, rides, marketplace listings, and community resources.",
-    accent: "from-amber-300 to-orange-300",
-    image:
-      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80",
-  },
-];
-
-const INTERN_WALL = [
-  {
-    month: "September",
-    name: "Steve",
-    role: "Program Department",
-    note: "",
-  },
-  {
-    month: "October",
-    name: "Steve",
-    role: "Marketing Department",
-    note: "",
-  },
-  {
-    month: "November",
-    name: "Steve",
-    role: "Technology Department",
-    note: "",
-  },
-  {
-    month: "December",
-    name: "Steve",
-    role: "Treasury Department",
-    note: "",
-  },
-  {
-    month: "January",
-    name: "Steve",
-    role: "Publicity Department",
-    note: "",
-  },
-  {
-    month: "February",
-    name: "Steve",
-    role: "Secretary Department",
-    note: "",
-  },
-];
 
 type FontAwesomeIconName =
   | "instagram"
   | "facebook"
   | "arrow-down-to-people";
-
-const SOCIAL_LINKS: Array<{
-  label: string;
-  href: string;
-  icon: FontAwesomeIconName | null;
-}> = [
-  {
-    label: "Instagram",
-    href: "https://www.instagram.com/uiuctsa/",
-    icon: "instagram",
-  },
-  {
-    label: "Facebook",
-    href: "https://www.facebook.com/UIUCTSA/",
-    icon: "facebook",
-  },
-  {
-    label: "Taiwanese at UIUC",
-    href: "https://www.facebook.com/groups/taiwaneseatuiuc/",
-    icon: "arrow-down-to-people",
-  },
-  { label: "Linktree", href: "https://linktr.ee/uiuctsa", icon: null },
-];
 
 const FONT_AWESOME_ICONS = {
   instagram: {
@@ -128,21 +24,24 @@ const FONT_AWESOME_ICONS = {
   },
 } as const;
 
-export function MarketingHomePage() {
+export async function MarketingHomePage() {
+  const [home, site, merch, features] = await Promise.all([getContent("home"), getContent("site"), getContent("merch"), getContent("features")]);
+  const LIFE_SECTIONS = home.lifeSections.filter((section) => section.href.startsWith("/incoming-students") ? features.incomingStudents : section.href.startsWith("/current-students") ? features.marketplace || features.sublease || features.carpool : true);
+  const INTERN_WALL = home.interns;
+  const SOCIAL_LINKS = site.socialLinks;
   return (
     <>
       <section className="overflow-hidden border-b border-neutral-100 bg-[linear-gradient(115deg,#edf5f0_0%,#f7f7f7_48%,#d8ddff_100%)]">
         <div className="mx-auto grid min-h-[calc(100vh-3.5rem)] w-full max-w-6xl gap-12 px-6 py-16 lg:grid-cols-[0.95fr_1.05fr] lg:items-center sm:py-24">
           <div>
             <h1 className="text-4xl font-semibold leading-tight tracking-tight text-black sm:text-5xl lg:text-6xl">
-              University of Illinois Urbana-Champaign
+              {home.title}
             </h1>
             <h2 className="mt-8 text-4xl font-semibold leading-tight tracking-tight text-black sm:text-5xl">
-              Taiwanese Student Association
+              {home.subtitle}
             </h2>
             <p className="mt-10 max-w-2xl text-xl leading-9 text-black">
-              這個網站彙集了有關香檳的生活建議，學術分享，甚至文化以及其他討論。UIUC
-              TSA希望能讓此站在復古地以類似部落格形式的同時，能讓大家能溫馨地、有效地找到自己需要的資訊。如果內容有什麼疏漏，歡迎聯繫我們。有想要分享的文章、照片、或者其他創作，我們也非常歡迎投稿！
+              {home.introduction}
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <Link
@@ -153,7 +52,7 @@ export function MarketingHomePage() {
               </Link>
             </div>
             <div className="mt-12 flex flex-wrap gap-x-8 gap-y-4">
-              {SOCIAL_LINKS.slice(0, 3).map((social) => (
+              {SOCIAL_LINKS.map((social) => (
                 <Link
                   key={social.label}
                   href={social.href}
@@ -225,16 +124,17 @@ export function MarketingHomePage() {
         </div>
       </section>
 
-      <EventsPreview />
+      {features.events && <EventsPreview />}
 
-      <section className="border-y border-neutral-100 bg-white">
+      {features.merch && (
+<section className="border-y border-neutral-100 bg-white">
         <div className="mx-auto grid w-full max-w-6xl gap-10 px-6 py-16 lg:grid-cols-[0.88fr_1.12fr] lg:items-center sm:py-20">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
               Merch
             </p>
             <h2 className="mt-2 text-4xl font-semibold tracking-tight text-neutral-900">
-              TSA 呆丸囡仔 T-shirt
+              {merch.title}
             </h2>
             <p className="mt-4 text-sm leading-6 text-neutral-600">
               Preview this semester&apos;s TSA T-shirt design and model shots.
@@ -243,12 +143,12 @@ export function MarketingHomePage() {
             </p>
             <div className="mt-6 grid gap-3 text-sm text-neutral-700 sm:grid-cols-3 lg:grid-cols-1">
               <div className="rounded-md border border-neutral-200 bg-neutral-50 p-4">
-                <p className="font-semibold text-neutral-900">$47.99 Bundle</p>
+                <p className="font-semibold text-neutral-900">{merch.bundlePrice} Bundle</p>
                 <p className="mt-1 text-neutral-500">Membership + T-shirt</p>
               </div>
               <div className="rounded-md border border-neutral-200 bg-neutral-50 p-4">
-                <p className="font-semibold text-neutral-900">$32.99 T-shirt</p>
-                <p className="mt-1 text-neutral-500">Released July 10, 2026</p>
+                <p className="font-semibold text-neutral-900">{merch.shirtPrice} T-shirt</p>
+                <p className="mt-1 text-neutral-500">{merch.releaseDate}</p>
               </div>
             </div>
             <Link
@@ -261,23 +161,20 @@ export function MarketingHomePage() {
 
           <div className="grid gap-4 sm:grid-cols-[1fr_0.82fr]">
             <figure className="flex min-h-[22rem] items-center justify-center rounded-md border border-black/10 bg-neutral-50 p-6">
-              <Image
-                src={rawMerch}
+              {merch.design && <Image
+                src={merch.design} unoptimized width={900} height={900}
                 alt="TSA T-shirt merch design"
                 className="h-full max-h-[28rem] w-full object-contain"
-              />
+              />}
             </figure>
             <div className="grid gap-4">
-              {[
-                { src: merchPosterOne, label: "Poster Preview 1" },
-                { src: merchPosterTwo, label: "Poster Preview 2" },
-              ].map((model) => (
+              {merch.posters.filter((poster) => poster.src).map((model) => (
                 <figure
                   key={model.label}
                   className="flex min-h-[13rem] items-center justify-center rounded-md border border-black/10 bg-neutral-50 p-4"
                 >
                   <Image
-                    src={model.src}
+                    src={model.src} unoptimized width={800} height={1000}
                     alt={`TSA T-shirt merch ${model.label.toLowerCase()}`}
                     className="max-h-[18rem] w-full object-contain"
                   />
@@ -287,25 +184,24 @@ export function MarketingHomePage() {
           </div>
         </div>
       </section>
+)}
 
-      <section className="border-b border-neutral-100 bg-neutral-50">
+      {features.interns && (
+<section className="border-b border-neutral-100 bg-neutral-50">
         <div className="mx-auto grid w-full max-w-6xl gap-10 px-6 py-16 lg:grid-cols-[0.85fr_1.15fr] sm:py-20">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
               Joining TSA
             </p>
             <h2 className="mt-2 text-3xl font-semibold tracking-tight text-neutral-900">
-              Join the team behind the events.
+              {home.joiningTitle}
             </h2>
             <p className="mt-4 text-sm leading-6 text-neutral-600">
-              TSA welcomes students interested in event planning, culture,
-              marketing, design, technology, photography, translation, and
-              community service. Interns help turn ideas into real campus
-              experiences.
+              {home.joiningDescription}
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
-                href="mailto:tsauiuc@gmail.com"
+                href={`mailto:${site.contactEmail}`}
                 className="rounded-full bg-[#f5f5f7] px-4 py-2 text-sm font-medium text-black transition hover:bg-[#e8e8ed]"
               >
                 Become an intern
@@ -340,12 +236,12 @@ export function MarketingHomePage() {
                     {intern.month}
                   </p>
                   <div className="aspect-square overflow-hidden rounded-md bg-neutral-200">
-                    <Image
-                      src={stevePhoto}
+                    {intern.photo && <Image
+                      src={intern.photo} unoptimized width={400} height={400}
                       alt={`${intern.name}, ${intern.role}`}
                       className="h-full w-full object-cover"
                       sizes="18rem"
-                    />
+                    />}
                   </div>
                   <h4 className="mt-4 text-base font-semibold text-neutral-900">
                     {intern.name}
@@ -362,6 +258,7 @@ export function MarketingHomePage() {
           </div>
         </div>
       </section>
+)}
 
     </>
   );
@@ -370,9 +267,10 @@ export function MarketingHomePage() {
 function FontAwesomeIcon({
   icon,
 }: {
-  icon: FontAwesomeIconName;
+  icon: string;
 }) {
-  const data = FONT_AWESOME_ICONS[icon];
+  if (!(icon in FONT_AWESOME_ICONS)) return null;
+  const data = FONT_AWESOME_ICONS[icon as FontAwesomeIconName];
 
   return (
     <svg

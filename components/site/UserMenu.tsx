@@ -33,7 +33,7 @@ export function UserMenu({ user }: { user: CurrentUser }) {
 
   const initial = (user.email?.[0] ?? "?").toUpperCase();
   const isMember = hasRole(user.role, "member");
-  const isDirector = hasRole(user.role, "director");
+  const isAdmin = hasRole(user.role, "admin");
 
   function close() {
     setOpen(false);
@@ -80,7 +80,7 @@ export function UserMenu({ user }: { user: CurrentUser }) {
                 Members area
               </MenuLink>
             )}
-            {isDirector && (
+            {isAdmin && (
               <MenuLink href="/admin" onClick={close}>
                 Admin dashboard
               </MenuLink>

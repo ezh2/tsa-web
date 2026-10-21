@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import tsaLogo from "../../images/TSA_bear.png";
+import { getContent } from "@/modules/content";
 
 const FOOTER_SECTIONS = [
   {
@@ -34,7 +35,22 @@ const FOOTER_SECTIONS = [
   },
 ];
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const [site, features] = await Promise.all([getContent("site"), getContent("features")]);
+  const featurePaths = {
+    "/events": features.events,
+    "/incoming-students": features.incomingStudents,
+    "/membership": features.membership,
+    "/membership/merch": features.merch,
+    "/current-students/marketplace": features.marketplace,
+    "/current-students/sublease": features.sublease,
+    "/current-students/carpool": features.carpool,
+    "/about#sponsors": features.sponsors,
+  };
+  const sections = FOOTER_SECTIONS.map((section) => ({ ...section, links: section.title === "Community"
+    ? [...(features.events ? [{ label: "Events", href: "/events" }] : []), ...site.socialLinks]
+    : section.links.filter((link) => featurePaths[link.href as keyof typeof featurePaths] !== false),
+  }));
   return (
     <footer className="mt-24 bg-black text-white">
       <div className="mx-auto grid w-full max-w-6xl gap-10 px-6 py-14 lg:grid-cols-[1.15fr_2fr] sm:py-16">
@@ -48,21 +64,20 @@ export function SiteFooter() {
               className="h-16 w-16 object-contain"
             />
             <div>
-              <p className="text-2xl font-semibold tracking-tight">UIUC TSA</p>
+              <p className="text-2xl font-semibold tracking-tight">{site.name}</p>
               <p className="mt-1 text-sm text-white/50">
-                Taiwanese Student Association
+                {site.tagline}
               </p>
             </div>
           </Link>
           <p className="mt-8 max-w-xs text-sm leading-6 text-white/55">
-            A student-run community at the University of Illinois
-            Urbana-Champaign.
+            {site.footerDescription}
           </p>
           <p className="mt-6 text-sm text-white/45">Champaign, IL</p>
         </div>
 
         <div className="grid gap-8 sm:grid-cols-3">
-          {FOOTER_SECTIONS.map((section) => (
+          {sections.map((section) => (
             <nav key={section.title} aria-label={section.title}>
               <h2 className="text-base font-semibold !text-white">
                 {section.title}

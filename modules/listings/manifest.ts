@@ -19,5 +19,5 @@ export const listingsManifest = {
     },
   ],
   navItems: [],
-  migrations: ["modules/listings/schemas/0001_init.sql"],
+  migrations: ["modules/listings/schemas/0001_init.sql", "modules/listings/schemas/0002_feature_visibility.sql"],
 } as const;

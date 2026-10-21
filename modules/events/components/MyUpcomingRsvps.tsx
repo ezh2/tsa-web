@@ -1,7 +1,7 @@
 import "server-only";
 import Link from "next/link";
 import { listMyUpcomingRsvps } from "@/modules/events/server/queries";
-import { fmtDateRange } from "@/modules/events/lib/format";
+import { fmtEventDate } from "@/modules/events/lib/format";
 
 export async function MyUpcomingRsvps() {
   const rsvps = await listMyUpcomingRsvps();
@@ -42,7 +42,7 @@ export async function MyUpcomingRsvps() {
               </span>
             </div>
             <p className="mt-1 text-xs text-neutral-600">
-              {fmtDateRange(r.event.starts_at, r.event.ends_at)}
+              {fmtEventDate(r.event)}
             </p>
             {r.event.location && (
               <p className="mt-0.5 text-xs text-neutral-500">

@@ -7,7 +7,7 @@ export async function listMyOrders(): Promise<OrderRecord[]> {
   return [];
 }
 
-// Directors only (enforced by RLS — non-directors get back only their own rows,
+// Admins only (enforced by RLS — non-admins get back only their own rows,
 // and the admin layout gates the page server-side).
 export async function listAllOrders(): Promise<OrderWithBuyer[]> {
   return [];

@@ -1,3 +1,4 @@
+import { requireSiteFeature } from "@/modules/content";
 import Link from "next/link";
 import { unstable_rethrow } from "next/navigation";
 import { hasRole } from "@/core/rbac";
@@ -51,10 +52,11 @@ export async function SubleasePage({
     error?: string;
   }>;
 }) {
+  await requireSiteFeature("sublease");
   const { type, posted, deleted, error } = await searchParams;
   const filter = resolveFilter(type);
   const user = await getCurrentUser();
-  const isDirector = user ? hasRole(user.role, "director") : false;
+  const isAdmin = user ? hasRole(user.role, "admin") : false;
 
   const listings = await listSubleaseListings(filter).catch((err) => {
     unstable_rethrow(err);
@@ -140,7 +142,7 @@ export async function SubleasePage({
                       Contact: {post.contact}
                     </p>
                     {user &&
-                      (post.user_id === user.id || isDirector) && (
+                      (post.user_id === user.id || isAdmin) && (
                         <DeleteListingButton
                           action={deleteSubleaseListingAction}
                           id={post.id}

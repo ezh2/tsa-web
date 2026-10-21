@@ -1,1 +1,1 @@
-update public.profiles set role = 'director' where email = 'burtonw2@illinois.edu';
+update public.profiles set role = 'admin' where email = 'burtonw2@illinois.edu';

@@ -6,7 +6,7 @@
 --
 -- Write model: rows are created and updated ONLY by the Stripe webhook handler
 -- using the service role key (bypasses RLS). Authenticated users have read-only
--- access to their own orders; directors can read everything. There are
+-- access to their own orders; admins can read everything. There are
 -- deliberately no insert/update/delete policies for any client role.
 -- ────────────────────────────────────────────────────────────────────────────
 
@@ -66,10 +66,10 @@ create policy payments_order_select_own
   to authenticated
   using (user_id = (select auth.uid()));
 
-create policy payments_order_select_director
+create policy payments_order_select_admin
   on public.payments_order for select
   to authenticated
-  using (public.current_user_role() = 'director');
+  using (public.current_user_role() = 'admin');
 
 -- No insert/update/delete policies: the Stripe webhook (service role) is the
 -- only writer.

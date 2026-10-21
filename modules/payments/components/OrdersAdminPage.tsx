@@ -27,7 +27,7 @@ export async function OrdersAdminPage() {
     <main className="mx-auto w-full max-w-5xl px-6 py-16">
       <header>
         <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
-          Director · Orders
+          Admin · Orders
         </p>
         <h1 className="mt-1 text-4xl font-semibold tracking-tight text-neutral-900">
           Orders

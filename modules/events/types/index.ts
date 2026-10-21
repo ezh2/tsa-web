@@ -8,7 +8,14 @@ export interface EventRecord {
   starts_at: string;
   ends_at: string | null;
   capacity: number | null;
-  created_by: string;
+  created_by: string | null;
+  is_published: boolean;
+  image_url: string;
+  link_url: string;
+  time_zone: "America/Chicago" | "Asia/Taipei" | "UTC";
+  time_tba: boolean;
+  time_note: string;
+  source_key: string | null;
   created_at: string;
   updated_at: string;
 }

@@ -4,7 +4,7 @@ export const paymentsManifest = {
   routes: [
     // Stripe checkout confirmation is temporarily paused.
     { path: "/membership/thanks", group: "public", requiredRole: "customer" },
-    // { path: "/admin/orders", group: "admin", requiredRole: "director" },
+    // { path: "/admin/orders", group: "admin", requiredRole: "admin" },
     // { path: "/api/stripe/webhook", group: "public", requiredRole: "customer" },
   ],
   navItems: [
@@ -12,7 +12,7 @@ export const paymentsManifest = {
     // {
     //   label: "Orders",
     //   href: "/admin/orders",
-    //   requiredRole: "director",
+    //   requiredRole: "admin",
     //   group: "admin",
     // },
   ],

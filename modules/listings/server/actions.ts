@@ -1,5 +1,6 @@
 "use server";
 
+import { requireSiteFeature } from "@/modules/content";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/core/rbac/server";
@@ -39,6 +40,7 @@ function requireMoney(
 export async function createMarketplaceListingAction(
   formData: FormData,
 ): Promise<void> {
+  await requireSiteFeature("marketplace");
   const path = "/current-students/marketplace";
   const user = await getCurrentUser();
   if (!user) loginRedirect(path);
@@ -96,6 +98,7 @@ export async function deleteMarketplaceListingAction(
 export async function createSubleaseListingAction(
   formData: FormData,
 ): Promise<void> {
+  await requireSiteFeature("sublease");
   const path = "/current-students/sublease";
   const user = await getCurrentUser();
   if (!user) loginRedirect(path);
@@ -168,6 +171,7 @@ export async function deleteSubleaseListingAction(
 export async function createCarpoolListingAction(
   formData: FormData,
 ): Promise<void> {
+  await requireSiteFeature("carpool");
   const path = "/current-students/carpool";
   const user = await getCurrentUser();
   if (!user) loginRedirect(path);

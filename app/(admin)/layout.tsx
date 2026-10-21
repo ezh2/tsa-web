@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { ForbiddenError } from "@/core/rbac";
 import { requireRole } from "@/core/rbac/server";
 import { AppShell } from "@/components/site/AppShell";
+import { AdminNavigation } from "@/modules/content";
 
 export default async function AdminLayout({
   children,
@@ -9,7 +10,7 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   try {
-    await requireRole("director");
+    await requireRole("admin");
   } catch (err) {
     if (err instanceof ForbiddenError) {
       redirect(`/?error=forbidden_${err.required}`);
@@ -17,5 +18,5 @@ export default async function AdminLayout({
     throw err;
   }
 
-  return <AppShell>{children}</AppShell>;
+  return <AppShell><AdminNavigation />{children}</AppShell>;
 }

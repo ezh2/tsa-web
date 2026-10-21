@@ -1,3 +1,4 @@
+import { requireSiteFeature } from "@/modules/content";
 import { unstable_rethrow } from "next/navigation";
 import { hasRole } from "@/core/rbac";
 import { getCurrentUser } from "@/core/rbac/server";
@@ -21,9 +22,10 @@ export async function CarpoolPage({
 }: {
   searchParams: Promise<{ posted?: string; deleted?: string; error?: string }>;
 }) {
+  await requireSiteFeature("carpool");
   const { posted, deleted, error } = await searchParams;
   const user = await getCurrentUser();
-  const isDirector = user ? hasRole(user.role, "director") : false;
+  const isAdmin = user ? hasRole(user.role, "admin") : false;
 
   const listings = await listCarpoolListings().catch((err) => {
     unstable_rethrow(err);
@@ -73,7 +75,7 @@ export async function CarpoolPage({
                       Contact: {post.contact}
                     </p>
                     {user &&
-                      (post.user_id === user.id || isDirector) && (
+                      (post.user_id === user.id || isAdmin) && (
                         <DeleteListingButton
                           action={deleteCarpoolListingAction}
                           id={post.id}
