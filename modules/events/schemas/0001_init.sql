@@ -70,24 +70,24 @@ create policy events_event_select_all
   to anon, authenticated
   using (true);
 
-create policy events_event_insert_director
+create policy events_event_insert_admin
   on public.events_event for insert
   to authenticated
   with check (
-    public.current_user_role() = 'director'
+    public.current_user_role() = 'admin'
     and created_by = (select auth.uid())
   );
 
-create policy events_event_update_director
+create policy events_event_update_admin
   on public.events_event for update
   to authenticated
-  using (public.current_user_role() = 'director')
-  with check (public.current_user_role() = 'director');
+  using (public.current_user_role() = 'admin')
+  with check (public.current_user_role() = 'admin');
 
-create policy events_event_delete_director
+create policy events_event_delete_admin
   on public.events_event for delete
   to authenticated
-  using (public.current_user_role() = 'director');
+  using (public.current_user_role() = 'admin');
 
 alter table public.events_rsvp enable row level security;
 
@@ -96,17 +96,17 @@ create policy events_rsvp_select_own
   to authenticated
   using (user_id = (select auth.uid()));
 
-create policy events_rsvp_select_director
+create policy events_rsvp_select_admin
   on public.events_rsvp for select
   to authenticated
-  using (public.current_user_role() = 'director');
+  using (public.current_user_role() = 'admin');
 
 create policy events_rsvp_insert_self_member
   on public.events_rsvp for insert
   to authenticated
   with check (
     user_id = (select auth.uid())
-    and public.current_user_role() in ('member', 'director')
+    and public.current_user_role() in ('member', 'admin')
   );
 
 create policy events_rsvp_update_self_member
@@ -115,7 +115,7 @@ create policy events_rsvp_update_self_member
   using (user_id = (select auth.uid()))
   with check (
     user_id = (select auth.uid())
-    and public.current_user_role() in ('member', 'director')
+    and public.current_user_role() in ('member', 'admin')
   );
 
 create policy events_rsvp_delete_self

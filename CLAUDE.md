@@ -12,9 +12,9 @@ The **UIUC Taiwanese Student Association (TSA) Club Management Platform** is a s
 **User tiers (strict hierarchy):**
 1. **Guest / Customer** — unauthenticated public, prospective members, event attendees.
 2. **Member** — verified club members, event staff, workers.
-3. **Director** — board admin, full control.
+3. **Admin** — board admin, full control.
 
-**Deployment:** Runs locally on the maintainer's machine (Docker for Supabase, `next start` for the web app) and is surfaced to a public custom domain via **Cloudflare Tunnel**.
+**Deployment:** Production uses a hosted Supabase project. The web app connects through `NEXT_PUBLIC_SUPABASE_URL`; Docker is only needed for an optional local Supabase stack. Confirm the web hosting setup before changing deployment infrastructure.
 
 ---
 
@@ -53,12 +53,12 @@ Adding a feature must never require editing `core/` or coupling the global routi
 
 | Layer       | Choice                                      | Notes                                                                  |
 |-------------|---------------------------------------------|------------------------------------------------------------------------|
-| Framework   | **Next.js 15** (App Router)                 | Server Components by default.                                          |
+| Framework   | **Next.js 16.2.4** (App Router)             | Server Components by default; read the installed version's docs.        |
 | Language    | **TypeScript** (strict)                     | `strict: true`, no implicit `any`, no `@ts-ignore`.                    |
 | Styling     | **Tailwind CSS v4**                         | Utility-first. Shared primitives live in `components/ui/`.             |
-| Backend     | **Self-hosted Supabase** via Docker         | Managed by the Supabase CLI — do not hand-write compose files.         |
+| Backend     | **Hosted Supabase**                        | Production is hosted; the CLI can manage an optional local Docker stack. |
 | Auth        | **Supabase Auth** + `@supabase/ssr`         | Cookie sessions for web; JWTs for future mobile.                       |
-| Database    | **Postgres** (inside Supabase)              | Migrations in `supabase/migrations/`. RLS enabled on every table.      |
+| Database    | **Postgres** (hosted Supabase)              | Migrations in `supabase/migrations/`. RLS enabled on every table.      |
 | Public edge | **Cloudflare Tunnel** (`cloudflared`)       | Surfaces local ports to the custom domain.                             |
 | Pkg manager | **npm**                                     | Lockfile committed.                                                    |
 
@@ -73,7 +73,7 @@ TSA_App/
 ├── app/                          # Next.js App Router — routing shell only
 │   ├── (public)/                 # Guest routes
 │   ├── (members)/                # Member-gated routes
-│   ├── (admin)/                  # Director-gated routes
+│   ├── (admin)/                  # Admin-gated routes
 │   ├── api/                      # HTTP route handlers (thin — defer to modules)
 │   ├── layout.tsx
 │   ├── page.tsx
@@ -154,7 +154,7 @@ Three layers — all required:
 
 1. **Database (RLS).** Every table has policies that evaluate against `auth.uid()` and the user's role in `public.profiles`. This is the **security boundary**.
 2. **Server (route handlers, Server Components, server actions).** Read the session via `core/supabase/server.ts`, resolve the role, reject before doing any work.
-3. **Client (UI).** Use `core/rbac` guards (`<RequireRole role="director">…</RequireRole>`) to hide gated UI. This is **UX only**, not security.
+3. **Client (UI).** Use `core/rbac` guards (`<RequireRole role="admin">…</RequireRole>`) to hide gated UI. This is **UX only**, not security.
 
 **Rules:**
 - Always check RBAC before rendering any gated UI — on the server first, then the client.
@@ -194,6 +194,8 @@ Three layers — all required:
 ---
 
 ## 9. Local Development — Docker & Supabase
+
+Production uses hosted Supabase. To use the hosted backend in development, configure `.env.local` and run `npm run dev`; do not start Docker or apply migrations with `--local`. The commands below are only for an optional isolated local database. Website-management setup for the hosted project is documented in `README.md`.
 
 The Supabase CLI manages the entire local Docker stack (Postgres, GoTrue/Auth, PostgREST, Realtime, Storage, Studio). **Do not hand-write `docker-compose.yml`** — let the CLI own it.
 

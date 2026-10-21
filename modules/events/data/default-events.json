@@ -1,0 +1,365 @@
+[
+  {
+    "title": "2026 新生說明會",
+    "description": "A focused orientation for new students and parents covering arrival logistics, campus setup, housing, payments, and everyday life at UIUC. Doors open at 9:30.",
+    "location": "集思北科大會議中心 2F 貝塔廳",
+    "starts_at": "2026-06-27T02:00:00.000Z",
+    "ends_at": "2026-06-27T04:00:00.000Z",
+    "image_url": "/content/new-stud-oren-2627.png",
+    "image_gallery": [
+      {
+        "src": "/content/new-stud-oren-2627.png",
+        "alt": "2026 TSA UIUC new student orientation flyer"
+      }
+    ],
+    "link_url": "https://drive.google.com/file/d/1XQUzouvdKBJ9bWFAMBzvMgI-GwMjHEQn/view",
+    "time_zone": "Asia/Taipei",
+    "time_tba": false,
+    "time_note": "",
+    "show_in_archive": true,
+    "source_key": "original-0"
+  },
+  {
+    "title": "Welcome Picnic",
+    "description": "A relaxed welcome event for new and returning students with organized games, conversation, and a chance to meet the TSA board before classes get busy.",
+    "location": "Main Quad",
+    "starts_at": "2026-08-22T21:00:00.000Z",
+    "ends_at": "2026-08-22T23:30:00.000Z",
+    "image_url": "",
+    "image_gallery": [],
+    "link_url": "",
+    "time_zone": "America/Chicago",
+    "time_tba": false,
+    "time_note": "",
+    "show_in_archive": false,
+    "source_key": "original-1"
+  },
+  {
+    "title": "New Student Welcome Event",
+    "description": "Kick off the semester over dinner at Chili Bistro! Meet fellow new students, connect with TSA members, and enjoy a relaxed evening of good food and conversation as you settle into life at UIUC.",
+    "location": "Chili Bistro",
+    "starts_at": "2026-08-30T01:00:00.000Z",
+    "ends_at": "2026-08-30T03:00:00.000Z",
+    "image_url": "/content/welcome-dinner.jpg",
+    "image_gallery": [
+      {
+        "src": "/content/welcome-dinner.jpg",
+        "alt": "TSA UIUC new student welcome dinner"
+      }
+    ],
+    "link_url": "",
+    "time_zone": "America/Chicago",
+    "time_tba": false,
+    "time_note": "",
+    "show_in_archive": true,
+    "source_key": "original-2"
+  },
+  {
+    "title": "General Meeting",
+    "description": "An interns-only TSA general meeting. Please bring your i-card. Follow Instagram for the latest details.",
+    "location": "AACC",
+    "starts_at": "2026-09-20T18:00:00.000Z",
+    "ends_at": "2026-09-20T19:00:00.000Z",
+    "image_url": "/content/general-meeting-2627.jpg",
+    "image_gallery": [
+      {
+        "src": "/content/general-meeting-2627.jpg",
+        "alt": "TSA UIUC General Meeting"
+      }
+    ],
+    "link_url": "",
+    "time_zone": "America/Chicago",
+    "time_tba": false,
+    "time_note": "",
+    "show_in_archive": true,
+    "source_key": "main-general-meeting"
+  },
+  {
+    "title": "超可盃 籃球",
+    "description": "A TSA basketball activity. Follow Instagram for the latest schedule and sign-up details.",
+    "location": "ARC Gym 1, Court 5-6",
+    "starts_at": "2026-09-26T16:30:00.000Z",
+    "ends_at": "2026-09-26T21:30:00.000Z",
+    "image_url": "/content/super-ok.jpg",
+    "image_gallery": [
+      {
+        "src": "/content/super-ok.jpg",
+        "alt": "TSA UIUC 超可盃 basketball event"
+      }
+    ],
+    "link_url": "",
+    "time_zone": "America/Chicago",
+    "time_tba": false,
+    "time_note": "",
+    "show_in_archive": true,
+    "source_key": "main-basketball"
+  },
+  {
+    "title": "中秋烤肉",
+    "description": "A Mid-Autumn Festival barbecue gathering. Follow Instagram for the latest ticket details.",
+    "location": "Crystal Lake Park",
+    "starts_at": "2026-09-27T16:30:00.000Z",
+    "ends_at": null,
+    "image_url": "/content/img-4378.jpeg",
+    "image_gallery": [
+      {
+        "src": "/content/img-4378.jpeg",
+        "alt": "TSA UIUC Mid-Autumn BBQ group photo"
+      },
+      {
+        "src": "/content/img-4786.jpeg",
+        "alt": "TSA UIUC Mid-Autumn BBQ food and picnic setup"
+      },
+      {
+        "src": "/content/img-4795.jpeg",
+        "alt": "TSA UIUC Mid-Autumn BBQ students at Crystal Lake Park"
+      }
+    ],
+    "link_url": "https://forms.gle/3EQo4LgSNydndDrr6",
+    "time_zone": "America/Chicago",
+    "time_tba": false,
+    "time_note": "",
+    "show_in_archive": true,
+    "source_key": "original-4"
+  },
+  {
+    "title": "National Day Celebration",
+    "description": "A community celebration for Double Ten Day with social activities, cultural touches, and a festive space for students to gather. Follow Instagram for details.",
+    "location": "Joe's Brewery Champaign",
+    "starts_at": "2026-10-11T03:30:00.000Z",
+    "ends_at": null,
+    "image_url": "/content/10-10.jpg",
+    "image_gallery": [
+      {
+        "src": "/content/10-10.jpg",
+        "alt": "TSA UIUC National Day Celebration"
+      }
+    ],
+    "link_url": "",
+    "time_zone": "America/Chicago",
+    "time_tba": false,
+    "time_note": "",
+    "show_in_archive": true,
+    "source_key": "original-7"
+  },
+  {
+    "title": "TASC 10/10 Night Market",
+    "description": "A 10/10 night activity with TASC. Follow Instagram for the latest details.",
+    "location": "TASC Night Market, booth location TBA",
+    "starts_at": "2026-10-10T22:30:00.000Z",
+    "ends_at": null,
+    "image_url": "",
+    "image_gallery": [],
+    "link_url": "",
+    "time_zone": "America/Chicago",
+    "time_tba": false,
+    "time_note": "",
+    "show_in_archive": true,
+    "source_key": "main-tasc-night-market"
+  },
+  {
+    "title": "Singing Contest",
+    "description": "TSA's annual performance event for student singers, featuring prepared performances, audience energy, and a supportive stage for campus talent.",
+    "location": "Illini Union",
+    "starts_at": "2026-11-15T02:00:00.000Z",
+    "ends_at": "2026-11-15T04:30:00.000Z",
+    "image_url": "",
+    "image_gallery": [],
+    "link_url": "",
+    "time_zone": "America/Chicago",
+    "time_tba": false,
+    "time_note": "",
+    "show_in_archive": true,
+    "source_key": "original-8"
+  },
+  {
+    "title": "Hot Choco Sale",
+    "description": "A seasonal fundraiser offering warm drinks on campus as the weather turns cold, with proceeds supporting TSA programming.",
+    "location": "Main Quad",
+    "starts_at": "2026-11-20T18:00:00.000Z",
+    "ends_at": "2026-11-20T22:00:00.000Z",
+    "image_url": "",
+    "image_gallery": [],
+    "link_url": "",
+    "time_zone": "America/Chicago",
+    "time_tba": false,
+    "time_note": "",
+    "show_in_archive": true,
+    "source_key": "original-9"
+  },
+  {
+    "title": "Game Day",
+    "description": "A low-pressure end-of-semester hangout with board games, party games, and time to unwind before finals.",
+    "location": "TBA",
+    "starts_at": "2026-12-06T00:00:00.000Z",
+    "ends_at": "2026-12-06T03:00:00.000Z",
+    "image_url": "",
+    "image_gallery": [],
+    "link_url": "",
+    "time_zone": "America/Chicago",
+    "time_tba": false,
+    "time_note": "",
+    "show_in_archive": true,
+    "source_key": "original-10"
+  },
+  {
+    "title": "RUFF",
+    "description": "A spring welcome-back event to reconnect after winter break and ease into the new semester with TSA friends.",
+    "location": "TBA",
+    "starts_at": "2027-01-24T00:00:00.000Z",
+    "ends_at": "2027-01-24T02:00:00.000Z",
+    "image_url": "",
+    "image_gallery": [],
+    "link_url": "",
+    "time_zone": "America/Chicago",
+    "time_tba": false,
+    "time_note": "",
+    "show_in_archive": true,
+    "source_key": "original-11"
+  },
+  {
+    "title": "New Year Banquet",
+    "description": "TSA's Lunar New Year banquet with Taiwanese cuisine, raffle prizes, and a formal community celebration for the new year.",
+    "location": "Golden Harbor / 漁滿樓",
+    "starts_at": "2027-02-14T00:00:00.000Z",
+    "ends_at": "2027-02-14T03:00:00.000Z",
+    "image_url": "",
+    "image_gallery": [],
+    "link_url": "",
+    "time_zone": "America/Chicago",
+    "time_tba": false,
+    "time_note": "",
+    "show_in_archive": true,
+    "source_key": "original-12"
+  },
+  {
+    "title": "Taiwanese Breakfast Pop-Up",
+    "description": "A food-centered event inspired by Taiwanese breakfast shops, featuring items such as rice balls, zongzi, and classic breakfast flavors.",
+    "location": "TBA",
+    "starts_at": "2027-03-13T16:00:00.000Z",
+    "ends_at": "2027-03-13T19:00:00.000Z",
+    "image_url": "",
+    "image_gallery": [],
+    "link_url": "",
+    "time_zone": "America/Chicago",
+    "time_tba": false,
+    "time_note": "",
+    "show_in_archive": true,
+    "source_key": "original-14"
+  },
+  {
+    "title": "Taiwanese Bento",
+    "description": "A campus bento pickup event bringing familiar Taiwanese flavors to UIUC students through preordered meal boxes.",
+    "location": "Anniversary Plaza",
+    "starts_at": "2027-04-17T18:30:00.000Z",
+    "ends_at": "2027-04-17T21:00:00.000Z",
+    "image_url": "",
+    "image_gallery": [],
+    "link_url": "",
+    "time_zone": "America/Chicago",
+    "time_tba": false,
+    "time_note": "",
+    "show_in_archive": true,
+    "source_key": "original-15"
+  },
+  {
+    "title": "Taichella",
+    "description": "A TSA music party celebrating student performers, music, and community energy near the end of the academic year.",
+    "location": "TBA",
+    "starts_at": "2027-04-25T00:00:00.000Z",
+    "ends_at": "2027-04-25T03:00:00.000Z",
+    "image_url": "",
+    "image_gallery": [],
+    "link_url": "",
+    "time_zone": "America/Chicago",
+    "time_tba": false,
+    "time_note": "",
+    "show_in_archive": true,
+    "source_key": "original-16"
+  },
+  {
+    "title": "End-of-Year Gathering",
+    "description": "A closing event for the academic year with time to reflect, celebrate contributors, and send off graduating members.",
+    "location": "TBA",
+    "starts_at": "2027-05-01T22:00:00.000Z",
+    "ends_at": "2027-05-02T00:00:00.000Z",
+    "image_url": "",
+    "image_gallery": [],
+    "link_url": "",
+    "time_zone": "America/Chicago",
+    "time_tba": false,
+    "time_note": "",
+    "show_in_archive": true,
+    "source_key": "original-17"
+  },
+  {
+    "title": "Homecoming @RUFF",
+    "description": null,
+    "location": "Partner event with WWTSA",
+    "starts_at": "2026-06-28T16:00:00.000Z",
+    "ends_at": null,
+    "image_url": "/content/ruff0629.jpg",
+    "image_gallery": [
+      {
+        "src": "/content/ruff0629.jpg",
+        "alt": "Homecoming at RUFF partner event flyer"
+      }
+    ],
+    "link_url": "",
+    "time_zone": "Asia/Taipei",
+    "time_tba": true,
+    "time_note": "Time announced by WWTSA",
+    "show_in_archive": true,
+    "source_key": "original-18"
+  },
+  {
+    "title": "Taiwanese Bento",
+    "description": null,
+    "location": "Anniversary Plaza",
+    "starts_at": "2026-04-18T18:30:00.000Z",
+    "ends_at": "2026-04-18T21:00:00.000Z",
+    "image_url": "/content/bento-2526.jpg",
+    "image_gallery": [
+      {
+        "src": "/content/bento-2526.jpg",
+        "alt": "TSA UIUC Taiwanese bento event"
+      }
+    ],
+    "link_url": "",
+    "time_zone": "America/Chicago",
+    "time_tba": false,
+    "time_note": "",
+    "show_in_archive": true,
+    "source_key": "original-19"
+  },
+  {
+    "title": "Lunar New Year Banquet",
+    "description": null,
+    "location": "Golden Harbor / 漁滿樓",
+    "starts_at": "2026-02-14T06:00:00.000Z",
+    "ends_at": null,
+    "image_url": "",
+    "image_gallery": [],
+    "link_url": "",
+    "time_zone": "America/Chicago",
+    "time_tba": true,
+    "time_note": "Time announced through TSA Linktree",
+    "show_in_archive": true,
+    "source_key": "original-20"
+  },
+  {
+    "title": "TSA Singing Contest",
+    "description": null,
+    "location": "Illini Room A",
+    "starts_at": "2025-11-16T02:30:00.000Z",
+    "ends_at": null,
+    "image_url": "",
+    "image_gallery": [],
+    "link_url": "",
+    "time_zone": "America/Chicago",
+    "time_tba": false,
+    "time_note": "",
+    "show_in_archive": true,
+    "source_key": "original-21"
+  }
+]

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { EventRecord } from "@/modules/events/types";
-import { toDatetimeLocalInput } from "@/modules/events/lib/format";
+import { eventLocalInput, EVENT_TIME_ZONES } from "../lib/timezone";
+import { EventGalleryEditor } from "./EventGalleryEditor";
+import { MediaField } from "@/modules/content";
 
 const inputClass =
   "w-full rounded-md border border-neutral-300 px-3 py-2 text-sm outline-none transition focus:border-neutral-900";
@@ -21,10 +23,10 @@ export function EventForm({
   cancelHref,
 }: EventFormProps) {
   const startsDefault = event
-    ? toDatetimeLocalInput(new Date(event.starts_at))
+    ? eventLocalInput(event.starts_at, event.time_zone ?? "America/Chicago")
     : "";
   const endsDefault = event?.ends_at
-    ? toDatetimeLocalInput(new Date(event.ends_at))
+    ? eventLocalInput(event.ends_at, event.time_zone ?? "America/Chicago")
     : "";
 
   return (
@@ -33,6 +35,11 @@ export function EventForm({
       className="mt-8 space-y-5 rounded-xl border border-neutral-200 bg-white p-6"
     >
       {event && <input type="hidden" name="id" value={event.id} />}
+
+      <label className="flex items-center justify-between gap-4 rounded-md bg-neutral-50 p-4 text-sm">
+        <span><strong>Published</strong><span className="mt-1 block text-xs text-neutral-500">Turn off to save a draft. Drafts are hidden from visitors.</span></span>
+        <input type="checkbox" name="is_published" defaultChecked={event?.is_published ?? true} className="h-5 w-5 accent-neutral-900" />
+      </label>
 
       <Field label="Title" name="title" required>
         <input
@@ -87,6 +94,22 @@ export function EventForm({
           />
         </Field>
       </div>
+
+      <Field label="Event timezone" name="time_zone" required>
+        <select id="time_zone" name="time_zone" defaultValue={event?.time_zone ?? "America/Chicago"} className={inputClass}>
+          {EVENT_TIME_ZONES.map((zone) => <option key={zone} value={zone}>{zone}</option>)}
+        </select>
+      </Field>
+      <label className="flex items-center gap-3 text-sm"><input type="checkbox" name="time_tba" defaultChecked={event?.time_tba ?? false} className="h-4 w-4 accent-neutral-900" />Display the date only; exact time is to be announced</label>
+      <Field label="Time announcement note (optional)" name="time_note">
+        <input id="time_note" name="time_note" defaultValue={event?.time_note ?? ""} placeholder="Time announced through TSA channels" className={inputClass} />
+      </Field>
+      <MediaField label="Event image" name="image_url" defaultValue={event?.image_url ?? ""} />
+      <EventGalleryEditor images={event?.image_gallery} />
+      <label className="flex items-center gap-3 text-sm"><input type="checkbox" name="show_in_archive" defaultChecked={event?.show_in_archive ?? true} className="h-4 w-4 accent-neutral-900" />Show in the past events archive after this event</label>
+      <Field label="Registration or information link (optional)" name="link_url">
+        <input id="link_url" name="link_url" defaultValue={event?.link_url ?? ""} placeholder="https://…" className={inputClass} />
+      </Field>
 
       <Field label="Capacity (optional)" name="capacity">
         <input

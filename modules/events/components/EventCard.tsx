@@ -11,12 +11,13 @@ export type EventCardEvent = {
   location: string;
   description?: string;
   href?: string;
+  detailsHref?: string;
   image?: {
-    src: StaticImageData;
+    src: StaticImageData | string;
     alt: string;
   };
   images?: {
-    src: StaticImageData;
+    src: StaticImageData | string;
     alt: string;
   }[];
 };
@@ -29,6 +30,7 @@ function EventSummary({ event }: { event: EventCardEvent }) {
       {previewImage && (
         <Image
           src={previewImage.src}
+          unoptimized={typeof previewImage.src === "string"}
           alt=""
           fill
           aria-hidden
@@ -70,7 +72,7 @@ export function EventCard({ event }: { event: EventCardEvent }) {
   const [open, setOpen] = useState(false);
   const images = event.images ?? (event.image ? [event.image] : []);
 
-  if (images.length === 0) {
+  if (images.length === 0 && !event.detailsHref) {
     return (
       <article className="relative overflow-hidden rounded-md border border-black/10 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-neutral-400">
         <EventSummary event={event} />
@@ -104,6 +106,9 @@ export function EventCard({ event }: { event: EventCardEvent }) {
               {images.length === 1 ? (
                 <Image
                   src={images[0].src}
+                  unoptimized={typeof images[0].src === "string"}
+                  width={1200}
+                  height={900}
                   alt={images[0].alt}
                   className="aspect-[4/3] w-full object-cover"
                   sizes="(min-width: 768px) 672px, 100vw"
@@ -115,6 +120,9 @@ export function EventCard({ event }: { event: EventCardEvent }) {
                     <Image
                       key={image.alt}
                       src={image.src}
+                      unoptimized={typeof image.src === "string"}
+                      width={1200}
+                      height={900}
                       alt={image.alt}
                       className={
                         "w-full object-cover " +
@@ -184,6 +192,11 @@ export function EventCard({ event }: { event: EventCardEvent }) {
                   className="mt-5 inline-flex rounded-md bg-neutral-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-neutral-700"
                 >
                   Open sign-up form
+                </Link>
+              )}
+              {event.detailsHref && (
+                <Link href={event.detailsHref} className="mt-5 ml-3 inline-flex text-sm font-semibold underline underline-offset-4">
+                  Event details & RSVP
                 </Link>
               )}
             </div>
