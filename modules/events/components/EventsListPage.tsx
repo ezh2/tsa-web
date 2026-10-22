@@ -1,36 +1,20 @@
 import type { StaticImageData } from "next/image";
 import { unstable_rethrow } from "next/navigation";
-import {
-  listPastEvents,
-  listUpcomingEvents,
-} from "@/modules/events/server/queries";
+import { listPastEvents } from "@/modules/events/server/queries";
 import {
   getStaticPastEvents,
-  getStaticUpcomingEvents,
   type StaticUpcomingEvent,
 } from "@/modules/events/data/upcoming";
+import {
+  deduplicateEvents,
+  formatEventTime,
+  timestampFromDate,
+  type CalendarEvent,
+} from "@/modules/events/lib/calendar";
+import { getUpcomingCalendarEvents } from "@/modules/events/lib/upcoming";
 import { EventCard } from "./EventCard";
 import bentoPhoto from "@/images/events/2526/bento/bento_2526.jpg";
 import ruffPhoto from "@/images/events/2627/ruff0629.jpg";
-
-type CalendarEvent = {
-  key: string;
-  title: string;
-  date: string;
-  time: string;
-  location: string;
-  description?: string;
-  timestamp: number;
-  href?: string;
-  image?: {
-    src: StaticImageData;
-    alt: string;
-  };
-  images?: {
-    src: StaticImageData;
-    alt: string;
-  }[];
-};
 
 type CalendarEventGroup = {
   month: string;
@@ -98,12 +82,8 @@ const MONTH_FORMAT = new Intl.DateTimeFormat(undefined, {
 const TIME_FORMAT = new Intl.DateTimeFormat(undefined, {
   hour: "numeric",
   minute: "2-digit",
+  hourCycle: "h12",
 });
-
-function timestampFromDate(date: string): number {
-  const timestamp = Date.parse(date);
-  return Number.isNaN(timestamp) ? 0 : timestamp;
-}
 
 function monthKey(date: Date): string {
   return `${date.getFullYear()}-${date.getMonth()}`;
@@ -125,7 +105,7 @@ function fromStaticEvent(event: StaticUpcomingEvent): CalendarEvent {
     key: `static-${event.date}-${event.title}`,
     title: event.title,
     date: event.date,
-    time: event.time,
+    time: formatEventTime(event.time),
     location: event.location,
     description: event.description,
     timestamp: timestampFromDate(event.date),
@@ -237,34 +217,14 @@ function EventBlockGrid({ events }: { events: CalendarEvent[] }) {
 }
 
 export async function EventsListPage() {
-  const events = await listUpcomingEvents().catch((error) => {
-    unstable_rethrow(error);
-    console.warn("Unable to load upcoming events", error);
-    return [];
-  });
+  const upcomingCalendarEvents = await getUpcomingCalendarEvents();
   const pastEvents = await listPastEvents().catch((error) => {
     unstable_rethrow(error);
     console.warn("Unable to load past events", error);
     return [];
   });
 
-  const upcomingCalendarEvents: CalendarEvent[] = [
-    ...events.map((event) => {
-      const start = new Date(event.starts_at);
-      return {
-        key: `db-${event.id}`,
-        title: event.title,
-        date: DATE_FORMAT.format(start),
-        time: timeRange(event.starts_at, event.ends_at),
-        location: event.location ?? "TBA",
-        description: event.description ?? undefined,
-        timestamp: start.getTime(),
-      };
-    }),
-    ...getStaticUpcomingEvents().map(fromStaticEvent),
-  ];
-
-  const pastCalendarEvents: CalendarEvent[] = [
+  const pastCalendarEvents = deduplicateEvents([
     ...pastEvents.map((event) => {
       const start = new Date(event.starts_at);
       return {
@@ -282,12 +242,12 @@ export async function EventsListPage() {
       key: `manual-past-${event.date}-${event.title}`,
       title: event.title,
       date: event.date,
-      time: event.time,
+      time: formatEventTime(event.time),
       location: event.location,
       image: event.image,
       timestamp: timestampFromDate(event.date),
     })),
-  ].toSorted((a, b) => b.timestamp - a.timestamp);
+  ]).toSorted((a, b) => b.timestamp - a.timestamp);
 
   return (
     <main className="mx-auto w-full max-w-6xl px-6 py-16 sm:py-20">

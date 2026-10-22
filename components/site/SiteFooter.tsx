@@ -27,7 +27,7 @@ const FOOTER_SECTIONS = [
     title: "Community",
     links: [
       { label: "Events", href: "/events" },
-      { label: "Instagram", href: "https://www.instagram.com/uiuctsa/" },
+      { label: "Instagram", href: "https://www.instagram.com/tsa_uiuc/" },
       { label: "Facebook", href: "https://www.facebook.com/UIUCTSA/" },
       { label: "Linktree", href: "https://linktr.ee/uiuctsa" },
     ],

@@ -9,6 +9,11 @@ import sylviaPhoto from "../../../images/Board2627/Sylvia.jpg";
 import timPhoto from "../../../images/Board2627/Tim.jpg";
 import ulandaPhoto from "../../../images/Board2627/Ulanda.jpg";
 import lateaLogo from "../../../images/sponsors/latea-logo.png";
+import bbqChickenLogo from "../../../images/sponsors/bbq-chicken-logo.png";
+import pokeLabLogo from "../../../images/sponsors/pokelab-logo.jpeg";
+import soGongDongLogo from "../../../images/sponsors/sgd-logo.jpeg";
+import susuruRamenLogo from "../../../images/sponsors/susuru-ramen-logo.jpeg";
+import rocTaiwanFlag from "../../../images/sponsors/roc-flag.webp";
 import tsmcLogo from "../../../images/sponsors/tsmc-logo.png";
 import weeeLogo from "../../../images/sponsors/weee-logo.png";
 
@@ -32,7 +37,11 @@ const SPONSORS: Array<{ name: string; logo?: StaticImageData }> = [
   { name: "TSMC (台灣積體電路製造)", logo: tsmcLogo },
   { name: "LaTea", logo: lateaLogo },
   { name: "Weee", logo: weeeLogo },
-  { name: "TECO Taiwan" },
+  { name: "bb.q Chicken", logo: bbqChickenLogo },
+  { name: "PokeLab", logo: pokeLabLogo },
+  { name: "So Gong Dong", logo: soGongDongLogo },
+  { name: "Susuru Ramen", logo: susuruRamenLogo },
+  { name: "Taipei Economics Cultural Office Chicago", logo: rocTaiwanFlag },
 ];
 
 const CONTRIBUTORS = [

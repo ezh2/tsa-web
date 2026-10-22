@@ -80,7 +80,7 @@ const SOCIAL_LINKS: Array<{
 }> = [
   {
     label: "Instagram",
-    href: "https://www.instagram.com/uiuctsa/",
+    href: "https://www.instagram.com/tsa_uiuc/",
     icon: "instagram",
   },
   {

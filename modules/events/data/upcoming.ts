@@ -135,27 +135,19 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
   },
   {
     title: "Singing Contest",
-    date: "November 14, 2026",
-    time: "20:00 - 22:30",
-    location: "Illini Union",
+    date: "February 2027",
+    time: "TBA",
+    location: "TBA",
     description:
       "TSA's annual performance event for student singers, featuring prepared performances, audience energy, and a supportive stage for campus talent.",
   },
   {
-    title: "Hot Choco Sale",
-    date: "November 20, 2026",
-    time: "12:00 - 16:00",
-    location: "Main Quad",
-    description:
-      "A seasonal fundraiser offering warm drinks on campus as the weather turns cold, with proceeds supporting TSA programming.",
-  },
-  {
     title: "Game Day",
-    date: "December 5, 2026",
-    time: "18:00 - 21:00",
-    location: "TBA",
+    date: "November 13, 2026",
+    time: "17:30 - 21:00",
+    location: "AACC",
     description:
-      "A low-pressure end-of-semester hangout with board games, party games, and time to unwind before finals.",
+      "Join us at AACC for an evening of mahjong and poker. Food will be available for purchase at AACC.",
   },
   {
     title: "RUFF",
@@ -183,19 +175,19 @@ export const STATIC_UPCOMING_EVENTS: readonly StaticUpcomingEvent[] = [
   },
   {
     title: "Taiwanese Bento",
-    date: "April 17, 2027",
+    date: "March 2027",
     time: "13:30 - 16:00",
     location: "Anniversary Plaza",
     description:
       "A campus bento pickup event bringing familiar Taiwanese flavors to UIUC students through preordered meal boxes.",
   },
   {
-    title: "Taichella",
-    date: "April 24, 2027",
-    time: "19:00 - 22:00",
+    title: "Water Balloon Battle",
+    date: "April 2027",
+    time: "TBA",
     location: "TBA",
     description:
-      "A TSA music party celebrating student performers, music, and community energy near the end of the academic year.",
+      "Join TSA for a water balloon battle this April. More event details will be announced soon.",
   },
   {
     title: "End-of-Year Gathering",

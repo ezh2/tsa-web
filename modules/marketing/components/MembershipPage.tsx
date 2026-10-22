@@ -2,13 +2,19 @@ import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { MerchIntroVideo } from "./MerchIntroVideo";
 import { MerchTranslationButton } from "./MerchTranslationButton";
+import {
+  BlackFridayOfferPrice,
+  BlackFridaySalePopup,
+  MerchPricingCards,
+} from "./BlackFridayPromo";
 import rawMerch from "../../../images/merch/Raw Merch.png";
 import merchPosterOne from "../../../images/merch/TSA_Merch_Poster_1.jpeg";
 import merchPosterTwo from "../../../images/merch/TSA_Merch_Poster_2.jpeg";
 import lateaLogo from "../../../images/sponsors/latea-logo.png";
-
-const MERCH_PURCHASE_URL =
-  "https://myship.7-11.com.tw/general/detail/GM2607092499849";
+import bbqChickenLogo from "../../../images/sponsors/bbq-chicken-logo.png";
+import pokeLabLogo from "../../../images/sponsors/pokelab-logo.jpeg";
+import soGongDongLogo from "../../../images/sponsors/sgd-logo.jpeg";
+import susuruRamenLogo from "../../../images/sponsors/susuru-ramen-logo.jpeg";
 
 const PARTNERS: Array<{
   category: string;
@@ -19,7 +25,37 @@ const PARTNERS: Array<{
   href?: string;
   confirmed: boolean;
   logo?: StaticImageData;
+  venues?: Array<{ name: string; address: string; logo: StaticImageData }>;
 }> = [
+  {
+    category: "Restaurant",
+    name: "Restaurant Partners",
+    offer: "10% off in-person purchases with a subtotal of $20 or more before tax and tip. Available for dine-in and in-store takeout starting October 23, 2026.",
+    additionalOffer: "Show a valid physical or digital TSA membership card when requesting the discount. Not valid for delivery apps or online orders. Cannot be combined with other discounts or promotions; limit one discount per bill.",
+    confirmed: true,
+    venues: [
+      {
+        name: "SGD Dubu",
+        address: "707 S Sixth St, Champaign",
+        logo: soGongDongLogo,
+      },
+      {
+        name: "bb.q Chicken",
+        address: "700 S Gregory St, Urbana",
+        logo: bbqChickenLogo,
+      },
+      {
+        name: "Pokelab",
+        address: "605 S Sixth St, Champaign",
+        logo: pokeLabLogo,
+      },
+      {
+        name: "Susuru Ramen",
+        address: "621 E Green St, Champaign",
+        logo: susuruRamenLogo,
+      },
+    ],
+  },
   {
     category: "Beverages",
     name: "LaTea",
@@ -69,7 +105,7 @@ const PARTNERS: Array<{
 const MEMBERSHIP_FEATURES = [
   "Lifetime TSA membership",
   "Non-transferable membership holder benefits",
-  "LaTea partner discounts and early access to new drinks",
+  "Partner discounts at LaTea and participating restaurants",
   "Membership card and Line Announcement System enrollment",
   "Membership card discounts cannot be combined with other event discounts",
 ];
@@ -87,7 +123,7 @@ const PRICING_PLANS = [
     name: "TSA Membership",
     price: "$29.99",
     note: "Lifetime, non-transferable",
-    body: "Lifetime access to TSA membership benefits, membership card verification, and announcements for the registered member, including LaTea partner benefits.",
+    body: "Lifetime access to TSA membership benefits, membership card verification, and announcements for the registered member, including partner discounts at LaTea and participating restaurants.",
     featured: false,
     productKey: "membership",
   },
@@ -201,6 +237,29 @@ export async function MembershipPage({
                     <h3 className="mt-2 text-lg font-semibold text-neutral-900">
                       {partner.name}
                     </h3>
+                    {partner.venues && (
+                      <ul className="mt-4 grid grid-cols-2 gap-3">
+                        {partner.venues.map((venue) => (
+                          <li
+                            key={venue.name}
+                            className="flex min-w-0 flex-col items-center rounded-md bg-neutral-50 p-3 text-center"
+                          >
+                            <Image
+                              src={venue.logo}
+                              alt={`${venue.name} logo`}
+                              className="h-14 w-full object-contain"
+                              sizes="(min-width: 768px) 180px, 40vw"
+                            />
+                            <p className="mt-2 text-sm font-semibold text-neutral-800">
+                              {venue.name}
+                            </p>
+                            <p className="mt-1 text-xs leading-5 text-neutral-500">
+                              {venue.address}
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                     {partner.address && (
                       <p className="mt-2 text-sm leading-6 text-neutral-500">
                         {partner.address}
@@ -277,7 +336,15 @@ export async function MembershipPage({
                         (plan.featured ? "!text-white" : "text-neutral-900")
                       }
                     >
-                      {plan.price}
+                      {plan.productKey === "bundle" ? (
+                        <BlackFridayOfferPrice
+                          regularPrice={plan.price}
+                          salePrice="$42.99"
+                          featured={plan.featured}
+                        />
+                      ) : (
+                        plan.price
+                      )}
                     </p>
                   </div>
                   <p
@@ -313,6 +380,7 @@ export async function MembershipPage({
 export function MerchPage() {
   return (
     <main className="bg-white">
+      <BlackFridaySalePopup />
       <MerchIntroVideo />
       <section className="border-b border-neutral-100">
         <div className="mx-auto w-full max-w-6xl px-6 py-16 sm:py-20">
@@ -338,36 +406,26 @@ export function MerchPage() {
                 <p>趕快入手，一起把屬於 UIUC 的回憶穿在身上吧！</p>
                 <MerchTranslationButton />
               </div>
-              <div className="mt-6 grid gap-3 text-sm text-neutral-700 sm:grid-cols-3 lg:grid-cols-1">
-                <div className="rounded-md border border-neutral-200 bg-white p-4">
-                  <p className="font-semibold text-neutral-900">$49.99 Bundle</p>
-                  <p className="mt-1 text-neutral-500">
-                    Membership + one T-shirt
-                  </p>
-                  <p className="mt-2 text-xs leading-5 text-neutral-500">
-                    Bundle pricing applies to one T-shirt only and cannot be
-                    combined with other event discounts.
-                  </p>
-                  <div className="mt-3">
-                    <MerchPurchaseLink label="Buy bundle" />
-                  </div>
-                </div>
-                <div className="rounded-md border border-neutral-200 bg-white p-4">
-                  <p className="font-semibold text-neutral-900">
-                    $29.99 Membership
-                  </p>
-                  <p className="mt-1 text-neutral-500">
-                    Lifetime, non-transferable
-                  </p>
-                </div>
-                <div className="rounded-md border border-neutral-200 bg-white p-4">
-                  <p className="font-semibold text-neutral-900">$32.99 T-shirt</p>
-                  <p className="mt-1 text-neutral-500">Semester merch rollout</p>
-                  <div className="mt-3">
-                    <MerchPurchaseLink label="Buy T-shirt" />
-                  </div>
-                </div>
-              </div>
+              <MerchPricingCards />
+              <p className="mt-4 text-sm leading-6 text-neutral-600">
+                To purchase or ask about merch, contact TSA on Instagram at{" "}
+                <a
+                  href="https://www.instagram.com/tsa_uiuc/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-neutral-900 underline underline-offset-4"
+                >
+                  @tsa_uiuc
+                </a>{" "}
+                or email{" "}
+                <a
+                  href="mailto:tsauiuc@gmail.com"
+                  className="font-medium text-neutral-900 underline underline-offset-4"
+                >
+                  tsauiuc@gmail.com
+                </a>
+                .
+              </p>
             </div>
 
             <figure>
@@ -385,7 +443,12 @@ export function MerchPage() {
                 <p className="mt-1 text-sm font-semibold uppercase text-neutral-900">
                   Released July 10, 2026
                 </p>
-                <p className="mt-1 text-sm text-neutral-900">$32.99</p>
+                <p className="mt-1 text-sm text-neutral-900">
+                  <BlackFridayOfferPrice
+                    regularPrice="$32.99"
+                    salePrice="$23.00"
+                  />
+                </p>
               </figcaption>
             </figure>
           </div>
@@ -409,18 +472,5 @@ export function MerchPage() {
         </div>
       </section>
     </main>
-  );
-}
-
-function MerchPurchaseLink({ label }: { label: string }) {
-  return (
-    <Link
-      href={MERCH_PURCHASE_URL}
-      rel="noopener noreferrer"
-      target="_blank"
-      className="inline-flex w-full justify-center rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-700"
-    >
-      {label}
-    </Link>
   );
 }
