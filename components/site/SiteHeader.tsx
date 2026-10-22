@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { UserMenu } from "./UserMenu";
 import type { CurrentUser } from "@/core/types";
+import type { SiteFeatures } from "@/modules/content";
 import tsaLogo from "../../images/TSA UIUC Logo.webp";
 
 const MEMBERSHIP_LINKS = [
@@ -21,7 +22,19 @@ const NAV_ITEMS = [
   { label: "Membership", href: "/membership", children: MEMBERSHIP_LINKS },
 ];
 
-export function SiteHeader({ user }: { user: CurrentUser | null }) {
+export function SiteHeader({ user, site, features }: {
+  user: CurrentUser | null;
+  site: { name: string; tagline: string };
+  features: SiteFeatures;
+}) {
+  const navItems = NAV_ITEMS.map((item) => ({
+    ...item,
+    children: item.children?.filter((child) =>
+      child.href === "/incoming-students" ? features.incomingStudents :
+      child.href === "/membership/merch" ? features.merch :
+      child.href === "/membership" ? features.membership : true),
+  })).filter((item) => item.href === "/events" ? features.events : item.href === "/incoming-students" ? features.incomingStudents : item.children ? item.children.length > 0 : true)
+    .map((item) => ({ ...item, href: item.children?.[0]?.href ?? item.href }));
   const pathname = usePathname();
   const isMerchPage = pathname === "/membership/merch";
   const [scrolled, setScrolled] = useState(false);
@@ -121,15 +134,15 @@ export function SiteHeader({ user }: { user: CurrentUser | null }) {
             className="h-16 w-16 shrink-0 object-contain"
           />
           <span className="flex flex-col leading-tight">
-            <span className="text-base">TSA UIUC</span>
+            <span className="text-base">{site.name}</span>
             <span className="hidden text-xs font-normal text-neutral-500 sm:inline">
-              Taiwanese Student Association
+              {site.tagline}
             </span>
           </span>
         </Link>
 
         <nav className="hidden items-center gap-1 rounded-full border border-[rgba(255,255,255,0.16)] bg-[rgba(255,255,255,0.12)] p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.14)] backdrop-blur-xl sm:flex">
-          {NAV_ITEMS.map((item) => {
+          {navItems.map((item) => {
             const active =
               isActive(item.href) ||
               item.children?.some((child) => isActive(child.href));
@@ -300,7 +313,7 @@ export function SiteHeader({ user }: { user: CurrentUser | null }) {
           className="border-t border-white/10 bg-black sm:hidden"
         >
           <nav className="flex flex-col gap-1 px-4 py-3">
-            {NAV_ITEMS.map((item) => {
+            {navItems.map((item) => {
               if (item.children) {
                 return (
                   <div key={item.href} className="flex flex-col gap-1">

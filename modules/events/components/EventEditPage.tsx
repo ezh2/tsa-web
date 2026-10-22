@@ -31,13 +31,13 @@ export async function EventEditPage({
 
       <header className="mt-6">
         <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
-          Director · Events
+          Admin · Events
         </p>
         <h1 className="mt-1 text-4xl font-semibold tracking-tight text-neutral-900">
           Edit event
         </h1>
         <p className="mt-2 text-sm text-neutral-600">
-          Times are interpreted in the server&apos;s local timezone.
+          Update the details below. Times use this event&apos;s selected timezone.
         </p>
       </header>
 

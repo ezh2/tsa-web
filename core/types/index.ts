@@ -1,4 +1,4 @@
-export type Role = "customer" | "member" | "director";
+export type Role = "customer" | "member" | "admin";
 export type AcademicStage =
   | "freshman"
   | "sophomore"
@@ -9,10 +9,10 @@ export type AcademicStage =
 export const ROLE_HIERARCHY: Record<Role, number> = {
   customer: 0,
   member: 1,
-  director: 2,
+  admin: 2,
 };
 
-export const ROLES: readonly Role[] = ["customer", "member", "director"] as const;
+export const ROLES: readonly Role[] = ["customer", "member", "admin"] as const;
 
 export interface Profile {
   id: string;

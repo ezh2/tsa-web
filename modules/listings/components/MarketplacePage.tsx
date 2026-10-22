@@ -1,3 +1,4 @@
+import { getContent, requireSiteFeature } from "@/modules/content";
 import { unstable_rethrow } from "next/navigation";
 import { hasRole } from "@/core/rbac";
 import { getCurrentUser } from "@/core/rbac/server";
@@ -17,23 +18,7 @@ import {
   Textarea,
 } from "./ui";
 
-const TSA_SELLINGS = [
-  {
-    title: "TSA Hoodie",
-    price: "35",
-    contact: "TSA Board",
-    tag: "Merch",
-    description:
-      "Official TSA hoodie. Pickup details will be announced by TSA.",
-  },
-  {
-    title: "TSA Sticker Pack",
-    price: "5",
-    contact: "TSA Board",
-    tag: "Merch",
-    description: "Taiwan and UIUC themed stickers from TSA.",
-  },
-] as const;
+
 
 function SaleCard({
   item,
@@ -93,9 +78,11 @@ export async function MarketplacePage({
 }: {
   searchParams: Promise<{ posted?: string; deleted?: string; error?: string }>;
 }) {
+  await requireSiteFeature("marketplace");
   const { posted, deleted, error } = await searchParams;
+  const { pinnedListings: TSA_SELLINGS } = await getContent("boards");
   const user = await getCurrentUser();
-  const isDirector = user ? hasRole(user.role, "director") : false;
+  const isAdmin = user ? hasRole(user.role, "admin") : false;
 
   const listings = await listMarketplaceListings().catch((err) => {
     unstable_rethrow(err);
@@ -135,7 +122,7 @@ export async function MarketplacePage({
                   key={item.id}
                   item={item}
                   canDelete={
-                    !!user && (item.user_id === user.id || isDirector)
+                    !!user && (item.user_id === user.id || isAdmin)
                   }
                 />
               ))}

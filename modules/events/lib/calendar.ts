@@ -1,4 +1,5 @@
 import type { StaticImageData } from "next/image";
+import type { EventRecord } from "../types";
 
 export type CalendarEvent = {
   key: string;
@@ -9,17 +10,49 @@ export type CalendarEvent = {
   description?: string;
   timestamp: number;
   href?: string;
-  image?: {
-    src: StaticImageData;
-    alt: string;
-  };
-  images?: {
-    src: StaticImageData;
-    alt: string;
-  }[];
+  detailsHref?: string;
+  showInArchive?: boolean;
+  image?: { src: StaticImageData | string; alt: string };
+  images?: { src: StaticImageData | string; alt: string }[];
 };
 
-function normalizeEventTitle(title: string): string {
+export function toCalendarEvent(event: EventRecord): CalendarEvent {
+  const timeZone = event.time_zone || "America/Chicago";
+  const start = new Date(event.starts_at);
+  const date = start.toLocaleDateString("en-US", {
+    timeZone,
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+  const timeFormat = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    hour: "numeric",
+    minute: "2-digit",
+    hourCycle: "h12",
+  });
+  const time = event.time_tba
+    ? event.time_note || "Time to be announced"
+    : timeFormat.format(start) +
+      (event.ends_at ? ` - ${timeFormat.format(new Date(event.ends_at))}` : "");
+
+  return {
+    key: event.id,
+    title: event.title,
+    date,
+    time,
+    location: event.location ?? "TBA",
+    description: event.description ?? undefined,
+    timestamp: Date.parse(date + " UTC"),
+    href: event.link_url || undefined,
+    detailsHref: event.id.startsWith("static-") ? undefined : `/events/${event.id}`,
+    showInArchive: event.show_in_archive ?? true,
+    image: event.image_url ? { src: event.image_url, alt: event.title } : undefined,
+    images: event.image_gallery?.length ? event.image_gallery : undefined,
+  };
+}
+
+function normalizeTitle(title: string): string {
   return title
     .normalize("NFKC")
     .toLocaleLowerCase()
@@ -28,13 +61,7 @@ function normalizeEventTitle(title: string): string {
 }
 
 function eventIdentity(event: CalendarEvent): string {
-  const normalize = (value: string) =>
-    value
-      .normalize("NFKC")
-      .toLocaleLowerCase()
-      .replace(/[\p{P}\p{S}\s]+/gu, "");
-
-  return `${normalizeEventTitle(event.title)}-${normalize(event.date)}`;
+  return `${normalizeTitle(event.title)}-${normalizeTitle(event.date)}`;
 }
 
 function hasEventImage(event: CalendarEvent): boolean {
@@ -47,7 +74,6 @@ export function deduplicateEvents(events: CalendarEvent[]): CalendarEvent[] {
   for (const event of events) {
     const identity = eventIdentity(event);
     const existing = uniqueEvents.get(identity);
-
     if (!existing || (!hasEventImage(existing) && hasEventImage(event))) {
       uniqueEvents.set(identity, event);
     }
@@ -56,27 +82,25 @@ export function deduplicateEvents(events: CalendarEvent[]): CalendarEvent[] {
   return [...uniqueEvents.values()];
 }
 
-export function normalizeCalendarEventTitle(title: string): string {
-  return normalizeEventTitle(title);
+export function calendarToday(now = new Date()): number {
+  const chicagoDate = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Chicago",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(now);
+  return Date.parse(chicagoDate + "T00:00:00Z");
 }
 
-export function timestampFromDate(date: string): number {
-  const timestamp = Date.parse(date);
-  return Number.isNaN(timestamp) ? 0 : timestamp;
-}
-
-export function formatEventTime(time: string): string {
-  const match = time.match(
-    /^\s*(\d{1,2}):(\d{2})(?:\s*-\s*(\d{1,2}):(\d{2}))?\s*$/,
-  );
-  if (!match) return time;
-
-  const formatClock = (hourText: string, minute: string) => {
-    const hour = Number(hourText);
-    const period = hour >= 12 ? "PM" : "AM";
-    return `${hour % 12 || 12}:${minute} ${period}`;
+export function splitCalendarEvents(events: CalendarEvent[], now = new Date()) {
+  const today = calendarToday(now);
+  const uniqueEvents = deduplicateEvents(events);
+  return {
+    upcoming: uniqueEvents
+      .filter((event) => event.timestamp >= today)
+      .toSorted((a, b) => a.timestamp - b.timestamp),
+    past: uniqueEvents
+      .filter((event) => event.showInArchive !== false && event.timestamp < today)
+      .toSorted((a, b) => b.timestamp - a.timestamp),
   };
-
-  const start = formatClock(match[1], match[2]);
-  return match[3] ? `${start} - ${formatClock(match[3], match[4])}` : start;
 }

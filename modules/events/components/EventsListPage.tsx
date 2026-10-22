@@ -1,118 +1,22 @@
-import type { StaticImageData } from "next/image";
-import { unstable_rethrow } from "next/navigation";
-import { listPastEvents } from "@/modules/events/server/queries";
-import {
-  getStaticPastEvents,
-  type StaticUpcomingEvent,
-} from "@/modules/events/data/upcoming";
-import {
-  deduplicateEvents,
-  formatEventTime,
-  timestampFromDate,
-  type CalendarEvent,
-} from "@/modules/events/lib/calendar";
-import { getUpcomingCalendarEvents } from "@/modules/events/lib/upcoming";
+import { requireSiteFeature } from "@/modules/content";
+import { listPublicCalendarEvents } from "../server/queries";
+import { calendarToday, splitCalendarEvents, type CalendarEvent } from "../lib/calendar";
 import { EventCard } from "./EventCard";
-import bentoPhoto from "@/images/events/2526/bento/bento_2526.jpg";
-import ruffPhoto from "@/images/events/2627/ruff0629.jpg";
 
-type CalendarEventGroup = {
-  month: string;
-  key: string;
-  events: CalendarEvent[];
-};
+type CalendarEventGroup = { month: string; key: string; events: CalendarEvent[] };
 
-type PastEvent = {
-  title: string;
-  date: string;
-  time: string;
-  location: string;
-  image?: {
-    src: StaticImageData;
-    alt: string;
-  };
-};
-
-const PAST_EVENTS: PastEvent[] = [
-  {
-    title: "Homecoming @RUFF",
-    date: "June 29, 2026",
-    time: "Time announced by WWTSA",
-    location: "Partner event with WWTSA",
-    image: {
-      src: ruffPhoto,
-      alt: "Homecoming at RUFF partner event flyer",
-    },
-  },
-  {
-    title: "Taiwanese Bento",
-    date: "April 18, 2026",
-    time: "13:30 - 16:00",
-    location: "Anniversary Plaza",
-    image: {
-      src: bentoPhoto,
-      alt: "TSA UIUC Taiwanese bento event",
-    },
-  },
-  {
-    title: "Lunar New Year Banquet",
-    date: "February 14, 2026",
-    time: "Time announced through TSA Linktree",
-    location: "Golden Harbor / 漁滿樓",
-  },
-  {
-    title: "TSA Singing Contest",
-    date: "November 15, 2025",
-    time: "20:30",
-    location: "Illini Room A",
-  },
-];
-
-const DATE_FORMAT = new Intl.DateTimeFormat(undefined, {
-  month: "long",
-  day: "numeric",
-  year: "numeric",
-});
-
-const MONTH_FORMAT = new Intl.DateTimeFormat(undefined, {
+const MONTH_FORMAT = new Intl.DateTimeFormat("en-US", {
+  timeZone: "UTC",
   month: "long",
   year: "numeric",
-});
-
-const TIME_FORMAT = new Intl.DateTimeFormat(undefined, {
-  hour: "numeric",
-  minute: "2-digit",
-  hourCycle: "h12",
 });
 
 function monthKey(date: Date): string {
-  return `${date.getFullYear()}-${date.getMonth()}`;
+  return `${date.getUTCFullYear()}-${date.getUTCMonth()}`;
 }
 
 function nextMonth(date: Date): Date {
-  return new Date(date.getFullYear(), date.getMonth() + 1, 1);
-}
-
-function timeRange(startsAt: string, endsAt: string | null): string {
-  const start = new Date(startsAt);
-  if (!endsAt) return TIME_FORMAT.format(start);
-  const end = new Date(endsAt);
-  return `${TIME_FORMAT.format(start)} - ${TIME_FORMAT.format(end)}`;
-}
-
-function fromStaticEvent(event: StaticUpcomingEvent): CalendarEvent {
-  return {
-    key: `static-${event.date}-${event.title}`,
-    title: event.title,
-    date: event.date,
-    time: formatEventTime(event.time),
-    location: event.location,
-    description: event.description,
-    timestamp: timestampFromDate(event.date),
-    href: event.href,
-    image: event.image,
-    images: event.images,
-  };
+  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 1));
 }
 
 function groupByMonth(events: CalendarEvent[]): CalendarEventGroup[] {
@@ -142,29 +46,21 @@ function MonthGroup({ group }: { group: CalendarEventGroup }) {
       </h2>
       <div className="mt-4 grid gap-2 sm:grid-cols-4 lg:grid-cols-5">
         {group.events.map((event) => (
-          <EventBlock key={event.key} event={event} />
+          <EventCard key={event.key} event={event} />
         ))}
       </div>
     </section>
   );
 }
 
-function EventBlock({ event }: { event: CalendarEvent }) {
-  return <EventCard event={event} />;
-}
-
-function CalendarBlocks({
-  events,
-  now = new Date(),
-}: {
-  events: CalendarEvent[];
-  now?: Date;
-}) {
+function CalendarBlocks({ events }: { events: CalendarEvent[] }) {
   const groups = groupByMonth(events);
-  const visibleMonthKeys = new Set([monthKey(now), monthKey(nextMonth(now))]);
-  const visibleGroups = groups.filter((group) =>
-    visibleMonthKeys.has(group.key),
-  );
+  const calendarNow = new Date(calendarToday());
+  const visibleMonthKeys = new Set([
+    monthKey(calendarNow),
+    monthKey(nextMonth(calendarNow)),
+  ]);
+  const visibleGroups = groups.filter((group) => visibleMonthKeys.has(group.key));
   const displayedGroups = visibleGroups.length > 0 ? visibleGroups : groups.slice(0, 1);
   const displayedGroupKeys = new Set(displayedGroups.map((group) => group.key));
   const foldedGroups = groups.filter((group) => !displayedGroupKeys.has(group.key));
@@ -210,44 +106,15 @@ function EventBlockGrid({ events }: { events: CalendarEvent[] }) {
   return (
     <div className="grid gap-2 sm:grid-cols-4 lg:grid-cols-5">
       {events.map((event) => (
-        <EventBlock key={event.key} event={event} />
+        <EventCard key={event.key} event={event} />
       ))}
     </div>
   );
 }
 
 export async function EventsListPage() {
-  const upcomingCalendarEvents = await getUpcomingCalendarEvents();
-  const pastEvents = await listPastEvents().catch((error) => {
-    unstable_rethrow(error);
-    console.warn("Unable to load past events", error);
-    return [];
-  });
-
-  const pastCalendarEvents = deduplicateEvents([
-    ...pastEvents.map((event) => {
-      const start = new Date(event.starts_at);
-      return {
-        key: `db-past-${event.id}`,
-        title: event.title,
-        date: DATE_FORMAT.format(start),
-        time: timeRange(event.starts_at, event.ends_at),
-        location: event.location ?? "TBA",
-        description: event.description ?? undefined,
-        timestamp: start.getTime(),
-      };
-    }),
-    ...getStaticPastEvents().map(fromStaticEvent),
-    ...PAST_EVENTS.map((event) => ({
-      key: `manual-past-${event.date}-${event.title}`,
-      title: event.title,
-      date: event.date,
-      time: formatEventTime(event.time),
-      location: event.location,
-      image: event.image,
-      timestamp: timestampFromDate(event.date),
-    })),
-  ]).toSorted((a, b) => b.timestamp - a.timestamp);
+  await requireSiteFeature("events");
+  const { upcoming, past } = splitCalendarEvents(await listPublicCalendarEvents());
 
   return (
     <main className="mx-auto w-full max-w-6xl px-6 py-16 sm:py-20">
@@ -266,7 +133,7 @@ export async function EventsListPage() {
         </p>
       </header>
 
-      <CalendarBlocks events={upcomingCalendarEvents} />
+      <CalendarBlocks events={upcoming} />
 
       <section className="mt-20 border-t border-neutral-100 pt-14">
         <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
@@ -276,7 +143,7 @@ export async function EventsListPage() {
           Past Events
         </h2>
         <div className="mt-8">
-          <EventBlockGrid events={pastCalendarEvents} />
+          <EventBlockGrid events={past} />
         </div>
       </section>
     </main>

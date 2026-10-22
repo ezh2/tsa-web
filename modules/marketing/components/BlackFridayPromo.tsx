@@ -210,13 +210,16 @@ export function BlackFridaySalePopup() {
         <h2 id="black-friday-title" className="sr-only">
           TSA UIUC Black Friday merch deals
         </h2>
-        <Image
-          src={blackFridayDeals}
-          alt="TSA merch Black Friday deals: $42.99 for the merch and VIP bundle, and $23 for merch"
-          className="mx-auto max-h-[70vh] w-auto object-contain"
-          sizes="(max-width: 540px) 94vw, 500px"
-          priority
-        />
+        <div className="relative mx-auto aspect-[16/15] w-full max-w-lg overflow-hidden">
+          <Image
+            src={blackFridayDeals}
+            alt="TSA merch Black Friday deals: $42.99 for the merch and VIP bundle, and $23 for merch"
+            fill
+            className="object-cover object-top"
+            sizes="(max-width: 540px) 94vw, 500px"
+            priority
+          />
+        </div>
         <div className="mt-3">
           <PurchaseButton label="Shop the Black Friday sale" sale />
         </div>

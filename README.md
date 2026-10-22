@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# UIUC TSA website
 
-## Getting Started
+Next.js 16, React 19, TypeScript, Tailwind CSS 4, and Supabase. Public pages, student exchange boards, membership information, and event management share Supabase authentication and database permissions.
 
-First, run the development server:
+## Development
 
-```bash
+Copy `.env.example` to `.env.local` and set the URL and public anon key for your Supabase project. A hosted Supabase project does not require Docker. `npm run dev` connects to the project configured in those environment variables, so use a separate Supabase project for development if you do not want to edit live content.
+
+```sh
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Website administration
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Sign in with an account whose `public.profiles.role` is `admin`, then visit `/admin`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Events:** create, edit, publish or unpublish, and delete events. Add an image, an information/registration link, capacity, a photo gallery, archive visibility, and times in Chicago, Taipei, or UTC.
+- **Site settings:** edit the name, contact address, footer, and social links.
+- **Home page:** edit the welcome text, resource cards, intern recognition, and recruitment copy.
+- **About & people:** add, remove, and reorder board members, sponsors, and contributor credits.
+- **Student guide:** edit orientation information, arrival guidance, and resource lists.
+- **Membership and merchandise:** edit public descriptions, displayed pricing, partner discounts, images, translations, and the external store link. Displayed prices do not change charges in the external store. Stripe checkout remains paused.
+- **Student boards:** edit the introduction and pinned TSA marketplace items. Community posts remain user-owned; admins can remove them on the boards.
+- **Feature visibility:** show or hide existing features. Disabled events and listing boards also enforce availability through database policies. Creating new functionality still requires code.
 
-## Learn More
+Use **Publish changes** to make content live. Image uploads accept JPG, PNG, WebP, and GIF up to 5 MB and are publicly viewable. Editors detect outdated revisions to prevent overwriting another admin's changes.
 
-To learn more about Next.js, take a look at the following resources:
+### Hosted Supabase setup
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+After applying the `director` → `admin` role migration, choose one setup workflow:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **SQL Editor:** run the contents of `scripts/admin_setup.sql` once in the hosted project's SQL Editor. This transaction creates the content tables and image bucket, adds event publishing fields, preserves the current 21-event schedule and its photos and galleries, and applies feature policies. It preserves existing accounts, database events, and listings.
+2. **CLI-managed migrations:** apply the five numbered migrations from `20261021010000` through `20261021050000` through your existing Supabase migration workflow instead of running the SQL bundle.
 
-## Deploy on Vercel
+**Already ran the original setup (0100, 0200, 0300)?** Run `scripts/admin_merge_upgrade.sql` once instead of rerunning the full setup. It contains only the two new migrations (0400 and 0500). It retains admin edits, updates untouched seed content to match the current public website, and adds gallery and archive fields. No hosted database changes happen when merging code.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The SQL Editor bundle does not update CLI migration history; do not subsequently reapply the same migrations with the CLI without reconciling that history. Regenerate the bundle after editing its source migrations:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```sh
+node scripts/compose_admin_setup.mjs
+```
+
+Deploy the updated website after the database setup. Before setup, public content uses the existing content defaults and the dashboard disables publishing with a setup notice. Events require the event migration to support drafts and media.
+
+## Structure
+
+- `app/`: thin routes and protected layouts.
+- `core/`: Supabase clients, authentication, roles, and profile helpers.
+- `modules/content/`: document schemas, initial site content, admin editors, uploads, and content queries.
+- `modules/events/`: event queries, mutations, admin forms, public pages, and RSVPs.
+- `modules/listings/`: marketplace, sublease, and carpool boards.
+- `modules/marketing/`: public page layouts consuming editable content.
+- `modules/auth/`: sign-in, onboarding, and account pages.
+- `modules/payments/`: paused Stripe implementation.
+- `supabase/migrations/`: ordered deployment migrations. Module-specific SQL is mirrored under each module's `schemas/` directory.
+
+New content tables use public read access and admin-only update policies. The database validates document shape, field limits, and safe URLs for direct API writes as well as website submissions. Upload permissions are also enforced by Supabase RLS. No service-role key is used by the editors or uploads.
+
+## Checks
+
+```sh
+npm run typecheck
+npm run lint
+npm run test:content
+npm run build
+```
+
+Content tests cover schema validation, safe links, admin publishing authorization, concurrent edits, local asset availability, and timezone/DST behavior. They use a mocked database client and do not replace testing migrations and Storage policies against Supabase. The production build needs access to Google Fonts for the existing Geist font configuration.

@@ -13,7 +13,7 @@ import "server-only";
 //     a duplicate means Stripe retried an already-handled event, so we skip
 //     it. This makes fulfillment idempotent (no double role grants/orders).
 //  3. Membership is granted only when payment_status is 'paid', and only
-//     upgrades 'customer' → 'member' — a director's role can never change.
+//     upgrades 'customer' → 'member' — an admin's role can never change.
 export async function handleStripeWebhook(): Promise<Response> {
   return Response.json({ received: false, paused: true }, { status: 503 });
 }
@@ -134,7 +134,7 @@ export async function handleStripeWebhook(): Promise<Response> {
 //   charge: Stripe.Charge,
 // ): Promise<void> {
 //   // charge.refunded is true only for full refunds; partial refunds keep the
-//   // order as paid. Refunds never auto-demote a member — directors decide.
+//   // order as paid. Refunds never auto-demote a member — admins decide.
 //   if (!charge.refunded) return;
 //   const paymentIntentId =
 //     typeof charge.payment_intent === "string"

@@ -96,7 +96,7 @@ create trigger listings_carpool_set_updated_at
 
 -- ────────────────────────────────────────────────────────────────────────────
 -- Row-Level Security
--- Public read. Signed-in users create their own posts. Own + directors delete.
+-- Public read. Signed-in users create their own posts. Own + admins delete.
 -- ────────────────────────────────────────────────────────────────────────────
 alter table public.listings_marketplace enable row level security;
 alter table public.listings_sublease enable row level security;
@@ -117,10 +117,10 @@ create policy listings_marketplace_delete_own
   to authenticated
   using (user_id = (select auth.uid()));
 
-create policy listings_marketplace_delete_director
+create policy listings_marketplace_delete_admin
   on public.listings_marketplace for delete
   to authenticated
-  using (public.current_user_role() = 'director');
+  using (public.current_user_role() = 'admin');
 
 create policy listings_sublease_select_all
   on public.listings_sublease for select
@@ -137,10 +137,10 @@ create policy listings_sublease_delete_own
   to authenticated
   using (user_id = (select auth.uid()));
 
-create policy listings_sublease_delete_director
+create policy listings_sublease_delete_admin
   on public.listings_sublease for delete
   to authenticated
-  using (public.current_user_role() = 'director');
+  using (public.current_user_role() = 'admin');
 
 create policy listings_carpool_select_all
   on public.listings_carpool for select
@@ -157,7 +157,7 @@ create policy listings_carpool_delete_own
   to authenticated
   using (user_id = (select auth.uid()));
 
-create policy listings_carpool_delete_director
+create policy listings_carpool_delete_admin
   on public.listings_carpool for delete
   to authenticated
-  using (public.current_user_role() = 'director');
+  using (public.current_user_role() = 'admin');

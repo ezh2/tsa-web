@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { listAllEvents } from "@/modules/events/server/queries";
-import { fmtDateRange } from "@/modules/events/lib/format";
+import { fmtEventDate } from "@/modules/events/lib/format";
 
 function feedbackMessage(
   updated: string | undefined,
@@ -20,11 +20,12 @@ export async function EventsAdminPage({
     updated?: string;
     deleted?: string;
     error?: string;
+    created?: string;
   }>;
 }) {
-  const { updated, deleted, error } = await searchParams;
+  const { updated, deleted, error, created } = await searchParams;
   const events = await listAllEvents();
-  const feedback = feedbackMessage(updated, deleted, error);
+  const feedback = created === "ok" ? { tone: "ok", text: "Event created." } : feedbackMessage(updated, deleted, error);
   const nowIso = new Date().toISOString();
 
   return (
@@ -32,7 +33,7 @@ export async function EventsAdminPage({
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
-            Director · Events
+            Admin · Events
           </p>
           <h1 className="mt-1 text-4xl font-semibold tracking-tight text-neutral-900">
             Manage events
@@ -82,6 +83,7 @@ export async function EventsAdminPage({
                       {event.title}
                     </h2>
                     <div className="flex shrink-0 items-baseline gap-3 text-xs text-neutral-500">
+                      <span className="rounded-full bg-neutral-100 px-2 py-0.5">{event.is_published ? "Published" : "Draft"}</span>
                       {isPast && (
                         <span className="rounded-full bg-neutral-100 px-2 py-0.5 font-medium uppercase tracking-wider text-neutral-600">
                           Past
@@ -91,7 +93,7 @@ export async function EventsAdminPage({
                     </div>
                   </div>
                   <p className="mt-1 text-sm text-neutral-600">
-                    {fmtDateRange(event.starts_at, event.ends_at)}
+                    {fmtEventDate(event)}
                   </p>
                 </Link>
               </li>

@@ -1,9 +1,11 @@
 import Link from "next/link";
+import Image from "next/image";
+import { requireSiteFeature } from "@/modules/content";
 import { notFound } from "next/navigation";
 import { getCurrentUser } from "@/core/rbac/server";
 import { hasRole } from "@/core/rbac";
 import { getEventById, getMyRsvp } from "@/modules/events/server/queries";
-import { fmtDateRange } from "@/modules/events/lib/format";
+import { fmtEventDate } from "@/modules/events/lib/format";
 import { RsvpForm } from "./RsvpForm";
 
 function feedbackMessage(
@@ -23,6 +25,7 @@ export async function EventDetailPage({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ rsvp?: string; error?: string }>;
 }) {
+  await requireSiteFeature("events");
   const { id } = await params;
   const { rsvp, error } = await searchParams;
 
@@ -31,7 +34,7 @@ export async function EventDetailPage({
 
   const user = await getCurrentUser();
   const myRsvp = user ? await getMyRsvp(event.id) : null;
-  const canRsvp = user && hasRole(user.role, "member");
+  const canRsvp = event.is_published && user && hasRole(user.role, "member");
   const feedback = feedbackMessage(rsvp, error);
 
   return (
@@ -46,7 +49,7 @@ export async function EventDetailPage({
       <article className="mt-6 space-y-6">
         <header>
           <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
-            {fmtDateRange(event.starts_at, event.ends_at)}
+            {fmtEventDate(event)}
           </p>
           <h1 className="mt-2 text-4xl font-semibold tracking-tight text-neutral-900">
             {event.title}
@@ -58,6 +61,10 @@ export async function EventDetailPage({
             )}
           </div>
         </header>
+
+        {!event.is_published && <p className="rounded-md bg-amber-50 p-4 text-sm text-amber-900">Draft preview. This event is hidden from visitors.</p>}
+        {event.image_url && <Image unoptimized src={event.image_url} alt={event.title} width={1000} height={700} className="max-h-[36rem] w-full rounded-md object-contain" />}
+        {event.link_url && <Link href={event.link_url} target="_blank" rel="noopener noreferrer" className="inline-flex rounded-full bg-neutral-900 px-5 py-3 text-sm font-semibold text-white">Registration & information ↗</Link>}
 
         {event.description && (
           <p className="whitespace-pre-wrap text-base leading-7 text-neutral-700">

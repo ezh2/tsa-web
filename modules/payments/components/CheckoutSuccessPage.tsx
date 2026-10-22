@@ -72,10 +72,10 @@ export async function CheckoutSuccessPage({
 //     session = null;
 //   }
 //
-//   // Only the buyer (or a director) may view a session's confirmation.
+//   // Only the buyer (or an admin) may view a session's confirmation.
 //   if (
 //     !session ||
-//     (session.metadata?.user_id !== user.id && !hasRole(user.role, "director"))
+//     (session.metadata?.user_id !== user.id && !hasRole(user.role, "admin"))
 //   ) {
 //     redirect("/membership");
 //   }

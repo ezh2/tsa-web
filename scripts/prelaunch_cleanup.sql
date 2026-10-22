@@ -33,5 +33,5 @@ order by created_at;
 --
 -- commit;
 
--- ── AFTER: re-grant director to real board accounts if affected ─────────────
--- update public.profiles set role = 'director' where email = 'burtonw2@illinois.edu';
+-- ── AFTER: re-grant admin to real board accounts if affected ─────────────
+-- update public.profiles set role = 'admin' where email = 'burtonw2@illinois.edu';

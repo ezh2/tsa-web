@@ -1,3 +1,4 @@
+import { getContent } from "@/modules/content";
 import Link from "next/link";
 
 const PREVIEWS = [
@@ -37,7 +38,10 @@ export function CurrentStuPage() {
   );
 }
 
-export function CurrentStuPageFullImplementation() {
+export async function CurrentStuPageFullImplementation() {
+  const [boards, features] = await Promise.all([getContent("boards"), getContent("features")]);
+  const previews = PREVIEWS.filter((preview) => preview.eyebrow === "Marketplace" ? features.marketplace : preview.eyebrow === "Sublease" ? features.sublease : features.carpool);
+
   return (
     <main className="bg-white">
       <section className="border-b border-neutral-100">
@@ -46,17 +50,17 @@ export function CurrentStuPageFullImplementation() {
             Current Students
           </p>
           <h1 className="mt-2 text-4xl font-semibold tracking-tight text-neutral-900">
-            Student Exchange Board
+            {boards.title}
           </h1>
           <p className="mt-4 max-w-3xl text-lg leading-8 text-neutral-600">
-            二手買賣、轉租、拼車日期登記集中在這裡。這一頁只顯示預覽，完整列表與表單請進入各功能頁面。
+            {boards.description}
           </p>
         </div>
       </section>
 
       <section>
         <div className="mx-auto grid w-full max-w-6xl gap-6 px-6 py-16 md:grid-cols-3 sm:py-20">
-          {PREVIEWS.map((preview) => (
+          {previews.map((preview) => (
             <Link
               key={preview.href}
               href={preview.href}
@@ -73,12 +77,7 @@ export function CurrentStuPageFullImplementation() {
               </p>
               <div className="mt-6 space-y-2">
                 {preview.items.map((item) => (
-                  <p
-                    key={item}
-                    className="rounded-md bg-neutral-50 px-3 py-2 text-sm text-neutral-700"
-                  >
-                    {item}
-                  </p>
+                  <p key={item} className="rounded-md bg-neutral-50 px-3 py-2 text-sm text-neutral-700">{item}</p>
                 ))}
               </div>
               <span className="mt-auto pt-8 text-sm font-medium text-neutral-900 group-hover:underline">

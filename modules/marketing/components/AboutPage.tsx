@@ -1,59 +1,5 @@
-import Image, { type StaticImageData } from "next/image";
-import brandonPhoto from "../../../images/Board2627/Brandon.jpg";
-import burtonPhoto from "../../../images/Board2627/burton.jpeg";
-import chloePhoto from "../../../images/Board2627/Chloe.jpg";
-import derrickPhoto from "../../../images/Board2627/Derrick.jpg";
-import ericPhoto from "../../../images/Board2627/Eric.jpg";
-import seanPhoto from "../../../images/Board2627/Sean.jpg";
-import sylviaPhoto from "../../../images/Board2627/Sylvia.jpg";
-import timPhoto from "../../../images/Board2627/Tim.jpg";
-import ulandaPhoto from "../../../images/Board2627/Ulanda.jpg";
-import lateaLogo from "../../../images/sponsors/latea-logo.png";
-import bbqChickenLogo from "../../../images/sponsors/bbq-chicken-logo.png";
-import pokeLabLogo from "../../../images/sponsors/pokelab-logo.jpeg";
-import soGongDongLogo from "../../../images/sponsors/sgd-logo.jpeg";
-import susuruRamenLogo from "../../../images/sponsors/susuru-ramen-logo.jpeg";
-import rocTaiwanFlag from "../../../images/sponsors/roc-flag.webp";
-import tsmcLogo from "../../../images/sponsors/tsmc-logo.png";
-import weeeLogo from "../../../images/sponsors/weee-logo.png";
-
-const BOARD_MEMBERS: Array<{
-  name: string;
-  role: string;
-  photo?: StaticImageData;
-}> = [
-  { name: "Tim Chen", role: "President", photo: timPhoto },
-  { name: "Eric Chang", role: "Vice President", photo: ericPhoto },
-  { name: "Chloe Lee", role: "Vice President", photo: chloePhoto },
-  { name: "Derrick Lin", role: "Treasury Director", photo: derrickPhoto },
-  { name: "Brandon Tsai", role: "Program Director", photo: brandonPhoto },
-  { name: "Ulanda Chen", role: "Marketing Director", photo: ulandaPhoto },
-  { name: "Sean Hsiung", role: "Publicity Director", photo: seanPhoto },
-  { name: "Sylvia Hou", role: "Secretary Director", photo: sylviaPhoto },
-  { name: "Burton Wang", role: "Technology Director", photo: burtonPhoto },
-];
-
-const SPONSORS: Array<{ name: string; logo?: StaticImageData }> = [
-  { name: "TSMC (台灣積體電路製造)", logo: tsmcLogo },
-  { name: "LaTea", logo: lateaLogo },
-  { name: "Weee", logo: weeeLogo },
-  { name: "bb.q Chicken", logo: bbqChickenLogo },
-  { name: "PokeLab", logo: pokeLabLogo },
-  { name: "So Gong Dong", logo: soGongDongLogo },
-  { name: "Susuru Ramen", logo: susuruRamenLogo },
-  { name: "Taipei Economics Cultural Office Chicago", logo: rocTaiwanFlag },
-];
-
-const CONTRIBUTORS = [
-  {
-    title: "Who made this page?",
-    body: "This website was developed in 2026 by Eric Chang & Burton Wang. Ongoing maintenance is managed by the TSA Technology Department.",
-  },
-  {
-    title: "Join as contributor:",
-    body: "We manage contributions through GitHub. If you would like to contribute, please open a pull request by following the instructions provided in the repository’s README and direct message TSA UIUC via Instagram, Facebook, or email.",
-  },
-];
+import { getContent } from "@/modules/content";
+import Image from "next/image";
 
 function PhotoPlaceholder({ label }: { label: string }) {
   return (
@@ -63,7 +9,9 @@ function PhotoPlaceholder({ label }: { label: string }) {
   );
 }
 
-export function AboutPage() {
+export async function AboutPage() {
+  const [about, features] = await Promise.all([getContent("about"), getContent("features")]);
+  const BOARD_MEMBERS = about.board, SPONSORS = about.sponsors, CONTRIBUTORS = about.contributors;
   return (
     <main className="bg-white">
       <section className="border-b border-neutral-100">
@@ -72,21 +20,14 @@ export function AboutPage() {
             About
           </p>
           <h1 className="mt-2 text-4xl font-semibold tracking-tight text-neutral-900">
-            About TSA
+            {about.title}
           </h1>
           <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_0.95fr]">
             <p className="text-base leading-8 text-neutral-700">
-              Taiwanese Student Association (TSA) is a non-profit student
-              organization at University of Illinois at Urbana-Champaign (UIUC)
-              dedicated to serve Taiwanese community in Champaign-Urbana region.
-              Needless to say, we are also a culture-oriented RSO (registered
-              student organization), so we will also promote cultural awareness
-              about Taiwan via events and cultural creations. TSA envisions
-              itself as a friendly and practical media for Taiwaneses to
-              recognize and/or help each other.
+              {about.introductionEnglish}
             </p>
             <p className="text-base leading-8 text-neutral-700">
-              伊利諾大學香檳分校的台灣同學會(TSA)，一直致力於服務UIUC的台灣人社群，並積極宣揚台灣的豐富文化。我們的理想是創造一個互助並交流的平台，讓在香檳的台灣人有家的感覺。TSA以實際行動來援助台灣人社群的需要，並以推廣台灣的文化價值。自從2002年成立以來，我們堅持使命和初衷，為我們的台灣人社群服務，並讓其他群體更加了解台灣。
+              {about.introductionChinese}
             </p>
           </div>
         </div>
@@ -109,7 +50,7 @@ export function AboutPage() {
                 {member.photo ? (
                   <div className="aspect-[4/3] w-full overflow-hidden rounded-md bg-neutral-100">
                     <Image
-                      src={member.photo}
+                      src={member.photo} unoptimized width={600} height={450}
                       alt={`${member.name}, ${member.role}`}
                       className="h-full w-full object-cover"
                       sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
@@ -128,7 +69,8 @@ export function AboutPage() {
         </div>
       </section>
 
-      <section className="border-b border-neutral-100">
+      {features.sponsors && (
+      <section id="sponsors" className="scroll-mt-24 border-b border-neutral-100">
         <div className="mx-auto w-full max-w-6xl px-6 py-16 sm:py-20">
           <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
             Support
@@ -145,7 +87,7 @@ export function AboutPage() {
                 {sponsor.logo ? (
                   <div className="flex aspect-[4/3] w-full items-center justify-center rounded-md bg-neutral-50 p-6">
                     <Image
-                      src={sponsor.logo}
+                      src={sponsor.logo} unoptimized width={400} height={300}
                       alt={`${sponsor.name} logo`}
                       className="max-h-full w-full object-contain"
                     />
@@ -161,6 +103,7 @@ export function AboutPage() {
           </div>
         </div>
       </section>
+      )}
 
       <section id="contributors" className="bg-neutral-50">
         <div className="mx-auto w-full max-w-6xl px-6 py-16 sm:py-20">

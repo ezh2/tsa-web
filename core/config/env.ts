@@ -1,5 +1,4 @@
-function required(name: string): string {
-  const value = process.env[name];
+function required(name: string, value = process.env[name]): string {
   if (!value || value.trim() === "") {
     throw new Error(`Missing required env var: ${name}`);
   }
@@ -7,8 +6,8 @@ function required(name: string): string {
 }
 
 export const publicEnv = {
-  SUPABASE_URL: required("NEXT_PUBLIC_SUPABASE_URL"),
-  SUPABASE_ANON_KEY: required("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
+  SUPABASE_URL: required("NEXT_PUBLIC_SUPABASE_URL", process.env.NEXT_PUBLIC_SUPABASE_URL),
+  SUPABASE_ANON_KEY: required("NEXT_PUBLIC_SUPABASE_ANON_KEY", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
 } as const;
 
 export const serverEnv = {

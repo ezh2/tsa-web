@@ -1,56 +1,26 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getUpcomingCalendarEvents } from "@/modules/events/lib/upcoming";
+import { listPublicCalendarEvents, splitCalendarEvents } from "@/modules/events";
 
 export async function EventsPreview() {
-  const events = (await getUpcomingCalendarEvents()).slice(0, 3);
-
+  const { upcoming } = splitCalendarEvents(await listPublicCalendarEvents());
   return (
     <section className="mx-auto w-full max-w-6xl px-6 py-20">
       <div className="flex items-end justify-between gap-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
-            What&apos;s next
-          </p>
-          <h2 className="mt-2 text-4xl font-semibold tracking-tight text-neutral-900 sm:text-5xl">
-            Upcoming events
-          </h2>
-          <p className="mt-3 text-sm font-medium text-neutral-600">
-            資訊以 Instagram 為主。
-          </p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">What&apos;s next</p>
+          <h2 className="mt-2 text-4xl font-semibold tracking-tight text-neutral-900 sm:text-5xl">Upcoming events</h2>
+          <p className="mt-3 text-sm font-medium text-neutral-600">資訊以 Instagram 為主。</p>
         </div>
-        <Link
-          href="/events"
-          className="rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-medium text-neutral-700 hover:text-neutral-900"
-        >
-          View all →
-        </Link>
+        <Link href="/events" className="rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-medium text-neutral-700 hover:text-neutral-900">View all →</Link>
       </div>
-
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {events.map((event) => (
-          <Link
-            key={event.key}
-            href="/events"
-            className="group relative flex min-h-64 flex-col overflow-hidden rounded-md border border-black/10 bg-white/85 p-6 backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-neutral-400 hover:shadow-sm"
-          >
-            {event.image && (
-              <Image
-                src={event.image.src}
-                alt=""
-                fill
-                aria-hidden
-                className="pointer-events-none object-cover opacity-8"
-                sizes="(min-width: 1024px) 384px, (min-width: 640px) 50vw, 100vw"
-              />
-            )}
+        {upcoming.slice(0, 3).map((event) => (
+          <Link key={event.key} href={event.detailsHref ?? "/events"} className="group relative flex min-h-64 flex-col overflow-hidden rounded-md border border-black/10 bg-white/85 p-6 backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-neutral-400 hover:shadow-sm">
+            {event.image && <Image src={event.image.src} unoptimized={typeof event.image.src === "string"} alt="" fill aria-hidden className="pointer-events-none object-cover opacity-8" sizes="(min-width: 1024px) 384px, (min-width: 640px) 50vw, 100vw" />}
             <div className="relative flex h-full flex-col">
-              <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">
-                {event.date} · {event.time}
-              </p>
-              <h3 className="mt-2 text-lg font-semibold text-neutral-900 group-hover:underline">
-                {event.title}
-              </h3>
+              <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">{event.date} · {event.time}</p>
+              <h3 className="mt-2 text-lg font-semibold text-neutral-900 group-hover:underline">{event.title}</h3>
               <p className="mt-1 text-sm text-neutral-600">{event.location}</p>
               {event.description && (
                 <p className="mt-3 line-clamp-3 text-sm text-neutral-600">
