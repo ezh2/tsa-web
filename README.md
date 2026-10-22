@@ -31,9 +31,9 @@ Use **Publish changes** to make content live. Image uploads accept JPG, PNG, Web
 After applying the `director` → `admin` role migration, choose one setup workflow:
 
 1. **SQL Editor:** run the contents of `scripts/admin_setup.sql` once in the hosted project's SQL Editor. This transaction creates the content tables and image bucket, adds event publishing fields, preserves the current 21-event schedule and its photos and galleries, and applies feature policies. It preserves existing accounts, database events, and listings.
-2. **CLI-managed migrations:** apply the five numbered migrations from `20261021010000` through `20261021050000` through your existing Supabase migration workflow instead of running the SQL bundle.
+2. **CLI-managed migrations:** apply the six numbered migrations from `20261021010000` through `20261022000000` through your existing Supabase migration workflow instead of running the SQL bundle.
 
-**Already ran the original setup (0100, 0200, 0300)?** Run `scripts/admin_merge_upgrade.sql` once instead of rerunning the full setup. It contains only the two new migrations (0400 and 0500). It retains admin edits, updates untouched seed content to match the current public website, and adds gallery and archive fields. No hosted database changes happen when merging code.
+**Already ran the original setup (0100, 0200, 0300)?** Run `scripts/admin_merge_upgrade.sql` once instead of rerunning the full setup. It contains the three follow-up migrations (0400, 0500, and 0600), retaining admin edits while updating untouched public content and the event calendar. No hosted database changes happen when merging code; run the SQL bundle in the hosted SQL Editor to apply these updates.
 
 The SQL Editor bundle does not update CLI migration history; do not subsequently reapply the same migrations with the CLI without reconciling that history. Regenerate the bundle after editing its source migrations:
 

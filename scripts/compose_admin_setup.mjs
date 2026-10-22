@@ -6,9 +6,10 @@ const migrations = [
   "20261021030000_listing_feature_visibility.sql",
   "20261021040000_preserve_main_content.sql",
   "20261021050000_preserve_main_calendar.sql",
+  "20261022000000_sync_latest_public_updates.sql",
 ];
 const header = `-- Run ONCE in the hosted Supabase SQL Editor after the admin-role rename.
--- Contains the five website-management migrations below, in dependency order.
+-- Contains the six website-management migrations below, in dependency order.
 -- This alternative to the CLI does not record Supabase CLI migration history.
 -- The transaction keeps setup all-or-nothing; it does not reset existing data.
 begin;
@@ -24,5 +25,5 @@ end $$;
 `;
 writeFileSync("scripts/admin_setup.sql", header + migrations.map((file) => `-- Migration: ${file}\n` + readFileSync(`supabase/migrations/${file}`, "utf8")).join("\n\n") + "\ncommit;\n");
 const upgradeHeader = "-- For projects that ALREADY ran the original admin_setup.sql (0100, 0200, 0300).\n-- Run once in the hosted SQL Editor. Fresh installations use admin_setup.sql.\nbegin;\n\n";
-writeFileSync("scripts/admin_merge_upgrade.sql", upgradeHeader + migrations.slice(-2).map((file) => readFileSync(`supabase/migrations/${file}`, "utf8")).join("\n") + "\ncommit;\n");
+writeFileSync("scripts/admin_merge_upgrade.sql", upgradeHeader + migrations.slice(-3).map((file) => `-- Migration: ${file}\n` + readFileSync(`supabase/migrations/${file}`, "utf8")).join("\n\n") + "\ncommit;\n");
 console.log("Wrote scripts/admin_setup.sql and scripts/admin_merge_upgrade.sql");

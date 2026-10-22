@@ -158,13 +158,19 @@ const seededRecord = (event) => ({ ...event, id: 'static-' + event.source_key })
 test('the calendar retains the corrected National Day venue, date, and full BBQ gallery', () => {
   const nationalDay = calendar.toCalendarEvent(seededRecord(eventSnapshot.find((event) => event.title === 'National Day Celebration')));
   assert.equal(nationalDay.date, 'October 10, 2026');
-  assert.equal(nationalDay.time, '22:30');
+  assert.equal(nationalDay.time, '10:30 PM');
   assert.equal(nationalDay.location, "Joe's Brewery Champaign");
   const bbq = eventSnapshot.find((event) => event.title === '中秋烤肉');
   assert.equal(bbq.image_gallery.length, 3);
   assert.equal(calendar.toCalendarEvent(seededRecord(bbq)).date, 'September 27, 2026');
   const keys = eventSnapshot.map((event) => event.source_key);
-  assert.equal(new Set(keys).size, 21);
+  assert.equal(new Set(keys).size, 20);
+  const getEvent = (title) => eventSnapshot.find((event) => event.title === title);
+  assert.equal(getEvent('Game Day').starts_at, '2026-11-13T23:30:00.000Z');
+  assert.equal(getEvent('Singing Contest').starts_at, '2027-02-01T18:00:00.000Z');
+  assert.equal(getEvent('Taiwanese Bento').starts_at, '2027-03-01T19:30:00.000Z');
+  assert.equal(getEvent('Water Balloon Battle').starts_at, '2027-04-01T05:00:00.000Z');
+  assert.equal(getEvent('Hot Choco Sale'), undefined);
   for (const event of eventSnapshot) for (const image of [event.image_url, ...event.image_gallery.map((image) => image.src)]) {
     if (image.startsWith('/content/')) assert.ok(fs.existsSync('public' + image), image);
   }
@@ -184,13 +190,26 @@ test('membership defaults preserve current confirmed benefits, pricing, people, 
   assert.equal(content.site.name, 'TSA UIUC');
   assert.equal(content.merch.bundlePrice, '$49.99');
   const partners = content.membership.partners.filter((partner) => partner.confirmed);
-  assert.equal(partners.length, 1);
-  assert.equal(partners[0].name, 'LaTea');
-  assert.match(partners[0].offer, /10% off/);
-  assert.match(partners[0].additionalOffer, /Early access/);
+  assert.equal(partners.length, 2);
+  const restaurantPartners = partners.find((partner) => partner.name === 'Restaurant Partners');
+  assert.match(restaurantPartners.offer, /10% off/);
+  assert.equal(restaurantPartners.venues.length, 4);
+  const latea = partners.find((partner) => partner.name === 'LaTea');
+  assert.match(latea.offer, /10% off/);
+  assert.match(latea.additionalOffer, /Early access/);
   assert.deepEqual(Array.from(content.home.interns, (intern) => intern.name), ['Barron Tsai', 'Ryan Hsu']);
   assert.ok(content.about.board.find((person) => person.name === 'Burton Wang').photo);
-  assert.deepEqual(Array.from(content.about.sponsors, (sponsor) => sponsor.name), ['TSMC (台灣積體電路製造)', 'LaTea', 'Weee', 'TECO Taiwan']);
+  assert.deepEqual(Array.from(content.about.sponsors, (sponsor) => sponsor.name), [
+    'TSMC (台灣積體電路製造)',
+    'LaTea',
+    'Weee',
+    'Taipei Economics Cultural Office Chicago',
+    'bb.q Chicken',
+    'Pokelab',
+    'SGD Dubu',
+    'Susuru Ramen',
+  ]);
+  assert.equal(content.about.sponsors.find((sponsor) => sponsor.name === 'Taipei Economics Cultural Office Chicago').logo, '/content/roc-flag.webp');
 });
 
 function publicCalendarFixture(data, error = null) {
