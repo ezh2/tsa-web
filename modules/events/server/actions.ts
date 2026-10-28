@@ -78,10 +78,19 @@ export async function previewEventImportAction(rawJson: string) {
   };
 }
 
-export async function importEventsAction(rawJson: string) {
+export async function importEventsAction(rawJson: string, selectedRows: number[], allowDuplicateRows: number[]) {
   const user = await requireRole("admin");
   const parsed = parseEventImportJson(rawJson);
   if (parsed.issues.length) return { ok: false as const, count: 0, issues: parsed.issues, duplicates: [] };
+  if (!Array.isArray(selectedRows) || !Array.isArray(allowDuplicateRows) || selectedRows.length === 0 || selectedRows.length > parsed.events.length
+    || selectedRows.some((row) => !Number.isSafeInteger(row) || row < 1 || row > parsed.events.length)
+    || new Set(selectedRows).size !== selectedRows.length
+    || allowDuplicateRows.some((row) => !Number.isSafeInteger(row) || !selectedRows.includes(row))
+    || new Set(allowDuplicateRows).size !== allowDuplicateRows.length) {
+    return { ok: false as const, count: 0, issues: [{ row: null, message: "Select at least one valid event to import." }], duplicates: [] };
+  }
+  const selectedEvents = selectedRows.map((row) => parsed.events[row - 1]);
+  const duplicateOverrides = new Set(allowDuplicateRows.filter((row) => selectedRows.includes(row)));
 
   const supabase = await createClient();
   const { data: existing, error: queryError } = await supabase.from("events_event").select("title, starts_at");
@@ -89,12 +98,17 @@ export async function importEventsAction(rawJson: string) {
     return { ok: false as const, count: 0, issues: [{ row: null, message: `Could not check existing events: ${queryError.message}` }], duplicates: [] };
   }
 
-  const duplicates = findEventImportDuplicates(parsed.events, existing ?? []);
-  if (duplicates.length) return { ok: false as const, count: 0, issues: [], duplicates };
+  const duplicates = findEventImportDuplicates(selectedEvents, existing ?? []).map((duplicate) => ({
+    ...duplicate,
+    row: selectedRows[duplicate.row - 1],
+  }));
+  if (duplicates.some((duplicate) => !duplicateOverrides.has(duplicate.row))) {
+    return { ok: false as const, count: 0, issues: [], duplicates };
+  }
 
   const { data, error } = await supabase
     .from("events_event")
-    .insert(parsed.events.map((event) => ({ ...event, created_by: user.id })))
+    .insert(selectedEvents.map((event) => ({ ...event, created_by: user.id })))
     .select("id");
   if (error) {
     return { ok: false as const, count: 0, issues: [{ row: null, message: error.message }], duplicates: [] };
@@ -126,6 +140,19 @@ export async function deleteEventAction(formData: FormData) {
   if (error) redirect(`/admin/events/${encodeURIComponent(id)}/edit?error=${encodeURIComponent(error.message)}`);
   revalidatePath("/", "layout");
   redirect("/admin/events?deleted=ok");
+}
+
+export async function deleteEventsAction(formData: FormData) {
+  await requireRole("admin");
+  const ids = [...new Set(formData.getAll("ids").filter((value): value is string => typeof value === "string").map((id) => id.trim()).filter(Boolean))];
+  if (ids.length === 0 || ids.length > 100) {
+    redirect(`/admin/events?error=${encodeURIComponent("Select between 1 and 100 events to delete.")}`);
+  }
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("events_event").delete().in("id", ids).select("id");
+  if (error) redirect(`/admin/events?error=${encodeURIComponent(error.message)}`);
+  revalidatePath("/", "layout");
+  redirect(`/admin/events?bulkDeleted=${data?.length ?? ids.length}`);
 }
 
 export async function rsvpAction(formData: FormData) {

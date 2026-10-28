@@ -23,16 +23,16 @@ function formatEventDate(event: EventImportRecord): string {
 
 export function EventImportPage() {
   const [json, setJson] = useState("");
-  const [validatedJson, setValidatedJson] = useState("");
   const [preview, setPreview] = useState<Preview | null>(null);
+  const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
   const [result, setResult] = useState<ImportResult | null>(null);
   const [busy, setBusy] = useState(false);
   const [fileError, setFileError] = useState("");
 
   function updateJson(value: string) {
     setJson(value);
-    setValidatedJson("");
     setPreview(null);
+    setSelectedRows(new Set());
     setResult(null);
     setFileError("");
   }
@@ -56,7 +56,8 @@ export function EventImportPage() {
     try {
       const next = await previewEventImportAction(json);
       setPreview(next);
-      setValidatedJson(json);
+      const duplicateRows = new Set(next.duplicates.map((duplicate) => duplicate.row));
+      setSelectedRows(new Set(next.events.map((_, index) => index + 1).filter((row) => !duplicateRows.has(row))));
     } catch {
       setPreview({
         ok: false,
@@ -64,28 +65,32 @@ export function EventImportPage() {
         issues: [{ row: null, message: "Could not validate the import. Try again." }],
         duplicates: [],
       });
+      setSelectedRows(new Set());
     } finally {
       setBusy(false);
     }
   }
 
   async function importBatch() {
-    if (!preview?.ok || preview.duplicates.length || validatedJson !== json) return;
+    if (!preview?.ok || selectedRows.size === 0) return;
     setBusy(true);
     try {
-      const next = await importEventsAction(json);
+      const rows = [...selectedRows].sort((a, b) => a - b);
+      const duplicateRows = preview.duplicates.map((duplicate) => duplicate.row).filter((row) => selectedRows.has(row));
+      const next = await importEventsAction(json, rows, duplicateRows);
       setResult(next);
       if (next.ok) {
         setPreview(null);
-        setValidatedJson("");
       } else {
+        const duplicateByRow = new Map([...preview.duplicates, ...next.duplicates].map((duplicate) => [duplicate.row, duplicate]));
         setPreview({
-          ok: false,
-          events: [],
+          ok: next.issues.length === 0,
+          events: preview.events,
           issues: next.issues,
-          duplicates: next.duplicates,
+          duplicates: [...duplicateByRow.values()],
         });
-        setValidatedJson(json);
+        const duplicateSet = new Set([...duplicateByRow.keys()]);
+        setSelectedRows((current) => new Set([...current].filter((row) => !duplicateSet.has(row))));
       }
     } catch {
       setResult({
@@ -99,7 +104,7 @@ export function EventImportPage() {
     }
   }
 
-  const canImport = Boolean(preview?.ok && preview.events.length && !preview.duplicates.length && validatedJson === json && !busy);
+  const canImport = Boolean(preview?.ok && selectedRows.size > 0 && !busy);
 
   return (
     <main className="mx-auto w-full max-w-4xl px-6 py-12">
@@ -202,12 +207,29 @@ export function EventImportPage() {
           )}
           {preview.ok && preview.events.length > 0 && (
             <>
-              <p className="mt-2 text-sm text-neutral-600">{preview.events.length} events ready to import.</p>
+              <p className="mt-2 text-sm text-neutral-600">{selectedRows.size} of {preview.events.length} events selected to import.</p>
               <ul className="mt-4 divide-y divide-neutral-200 rounded-md border border-neutral-200">
                 {preview.events.map((event, index) => (
-                  <li key={`${event.title}-${event.starts_at}`} className="flex flex-wrap items-baseline justify-between gap-x-5 gap-y-1 px-4 py-3">
-                    <span className="font-medium text-neutral-900">{index + 1}. {event.title}</span>
-                    <span className="text-sm text-neutral-600">{formatEventDate(event)} · {event.location || "No location"}</span>
+                  <li key={`${event.title}-${event.starts_at}`} className="flex flex-wrap items-center justify-between gap-x-5 gap-y-2 px-4 py-3">
+                    <label className="flex min-w-0 items-center gap-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedRows.has(index + 1)}
+                        onChange={(change) => setSelectedRows((current) => {
+                          const next = new Set(current);
+                          if (change.target.checked) next.add(index + 1);
+                          else next.delete(index + 1);
+                          return next;
+                        })}
+                        className="h-4 w-4 shrink-0 accent-neutral-900"
+                        aria-label={`Import ${event.title}`}
+                      />
+                      <span className="font-medium text-neutral-900">{index + 1}. {event.title}</span>
+                      {preview.duplicates.some((duplicate) => duplicate.row === index + 1) && (
+                        <span className="rounded bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-900">Duplicate</span>
+                      )}
+                    </label>
+                    <span className="ml-7 text-sm text-neutral-600">{formatEventDate(event)} · {event.location || "No location"}</span>
                   </li>
                 ))}
               </ul>
@@ -220,7 +242,7 @@ export function EventImportPage() {
               disabled={!canImport}
               className="mt-5 rounded-md bg-emerald-700 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {busy ? "Importing…" : `Import ${preview.events.length} events`}
+              {busy ? "Importing…" : `Import ${selectedRows.size} selected`}
             </button>
           )}
         </section>

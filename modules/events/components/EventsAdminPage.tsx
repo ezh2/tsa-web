@@ -1,13 +1,15 @@
 import Link from "next/link";
 import { listAllEvents } from "@/modules/events/server/queries";
-import { fmtEventDate } from "@/modules/events/lib/format";
+import { EventsAdminList } from "./EventsAdminList";
 
 function feedbackMessage(
   updated: string | undefined,
   deleted: string | undefined,
+  bulkDeleted: string | undefined,
   error: string | undefined,
 ): { tone: "ok" | "err"; text: string } | null {
   if (error) return { tone: "err", text: error };
+  if (bulkDeleted) return { tone: "ok", text: `Deleted ${bulkDeleted} events.` };
   if (deleted === "ok") return { tone: "ok", text: "Event deleted." };
   if (updated) return { tone: "ok", text: "Event updated." };
   return null;
@@ -19,13 +21,14 @@ export async function EventsAdminPage({
   searchParams: Promise<{
     updated?: string;
     deleted?: string;
+    bulkDeleted?: string;
     error?: string;
     created?: string;
   }>;
 }) {
-  const { updated, deleted, error, created } = await searchParams;
+  const { updated, deleted, bulkDeleted, error, created } = await searchParams;
   const events = await listAllEvents();
-  const feedback = created === "ok" ? { tone: "ok", text: "Event created." } : feedbackMessage(updated, deleted, error);
+  const feedback = created === "ok" ? { tone: "ok", text: "Event created." } : feedbackMessage(updated, deleted, bulkDeleted, error);
   const nowIso = new Date().toISOString();
 
   return (
@@ -77,37 +80,7 @@ export async function EventsAdminPage({
           No events yet. Create the first one.
         </p>
       ) : (
-        <ul className="mt-8 space-y-3">
-          {events.map((event) => {
-            const isPast = event.starts_at < nowIso;
-            return (
-              <li key={event.id}>
-                <Link
-                  href={`/admin/events/${event.id}/edit`}
-                  className="block rounded-xl border border-neutral-200 bg-white p-5 transition hover:border-neutral-400 hover:shadow-sm"
-                >
-                  <div className="flex items-baseline justify-between gap-4">
-                    <h2 className="text-lg font-semibold text-neutral-900">
-                      {event.title}
-                    </h2>
-                    <div className="flex shrink-0 items-baseline gap-3 text-xs text-neutral-500">
-                      <span className="rounded-full bg-neutral-100 px-2 py-0.5">{event.is_published ? "Published" : "Draft"}</span>
-                      {isPast && (
-                        <span className="rounded-full bg-neutral-100 px-2 py-0.5 font-medium uppercase tracking-wider text-neutral-600">
-                          Past
-                        </span>
-                      )}
-                      {event.location && <span>{event.location}</span>}
-                    </div>
-                  </div>
-                  <p className="mt-1 text-sm text-neutral-600">
-                    {fmtEventDate(event)}
-                  </p>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+        <EventsAdminList events={events} nowIso={nowIso} />
       )}
     </main>
   );
