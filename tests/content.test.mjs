@@ -18,6 +18,10 @@ const defaults = loadTs('modules/content/lib/defaults.ts');
 const schema = loadTs('modules/content/lib/schema.ts', { './defaults': defaults });
 const { CONTENT_SCHEMAS, validateContent, isSafeContentUrl } = schema;
 const { eventLocalToIso, eventLocalInput } = loadTs('modules/events/lib/timezone.ts');
+const eventImport = loadTs('modules/events/lib/import.ts', {
+  '@/modules/content/lib/schema': { isSafeContentUrl },
+  './timezone': { eventLocalToIso, isEventTimeZone: (zone) => ['America/Chicago', 'Asia/Taipei', 'UTC'].includes(zone) },
+});
 
 test('all existing site content can be published without losing its data', () => {
   for (const [key, value] of Object.entries(defaults.DEFAULT_CONTENT)) assert.equal(validateContent(value, CONTENT_SCHEMAS[key]), null, key);
@@ -53,6 +57,24 @@ test('event wall-clock times use their selected timezone in winter, summer, and 
   assert.equal(eventLocalToIso('2026-08-22T16:00', 'America/Chicago'), '2026-08-22T21:00:00.000Z');
   assert.equal(eventLocalToIso('2026-06-27T10:00', 'Asia/Taipei'), '2026-06-27T02:00:00.000Z');
   assert.equal(eventLocalInput('2026-06-27T02:00:00.000Z', 'Asia/Taipei'), '2026-06-27T10:00');
+});
+
+test('bulk event JSON validates timezone-aware events and catches duplicate rows', () => {
+  const event = {
+    title: 'Game Day',
+    starts_at: '2026-11-13T17:30',
+    ends_at: '2026-11-13T21:00',
+    time_zone: 'America/Chicago',
+    location: 'AACC',
+  };
+  const parsed = eventImport.parseEventImportJson(JSON.stringify([event, event]));
+  assert.equal(parsed.issues.length, 0);
+  assert.equal(parsed.events.length, 2);
+  assert.equal(parsed.events[0].starts_at, '2026-11-13T23:30:00.000Z');
+  const duplicates = eventImport.findEventImportDuplicates(parsed.events, []);
+  assert.deepEqual(Array.from(duplicates, (duplicate) => duplicate.matchedRow), [1]);
+  assert.deepEqual(eventImport.parseEventImportJson(JSON.stringify([{ ...event, image_url: 'javascript:alert(1)' }])).issues[0].row, 1);
+  assert.deepEqual(eventImport.parseEventImportJson(JSON.stringify([{ ...event, starts_at: '2026-03-08T02:30' }])).issues[0].row, 1);
 });
 
 test('nonexistent DST times and invalid calendar dates are rejected', () => {

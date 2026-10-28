@@ -7,6 +7,7 @@ import { requireRole, getCurrentUser } from "@/core/rbac/server";
 import { hasRole } from "@/core/rbac";
 import { isSafeContentUrl, requireSiteFeature } from "@/modules/content";
 import { eventLocalToIso, isEventTimeZone } from "../lib/timezone";
+import { findEventImportDuplicates, parseEventImportJson } from "../lib/import";
 import type { RsvpStatus } from "../types";
 
 function str(value: FormDataEntryValue | null): string {
@@ -58,6 +59,49 @@ export async function createEventAction(formData: FormData) {
   if (error) redirect(`/admin/events/new?error=${encodeURIComponent(error.message)}`);
   revalidatePath("/", "layout");
   redirect("/admin/events?created=ok");
+}
+
+export async function previewEventImportAction(rawJson: string) {
+  await requireRole("admin");
+  const parsed = parseEventImportJson(rawJson);
+  if (parsed.issues.length) return { ok: false as const, events: [], issues: parsed.issues, duplicates: [] };
+
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("events_event").select("title, starts_at");
+  if (error) return { ok: false as const, events: parsed.events, issues: [{ row: null, message: `Could not check existing events: ${error.message}` }], duplicates: [] };
+
+  return {
+    ok: true as const,
+    events: parsed.events,
+    issues: [],
+    duplicates: findEventImportDuplicates(parsed.events, data ?? []),
+  };
+}
+
+export async function importEventsAction(rawJson: string) {
+  const user = await requireRole("admin");
+  const parsed = parseEventImportJson(rawJson);
+  if (parsed.issues.length) return { ok: false as const, count: 0, issues: parsed.issues, duplicates: [] };
+
+  const supabase = await createClient();
+  const { data: existing, error: queryError } = await supabase.from("events_event").select("title, starts_at");
+  if (queryError) {
+    return { ok: false as const, count: 0, issues: [{ row: null, message: `Could not check existing events: ${queryError.message}` }], duplicates: [] };
+  }
+
+  const duplicates = findEventImportDuplicates(parsed.events, existing ?? []);
+  if (duplicates.length) return { ok: false as const, count: 0, issues: [], duplicates };
+
+  const { data, error } = await supabase
+    .from("events_event")
+    .insert(parsed.events.map((event) => ({ ...event, created_by: user.id })))
+    .select("id");
+  if (error) {
+    return { ok: false as const, count: 0, issues: [{ row: null, message: error.message }], duplicates: [] };
+  }
+
+  revalidatePath("/", "layout");
+  return { ok: true as const, count: data?.length ?? parsed.events.length, issues: [], duplicates: [] };
 }
 
 export async function updateEventAction(formData: FormData) {

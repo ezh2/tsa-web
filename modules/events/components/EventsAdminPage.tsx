@@ -42,12 +42,20 @@ export async function EventsAdminPage({
             All events, newest first. Click a row to edit.
           </p>
         </div>
-        <Link
-          href="/admin/events/new"
-          className="rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-700"
-        >
-          New event
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href="/admin/events/import"
+            className="rounded-md border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-800 transition hover:bg-neutral-50"
+          >
+            Import JSON
+          </Link>
+          <Link
+            href="/admin/events/new"
+            className="rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-700"
+          >
+            New event
+          </Link>
+        </div>
       </header>
 
       {feedback && (
